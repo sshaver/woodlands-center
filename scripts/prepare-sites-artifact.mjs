@@ -1,11 +1,15 @@
-import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { promisify } from "node:util";
 
 const projectRoot = process.cwd();
 const staticDist = join(projectRoot, "dist");
 const stageRoot = join(projectRoot, ".sites-stage");
 const stagedDist = join(stageRoot, "dist");
 const stagedPublic = join(stagedDist, "server", "public");
+const maxHostedFileSize = 25 * 1024 * 1024;
+const execFileAsync = promisify(execFile);
 
 const skippedDistEntries = new Set([".openai", "assets", "server"]);
 
@@ -106,6 +110,34 @@ async function copyReferencedAssets() {
   return references.size;
 }
 
+async function optimizeOversizedImages() {
+  const files = await collectFiles(join(stagedPublic, "assets"));
+  let optimizedCount = 0;
+
+  for (const filePath of files) {
+    if (!/\.(?:jpe?g|png)$/i.test(filePath)) {
+      continue;
+    }
+
+    const fileStats = await stat(filePath);
+    if (fileStats.size <= maxHostedFileSize) {
+      continue;
+    }
+
+    for (const maxDimension of [2400, 1800, 1400]) {
+      await execFileAsync("sips", ["-Z", String(maxDimension), filePath]);
+      const updatedStats = await stat(filePath);
+
+      if (updatedStats.size <= maxHostedFileSize) {
+        optimizedCount++;
+        break;
+      }
+    }
+  }
+
+  return optimizedCount;
+}
+
 const workerSource = `const INDEX_FILE = "/index.html";
 
 function assetCandidates(pathname) {
@@ -154,6 +186,7 @@ await rm(stageRoot, { recursive: true, force: true });
 await mkdir(join(stagedDist, "server"), { recursive: true });
 await copyStaticDist(staticDist, stagedPublic, true);
 const copiedAssetCount = await copyReferencedAssets();
+const optimizedImageCount = await optimizeOversizedImages();
 try {
   await cp(join(projectRoot, "public", "screenshot.jpeg"), join(stagedPublic, "screenshot.jpeg"));
 } catch (error) {
@@ -165,4 +198,4 @@ await mkdir(join(stagedDist, ".openai"), { recursive: true });
 await cp(join(projectRoot, ".openai", "hosting.json"), join(stagedDist, ".openai", "hosting.json"));
 await writeFile(join(stagedDist, "server", "index.js"), workerSource);
 
-console.log(`Prepared Sites artifact at ${stageRoot} with ${copiedAssetCount} referenced assets`);
+console.log(`Prepared Sites artifact at ${stageRoot} with ${copiedAssetCount} referenced assets and ${optimizedImageCount} optimized images`);
