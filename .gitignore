@@ -1,0 +1,7 @@
+node_modules/
+.sites-stage/
+.sites-artifacts/
+dist/
+cwmp_codex_build_package/assets/
+cwmp_codex_build_package_with_assets.zip
+.DS_Store

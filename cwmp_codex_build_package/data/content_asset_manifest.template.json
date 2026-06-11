@@ -1,0 +1,85 @@
+{
+  "notes": "Copy this file to data/content_asset_manifest.json after adding production assets. Reference-design mockups are intentionally excluded from this manifest.",
+  "assets": [
+    {
+      "id": "site-logo-white",
+      "path": "assets/logos/cwmp-logo--white.svg",
+      "type": "logo",
+      "intended_use": ["header.logo", "footer.logo", "mobile_menu.logo"],
+      "alt": "The Cynthia Woods Mitchell Pavilion logo",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "required"
+    },
+    {
+      "id": "home-events-hero",
+      "path": "assets/content-images/events/home-events--hero--crowd-stage.jpg",
+      "type": "image",
+      "intended_use": ["home_events.hero_background"],
+      "alt": "A concert crowd watches a performance at The Pavilion.",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "required"
+    },
+    {
+      "id": "event-detail-sample-hero",
+      "path": "assets/content-images/events/event-detail--hero--sample-artist.jpg",
+      "type": "image",
+      "intended_use": ["event_detail.hero_image"],
+      "alt": "Featured artist promotional image for an event at The Pavilion.",
+      "credit": "Artist or approved source TBD",
+      "rights": "Approved for website promotional use",
+      "priority": "required"
+    },
+    {
+      "id": "mission-video-poster",
+      "path": "assets/content-images/mission/arts-access--video-poster--student-microphone.jpg",
+      "type": "video-poster",
+      "intended_use": ["mission.video_poster", "home.video_block"],
+      "alt": "A student participates in a Pavilion arts outreach activity.",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "required"
+    },
+    {
+      "id": "plan-your-visit-hero",
+      "path": "assets/content-images/plan-your-visit/plan-your-visit--hero--venue-crowd.jpg",
+      "type": "image",
+      "intended_use": ["plan_your_visit.hero_background"],
+      "alt": "Guests gather at The Pavilion before a show.",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "required"
+    },
+    {
+      "id": "story-hub-featured",
+      "path": "assets/content-images/story-hub/story-hub--featured--orchestra-electrified.jpg",
+      "type": "image",
+      "intended_use": ["story_hub.featured_story", "story_card.image"],
+      "alt": "Arts educators hold instruments on stage at The Pavilion.",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "required"
+    },
+    {
+      "id": "season-seats-seating-map",
+      "path": "assets/documents/maps/season-seats--seating-map.pdf",
+      "type": "map",
+      "intended_use": ["season_seats.seating_map"],
+      "alt": "Season seats seating map for The Pavilion.",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "preferred"
+    },
+    {
+      "id": "parking-map",
+      "path": "assets/documents/maps/parking-map--general.pdf",
+      "type": "map",
+      "intended_use": ["plan_your_visit.parking.map"],
+      "alt": "Parking map for The Pavilion.",
+      "credit": "The Cynthia Woods Mitchell Pavilion",
+      "rights": "CWMP-owned or approved for website use",
+      "priority": "preferred"
+    }
+  ]
+}

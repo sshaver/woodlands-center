@@ -1,0 +1,118 @@
+Request for Proposal: Website Redesign & Development
+Organization: The Cynthia Woods Mitchell Pavilion
+Issue Date: February 1, 2026
+Proposal Due Date: March 1, 2026
+Primary Contact: Scott Shaver | sshaver@woodlandscenter.org
+1. Introduction & Background
+1.1 Organization Overview
+We are a 501(c)(3) non-profit organization with a mission to increase and enrich arts access in the Greater Houston area. We own and operate a 16,000+ capacity concert amphitheater where we host a diverse set of 70+ performances each year, including free arts performances and world-class touring acts. Profit made from our biggest shows allows us to support a growing number of arts programs, including grants for arts educators, scholarships for arts students and arts education activities both on and off-site.
+Our website serves a wide variety of audiences, which makes structuring it an interesting challenge. The bulk of website visitors arrive at our site either looking to buy tickets to a concert or searching for information about our rules, parking or show schedules. However, the site must also help introduce those people to the non-profit side of our operation and provide the infrastructure necessary to facilitate the activities of our mission.
+1.2 Purpose of This RFP
+We are looking to replace our current site for the following reasons:
+Though our last site build took place in 2020, the design already feels a bit outdated and static
+People navigate sites differently in 2026 than they did in 2020, expecting less reading and more direct access to the answers they want
+Our site is currently built to get people to read information, not to prioritize the key outcomes that matter to us organizationally
+Though we tried to prioritize our missional efforts in the last build, we are still finding that many people don’t know about our non-profit side
+2. Project Overview
+2.1 Project Goals
+Visual overhaul to align with current branding standards
+Increase ease of use in finding specific information by simplifying structure
+Maximize service to all of our audiences cohesively
+Create landing pages that convert for a large number of possible outcomes
+Provide some flexibility within site structure to create one-off “experience” pages for special events like a fundraising Gala
+2.2 Success Criteria
+On-time / on-budget delivery
+Ease of content updates – we make updates 3-5 times a day
+Reduced number of “Contact Us” requests because info is easy to find
+Increased engagement – longer times spent on page, more clicks to outcomes
+Site works and converts excellently on desktop and mobile
+3. Scope of Work
+3.1 Website Requirements
+7 Templates
+Home/Events
+Landing Page
+Plan Your Visit
+Story Hub
+Pop Over CTA (for email join, contact us)
+Event Details Page
+Blank/Flow
+30 Pages
++ backlog of hundreds of previous event pages
++ blog content
+Responsive and meets modern accessibility standards
+Backend of the site must be accessible to our team
+High priority that we do not often have to come back to site builder for content updates, new templates, etc.
+3.2 Functional Needs
+Event listings and detail pages
+Integration with Hubspot Forms
+Integration with Ticketmaster for Season Seat holders
+AI Search functionality
+Easy to host video on website
+3.3 Content & Migration
+Content will be provided by our team and ported by our team. We are looking to reduce cost here and want to control the content porting process.
+3.4 Design Expectations
+Our team has drafted a visual look/feel/flow for the site that can work as a starting point. Images are appended to this document. However, we are open to other ideas and structures.
+4. Technical Requirements
+4.1 Platform & Hosting
+We do not have a preferred CMS and are looking for a vendor-hosted site.
+4.2 Integrations
+We are looking to integrate with an LLM or similar tool to provide excellent AI responses to common fan questions. (Ex: What’s your bag policy? Can I bring an umbrella? Is Poison playing this year?)
+Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:
+Hubspot (Forms, Email, Social, CRM)
+Foundant
+DonorPerfect
+Acceptd
+5. Project Management & Timeline
+5.1 Anticipated Timeline
+We hope to start work on this site by mid-March and have it completed by July.
+5.2 Project Management Approach
+Scott Shaver will be your main point of contact throughout the process.
+Suggested workflow and rhythm:
+A series of kick-off meetings to understand the work and schedule out the required time to build, test and deploy the site
+Weekly or bi-weekly meetings (15-30 minutes) after that to report on the work
+Review and revise after initial drafts are created. Will incorporate reviews from a few other key stakeholders after Scott approves initial designs.
+Test, one more round of review, then deploy
+6. Qualifications & Budget
+6.1 Company Overview
+Please include a brief overview of your organization’s qualifications to work on this project, including:
+Examples of similar projects
+Experience with arts, entertainment, or nonprofit organizations
+Team members or roles we will collaborate with on this project. Please also include brief bios for these team members. We’d like to get to know the folks we’ll be working with!
+6.2 Pricing and Budget
+Please outline your pricing structure and provide an itemized estimated budget for this project. We do not need granular detail, but we would like to see where major costs could be cut or where key value could be added for an additional fee.
+Please make sure to define the costs of hosting and maintenance, as well as your rate for ongoing work on the website.
+7. Proposal Submission Requirements
+Vendors should include:
+Project approach and methodology
+Timeline and milestones
+Pricing breakdown
+Assumptions and dependencies
+Optional enhancements
+Submission Format: Email or PDF
+Submission Deadline: March 1, 2026
+8. Proposal Rubric
+We will use the following rubric to select a vendor for this project.
+1. Understanding of Project & Approach (25%)
+Demonstrates clear understanding of our organization and goals
+Proposed approach aligns with stated needs
+Provides refined solution for balancing needs of multiple audiences
+2. Cost, Value and Timeline (25%)
+Pricing clarity and transparency
+Structure of ongoing costs
+Clear milestones and realistic delivery schedule
+Additional value provided beyond RFP deliverables
+3. Technical Solution and Fit (20%)
+CMS suitability and ease of use
+Integration experience and solution, specifically with Hubspot, LLMs and Ticketmaster
+4. Design & User Experience Capability (15%)
+Demonstrated UX thinking and accessibility awareness
+Design quality and usability of past work
+Mobile-first or responsive experience
+Ability to integrate CWMP ideas into final design
+5. Relevant Work and Past Experience (15%)
+Work with arts, entertainment, nonprofit, or ticketed events (if applicable)
+Quality and relevance of portfolio examples
+Cultural fit of team
+Expertise of team
+Please email sshaver@woodlandscenter.org if you have any questions. Thank you for your proposal!
+Design Ideas / Drafts

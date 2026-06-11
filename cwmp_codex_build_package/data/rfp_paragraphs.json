@@ -1,0 +1,914 @@
+[
+  {
+    "paragraph_index": 1,
+    "text": "Request for Proposal: Website Redesign & Development",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Request for Proposal: Website Redesign & Development"
+  },
+  {
+    "paragraph_index": 2,
+    "text": "Organization: The Cynthia Woods Mitchell Pavilion\nIssue Date: February 1, 2026\nProposal Due Date: March 1, 2026\nPrimary Contact: Scott Shaver | sshaver@woodlandscenter.org",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Organization: The Cynthia Woods Mitchell Pavilion\nIssue Date: February 1, 2026\nProposal Due Date: March 1, 2026\nPrimary Contact: Scott Shaver | sshaver@woodlandscenter.org"
+  },
+  {
+    "paragraph_index": 4,
+    "text": "1. Introduction & Background",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "1. Introduction & Background"
+  },
+  {
+    "paragraph_index": 5,
+    "text": "1.1 Organization Overview",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "1.1 Organization Overview"
+  },
+  {
+    "paragraph_index": 6,
+    "text": "We are a 501(c)(3) non-profit organization with a mission to increase and enrich arts access in the Greater Houston area. We own and operate a 16,000+ capacity concert amphitheater where we host a diverse set of 70+ performances each year, including free arts performances and world-class touring acts. Profit made from our biggest shows allows us to support a growing number of arts programs, including grants for arts educators, scholarships for arts students and arts education activities both on and off-site.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "We are a 501(c)(3) non-profit organization with a mission to increase and enrich arts access in the Greater Houston area. We own and operate a 16,000+ capacity concert amphitheater where we host a diverse set of 70+ performances each year, including free arts performances and world-class touring acts. Profit made from our biggest shows allows us to support a growing number of arts programs, including grants for arts educators, scholarships for arts students and arts education activities both on and off-site."
+  },
+  {
+    "paragraph_index": 7,
+    "text": "Our website serves a wide variety of audiences, which makes structuring it an interesting challenge. The bulk of website visitors arrive at our site either looking to buy tickets to a concert or searching for information about our rules, parking or show schedules. However, the site must also help introduce those people to the non-profit side of our operation and provide the infrastructure necessary to facilitate the activities of our mission.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Our website serves a wide variety of audiences, which makes structuring it an interesting challenge. The bulk of website visitors arrive at our site either looking to buy tickets to a concert or searching for information about our rules, parking or show schedules. However, the site must also help introduce those people to the non-profit side of our operation and provide the infrastructure necessary to facilitate the activities of our mission."
+  },
+  {
+    "paragraph_index": 8,
+    "text": "1.2 Purpose of This RFP",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "1.2 Purpose of This RFP"
+  },
+  {
+    "paragraph_index": 9,
+    "text": "We are looking to replace our current site for the following reasons:",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "We are looking to replace our current site for the following reasons:"
+  },
+  {
+    "paragraph_index": 10,
+    "text": "Though our last site build took place in 2020, the design already feels a bit outdated and static",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 23,
+    "section": "We are looking to replace our current site for the following reasons:"
+  },
+  {
+    "paragraph_index": 11,
+    "text": "People navigate sites differently in 2026 than they did in 2020, expecting less reading and more direct access to the answers they want",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 23,
+    "section": "We are looking to replace our current site for the following reasons:"
+  },
+  {
+    "paragraph_index": 12,
+    "text": "Our site is currently built to get people to read information, not to prioritize the key outcomes that matter to us organizationally",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 23,
+    "section": "We are looking to replace our current site for the following reasons:"
+  },
+  {
+    "paragraph_index": 13,
+    "text": "Though we tried to prioritize our missional efforts in the last build, we are still finding that many people don’t know about our non-profit side",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 23,
+    "section": "We are looking to replace our current site for the following reasons:"
+  },
+  {
+    "paragraph_index": 15,
+    "text": "2. Project Overview",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "2. Project Overview"
+  },
+  {
+    "paragraph_index": 16,
+    "text": "2.1 Project Goals",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "2.1 Project Goals"
+  },
+  {
+    "paragraph_index": 17,
+    "text": "Visual overhaul to align with current branding standards",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 22,
+    "section": "2.1 Project Goals"
+  },
+  {
+    "paragraph_index": 18,
+    "text": "Increase ease of use in finding specific information by simplifying structure",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 22,
+    "section": "2.1 Project Goals"
+  },
+  {
+    "paragraph_index": 19,
+    "text": "Maximize service to all of our audiences cohesively",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 22,
+    "section": "2.1 Project Goals"
+  },
+  {
+    "paragraph_index": 20,
+    "text": "Create landing pages that convert for a large number of possible outcomes",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 22,
+    "section": "2.1 Project Goals"
+  },
+  {
+    "paragraph_index": 21,
+    "text": "Provide some flexibility within site structure to create one-off “experience” pages for special events like a fundraising Gala",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 22,
+    "section": "2.1 Project Goals"
+  },
+  {
+    "paragraph_index": 22,
+    "text": "2.2 Success Criteria",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "2.2 Success Criteria"
+  },
+  {
+    "paragraph_index": 23,
+    "text": "On-time / on-budget delivery",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 4,
+    "section": "2.2 Success Criteria"
+  },
+  {
+    "paragraph_index": 24,
+    "text": "Ease of content updates – we make updates 3-5 times a day",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 4,
+    "section": "2.2 Success Criteria"
+  },
+  {
+    "paragraph_index": 25,
+    "text": "Reduced number of “Contact Us” requests because info is easy to find",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 4,
+    "section": "2.2 Success Criteria"
+  },
+  {
+    "paragraph_index": 26,
+    "text": "Increased engagement – longer times spent on page, more clicks to outcomes",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 4,
+    "section": "2.2 Success Criteria"
+  },
+  {
+    "paragraph_index": 27,
+    "text": "Site works and converts excellently on desktop and mobile",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 4,
+    "section": "2.2 Success Criteria"
+  },
+  {
+    "paragraph_index": 29,
+    "text": "3. Scope of Work",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "3. Scope of Work"
+  },
+  {
+    "paragraph_index": 30,
+    "text": "3.1 Website Requirements",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 31,
+    "text": "7 Templates",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 32,
+    "text": "Home/Events",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 33,
+    "text": "Landing Page",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 34,
+    "text": "Plan Your Visit",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 35,
+    "text": "Story Hub",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 36,
+    "text": "Pop Over CTA (for email join, contact us)",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 37,
+    "text": "Event Details Page",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 38,
+    "text": "Blank/Flow",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 39,
+    "text": "30 Pages",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 40,
+    "text": "+ backlog of hundreds of previous event pages",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 41,
+    "text": "+ blog content",
+    "style": "Normal",
+    "list_level": 1,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 42,
+    "text": "Responsive and meets modern accessibility standards",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 43,
+    "text": "Backend of the site must be accessible to our team",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 44,
+    "text": "High priority that we do not often have to come back to site builder for content updates, new templates, etc.",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 5,
+    "section": "3.1 Website Requirements"
+  },
+  {
+    "paragraph_index": 45,
+    "text": "3.2 Functional Needs",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "3.2 Functional Needs"
+  },
+  {
+    "paragraph_index": 46,
+    "text": "Event listings and detail pages",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 6,
+    "section": "3.2 Functional Needs"
+  },
+  {
+    "paragraph_index": 47,
+    "text": "Integration with Hubspot Forms",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 6,
+    "section": "3.2 Functional Needs"
+  },
+  {
+    "paragraph_index": 48,
+    "text": "Integration with Ticketmaster for Season Seat holders",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 6,
+    "section": "3.2 Functional Needs"
+  },
+  {
+    "paragraph_index": 49,
+    "text": "AI Search functionality",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 6,
+    "section": "3.2 Functional Needs"
+  },
+  {
+    "paragraph_index": 50,
+    "text": "Easy to host video on website",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 6,
+    "section": "3.2 Functional Needs"
+  },
+  {
+    "paragraph_index": 51,
+    "text": "3.3 Content & Migration",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "3.3 Content & Migration"
+  },
+  {
+    "paragraph_index": 52,
+    "text": "Content will be provided by our team and ported by our team. We are looking to reduce cost here and want to control the content porting process.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Content will be provided by our team and ported by our team. We are looking to reduce cost here and want to control the content porting process."
+  },
+  {
+    "paragraph_index": 53,
+    "text": "3.4 Design Expectations",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "3.4 Design Expectations"
+  },
+  {
+    "paragraph_index": 54,
+    "text": "Our team has drafted a visual look/feel/flow for the site that can work as a starting point. Images are appended to this document. However, we are open to other ideas and structures.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Our team has drafted a visual look/feel/flow for the site that can work as a starting point. Images are appended to this document. However, we are open to other ideas and structures."
+  },
+  {
+    "paragraph_index": 56,
+    "text": "4. Technical Requirements",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "4. Technical Requirements"
+  },
+  {
+    "paragraph_index": 57,
+    "text": "4.1 Platform & Hosting",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "4.1 Platform & Hosting"
+  },
+  {
+    "paragraph_index": 58,
+    "text": "We do not have a preferred CMS and are looking for a vendor-hosted site.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "We do not have a preferred CMS and are looking for a vendor-hosted site."
+  },
+  {
+    "paragraph_index": 59,
+    "text": "4.2 Integrations",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "4.2 Integrations"
+  },
+  {
+    "paragraph_index": 60,
+    "text": "We are looking to integrate with an LLM or similar tool to provide excellent AI responses to common fan questions. (Ex: What’s your bag policy? Can I bring an umbrella? Is Poison playing this year?)",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "We are looking to integrate with an LLM or similar tool to provide excellent AI responses to common fan questions. (Ex: What’s your bag policy? Can I bring an umbrella? Is Poison playing this year?)"
+  },
+  {
+    "paragraph_index": 61,
+    "text": "Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:"
+  },
+  {
+    "paragraph_index": 62,
+    "text": "Hubspot (Forms, Email, Social, CRM)",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 24,
+    "section": "Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:"
+  },
+  {
+    "paragraph_index": 63,
+    "text": "Foundant",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 24,
+    "section": "Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:"
+  },
+  {
+    "paragraph_index": 64,
+    "text": "DonorPerfect",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 24,
+    "section": "Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:"
+  },
+  {
+    "paragraph_index": 65,
+    "text": "Acceptd",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 24,
+    "section": "Our site currently links out to the following platforms. If integrations could be built for one or a few of them, we would be open to it:"
+  },
+  {
+    "paragraph_index": 67,
+    "text": "5. Project Management & Timeline",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "5. Project Management & Timeline"
+  },
+  {
+    "paragraph_index": 68,
+    "text": "5.1 Anticipated Timeline",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "5.1 Anticipated Timeline"
+  },
+  {
+    "paragraph_index": 69,
+    "text": "We hope to start work on this site by mid-March and have it completed by July.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "We hope to start work on this site by mid-March and have it completed by July."
+  },
+  {
+    "paragraph_index": 70,
+    "text": "5.2 Project Management Approach",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "5.2 Project Management Approach"
+  },
+  {
+    "paragraph_index": 71,
+    "text": "Scott Shaver will be your main point of contact throughout the process.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Scott Shaver will be your main point of contact throughout the process."
+  },
+  {
+    "paragraph_index": 73,
+    "text": "Suggested workflow and rhythm:",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Suggested workflow and rhythm:"
+  },
+  {
+    "paragraph_index": 75,
+    "text": "A series of kick-off meetings to understand the work and schedule out the required time to build, test and deploy the site",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 25,
+    "section": "Suggested workflow and rhythm:"
+  },
+  {
+    "paragraph_index": 76,
+    "text": "Weekly or bi-weekly meetings (15-30 minutes) after that to report on the work",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 25,
+    "section": "Suggested workflow and rhythm:"
+  },
+  {
+    "paragraph_index": 77,
+    "text": "Review and revise after initial drafts are created. Will incorporate reviews from a few other key stakeholders after Scott approves initial designs.",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 25,
+    "section": "Suggested workflow and rhythm:"
+  },
+  {
+    "paragraph_index": 78,
+    "text": "Test, one more round of review, then deploy",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 25,
+    "section": "Suggested workflow and rhythm:"
+  },
+  {
+    "paragraph_index": 81,
+    "text": "6. Qualifications & Budget",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "6. Qualifications & Budget"
+  },
+  {
+    "paragraph_index": 82,
+    "text": "6.1 Company Overview",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "6.1 Company Overview"
+  },
+  {
+    "paragraph_index": 83,
+    "text": "Please include a brief overview of your organization’s qualifications to work on this project, including:",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Please include a brief overview of your organization’s qualifications to work on this project, including:"
+  },
+  {
+    "paragraph_index": 84,
+    "text": "Examples of similar projects",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 15,
+    "section": "Please include a brief overview of your organization’s qualifications to work on this project, including:"
+  },
+  {
+    "paragraph_index": 85,
+    "text": "Experience with arts, entertainment, or nonprofit organizations",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 15,
+    "section": "Please include a brief overview of your organization’s qualifications to work on this project, including:"
+  },
+  {
+    "paragraph_index": 86,
+    "text": "Team members or roles we will collaborate with on this project. Please also include brief bios for these team members. We’d like to get to know the folks we’ll be working with!",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 15,
+    "section": "Please include a brief overview of your organization’s qualifications to work on this project, including:"
+  },
+  {
+    "paragraph_index": 87,
+    "text": "6.2 Pricing and Budget",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "6.2 Pricing and Budget"
+  },
+  {
+    "paragraph_index": 88,
+    "text": "Please outline your pricing structure and provide an itemized estimated budget for this project. We do not need granular detail, but we would like to see where major costs could be cut or where key value could be added for an additional fee.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Please outline your pricing structure and provide an itemized estimated budget for this project. We do not need granular detail, but we would like to see where major costs could be cut or where key value could be added for an additional fee."
+  },
+  {
+    "paragraph_index": 89,
+    "text": "Please make sure to define the costs of hosting and maintenance, as well as your rate for ongoing work on the website.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Please make sure to define the costs of hosting and maintenance, as well as your rate for ongoing work on the website."
+  },
+  {
+    "paragraph_index": 91,
+    "text": "7. Proposal Submission Requirements",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "7. Proposal Submission Requirements"
+  },
+  {
+    "paragraph_index": 92,
+    "text": "Vendors should include:",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Vendors should include:"
+  },
+  {
+    "paragraph_index": 93,
+    "text": "Project approach and methodology",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 19,
+    "section": "Vendors should include:"
+  },
+  {
+    "paragraph_index": 94,
+    "text": "Timeline and milestones",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 19,
+    "section": "Vendors should include:"
+  },
+  {
+    "paragraph_index": 95,
+    "text": "Pricing breakdown",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 19,
+    "section": "Vendors should include:"
+  },
+  {
+    "paragraph_index": 96,
+    "text": "Assumptions and dependencies",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 19,
+    "section": "Vendors should include:"
+  },
+  {
+    "paragraph_index": 97,
+    "text": "Optional enhancements",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 19,
+    "section": "Vendors should include:"
+  },
+  {
+    "paragraph_index": 98,
+    "text": "Submission Format: Email or PDF\nSubmission Deadline: March 1, 2026",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Submission Format: Email or PDF\nSubmission Deadline: March 1, 2026"
+  },
+  {
+    "paragraph_index": 101,
+    "text": "8. Proposal Rubric",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "8. Proposal Rubric"
+  },
+  {
+    "paragraph_index": 102,
+    "text": "We will use the following rubric to select a vendor for this project.",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "We will use the following rubric to select a vendor for this project."
+  },
+  {
+    "paragraph_index": 103,
+    "text": "1. Understanding of Project & Approach (25%)",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "1. Understanding of Project & Approach (25%)"
+  },
+  {
+    "paragraph_index": 104,
+    "text": "Demonstrates clear understanding of our organization and goals",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "1. Understanding of Project & Approach (25%)"
+  },
+  {
+    "paragraph_index": 105,
+    "text": "Proposed approach aligns with stated needs",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "1. Understanding of Project & Approach (25%)"
+  },
+  {
+    "paragraph_index": 106,
+    "text": "Provides refined solution for balancing needs of multiple audiences",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "1. Understanding of Project & Approach (25%)"
+  },
+  {
+    "paragraph_index": 107,
+    "text": "2. Cost, Value and Timeline (25%)",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "2. Cost, Value and Timeline (25%)"
+  },
+  {
+    "paragraph_index": 108,
+    "text": "Pricing clarity and transparency",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "2. Cost, Value and Timeline (25%)"
+  },
+  {
+    "paragraph_index": 109,
+    "text": "Structure of ongoing costs",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "2. Cost, Value and Timeline (25%)"
+  },
+  {
+    "paragraph_index": 110,
+    "text": "Clear milestones and realistic delivery schedule",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "2. Cost, Value and Timeline (25%)"
+  },
+  {
+    "paragraph_index": 111,
+    "text": "Additional value provided beyond RFP deliverables",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 26,
+    "section": "2. Cost, Value and Timeline (25%)"
+  },
+  {
+    "paragraph_index": 112,
+    "text": "3. Technical Solution and Fit (20%)",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "3. Technical Solution and Fit (20%)"
+  },
+  {
+    "paragraph_index": 113,
+    "text": "CMS suitability and ease of use",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 28,
+    "section": "3. Technical Solution and Fit (20%)"
+  },
+  {
+    "paragraph_index": 114,
+    "text": "Integration experience and solution, specifically with Hubspot, LLMs and Ticketmaster",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 28,
+    "section": "3. Technical Solution and Fit (20%)"
+  },
+  {
+    "paragraph_index": 115,
+    "text": "4. Design & User Experience Capability (15%)",
+    "style": "Heading 3",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "4. Design & User Experience Capability (15%)"
+  },
+  {
+    "paragraph_index": 116,
+    "text": "Demonstrated UX thinking and accessibility awareness",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 29,
+    "section": "4. Design & User Experience Capability (15%)"
+  },
+  {
+    "paragraph_index": 117,
+    "text": "Design quality and usability of past work",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 29,
+    "section": "4. Design & User Experience Capability (15%)"
+  },
+  {
+    "paragraph_index": 118,
+    "text": "Mobile-first or responsive experience",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 29,
+    "section": "4. Design & User Experience Capability (15%)"
+  },
+  {
+    "paragraph_index": 119,
+    "text": "Ability to integrate CWMP ideas into final design",
+    "style": "Normal",
+    "list_level": 0,
+    "numbering_id": 29,
+    "section": "4. Design & User Experience Capability (15%)"
+  },
+  {
+    "paragraph_index": 120,
+    "text": "5. Relevant Work and Past Experience (15%)",
+    "style": "Heading 3",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "5. Relevant Work and Past Experience (15%)"
+  },
+  {
+    "paragraph_index": 121,
+    "text": "Work with arts, entertainment, nonprofit, or ticketed events (if applicable)",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 30,
+    "section": "5. Relevant Work and Past Experience (15%)"
+  },
+  {
+    "paragraph_index": 122,
+    "text": "Quality and relevance of portfolio examples",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 30,
+    "section": "5. Relevant Work and Past Experience (15%)"
+  },
+  {
+    "paragraph_index": 123,
+    "text": "Cultural fit of team",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 30,
+    "section": "5. Relevant Work and Past Experience (15%)"
+  },
+  {
+    "paragraph_index": 124,
+    "text": "Expertise of team",
+    "style": "List Paragraph",
+    "list_level": 0,
+    "numbering_id": 30,
+    "section": "5. Relevant Work and Past Experience (15%)"
+  },
+  {
+    "paragraph_index": 125,
+    "text": "Please email sshaver@woodlandscenter.org if you have any questions. Thank you for your proposal!",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Please email sshaver@woodlandscenter.org if you have any questions. Thank you for your proposal!"
+  },
+  {
+    "paragraph_index": 127,
+    "text": "Design Ideas / Drafts",
+    "style": "Normal",
+    "list_level": null,
+    "numbering_id": null,
+    "section": "Design Ideas / Drafts"
+  }
+]

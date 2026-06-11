@@ -1,0 +1,163 @@
+{
+  "notes": [
+    "This is a build-time fixture blueprint, not final migrated content.",
+    "For exact hierarchy and copy, use docs/SITE_OUTLINE_EXACT.md.",
+    "CTA destinations are placeholders and must be CMS-configurable."
+  ],
+  "navigation": {
+    "desktopPrimary": [
+      {"label": "Plan your visit", "href": "/plan-your-visit", "icon": "pin"},
+      {"label": "Events", "href": "/events", "icon": "ticket"},
+      {"label": "Arts Access Mission", "href": "/mission", "icon": "violin"}
+    ],
+    "mobileDock": [
+      {"label": "Season Seats", "href": "/season-seats", "icon": "crown"},
+      {"label": "Donate", "href": "/donate", "icon": "handshake"},
+      {"label": "Events", "href": "/events", "icon": "ticket"},
+      {"label": "Visit", "href": "/plan-your-visit", "icon": "pin"},
+      {"label": "Mission", "href": "/mission", "icon": "violin"}
+    ],
+    "footer": [
+      {"label": "Staff & Leadership", "href": "/staff"},
+      {"label": "History", "href": "/history"},
+      {"label": "Press Contact", "href": "/press"},
+      {"label": "Work at CWMP", "href": "/work-at-cwmp"},
+      {"label": "Staff Log In", "href": "/staff-login"},
+      {"label": "Rent The Pavilion", "href": "/rent"},
+      {"label": "Volunteers", "href": "/volunteer"},
+      {"label": "Donate", "href": "/donate"},
+      {"label": "Sponsorships", "href": "/sponsors"}
+    ]
+  },
+  "sampleEvents": [
+    {"title": "Rod Stewart", "slug": "rod-stewart", "eventDateLabel": "April 19", "ticketLink": "CONFIGURE_IN_CMS"},
+    {"title": "Jim Gaffigan", "slug": "jim-gaffigan", "eventDateLabel": "May 2", "ticketLink": "CONFIGURE_IN_CMS"},
+    {"title": "Sting", "slug": "sting", "eventDateLabel": "May 13", "ticketLink": "CONFIGURE_IN_CMS"},
+    {"title": "MGK", "slug": "mgk", "eventDateLabel": "May 23", "ticketLink": "CONFIGURE_IN_CMS"},
+    {"title": "Train", "slug": "train", "eventDateLabel": "Aug 14", "ticketLink": "CONFIGURE_IN_CMS"},
+    {"title": "Lynyrd Skynyrd & Foreigner", "slug": "lynyrd-skynyrd-foreigner", "eventDateLabel": "Aug 27", "ticketLink": "CONFIGURE_IN_CMS"},
+    {"title": "Mötley Crüe", "slug": "motley-crue", "subheader": "with Tesla & Extreme", "eventDateLabel": "September 11", "eventTimeLabel": "7:00 PM", "ticketLink": "CONFIGURE_IN_CMS"}
+  ],
+  "planVisitTopics": [
+    {
+      "title": "What to Bring",
+      "slug": "what-to-bring",
+      "intro": "Please note that these policies are subject to change on the day of the event and that the information listed there/here is not all-inclusive.",
+      "sections": [
+        {
+          "heading": "Bag Policy",
+          "items": [
+            "Clear bags sized 12\" x 12\" or smaller are permitted.",
+            "Tinted bags or bags with printed patterns are not accepted.",
+            "Non-clear handheld clutches sized 4.5\" x 6.5\" or smaller are permitted.",
+            "Bags for medical equipment (sized appropriately to the size of the equipment) are permitted, but will be subject to search, i.e. small items like medication need to follow the standard bag policy above.",
+            "Diaper bags (accompanied by infant/toddler) are permitted, but will be subject to search.",
+            "Nursing/Pumping bags including bottles, ice and pumping equipment are permitted, but will be subject to search.",
+            "Following standard safety protocol, all unattended items and bags outside the gates or within the venue will be removed from the facility immediately.",
+            "Bags, purses or backpacks of any kind will not be accepted by Pavilion Info Booths."
+          ]
+        },
+        {
+          "heading": "Do Bring",
+          "body": "The following items are allowed into The Pavilion at most shows. Please be prepared to have your belongings searched.",
+          "items": ["Non-detachable lens cameras", "Signs 8.5\"x11\" or smaller", "Small blankets or tarps", "Small umbrellas", "Rain jackets", "Most wearable neck fans and small handheld fans"]
+        },
+        {
+          "heading": "Don’t Bring",
+          "body": "The following items are NOT allowed into The Pavilion.",
+          "items": ["Clothing Items that do not provide adequate coverage and/or opacity", "Animals: The only exceptions to this rule are service animals (we follow The U.S. Department of Justice guidelines regarding service animals.)", "Aerosol cans (hairspray, bug spray, sunscreen)", "Audio and video recording equipment", "Beverages of any kind", "Detachable lens cameras", "E-liquid or vape juice", "Glass of any kind, to include perfume bottles", "Grills", "Fireworks", "Ice chests", "Laptops and tablets (including Kindles and e-readers)", "Laser pointers", "Medication in unmarked containers.", "Non-medical masks.", "Outside lawn chairs. Specially designed lawn chairs are available for rent at most Live Nation shows for $10. Lawn Chairs are free at all performing arts events.", "Play pens", "Pocket knives", "Selfie sticks", "Strollers are allowed in the plaza areas, but not under the tent or on the lawn.", "Tents or sun shades", "Large umbrellas", "Weapons: While it is legal to open carry or carry a concealed handgun in Texas, we do not allow guns in our facility."]
+        },
+        {
+          "heading": "Food & Drink",
+          "items": [
+            "Outside liquids of any kind are not allowed at any Pavilion events.",
+            "Personal food is allowed at Live Nation (rock, country, pop, etc.) shows in the amount of one, one-gallon ziploc bag per person. This amount restriction does not apply to Performing Arts (symphony, ballet, opera, etc.) shows.",
+            "Empty, reusable bottles/cups are allowed at most shows. Chilled water fountains/bottle fillers are available at The Pavilion. Some artists may have more specific policies, such as the removal of lids or only allowing crushable, disposable bottles. We will do our best to communicate these policies as soon as we are made aware of them, but if you bring a reusable bottle or cup we ask that you please remain flexible and are prepared not to bring it in if the artist requires."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Rules",
+      "slug": "rules",
+      "items": [
+        "Guests are always subject to a search upon entering the facility. Guests who refuse the search will be denied entrance.",
+        "No re-entry is permitted once leaving the gates.",
+        "No smoking is allowed in the reserved seating areas. This includes e-cigarettes/vapes.",
+        "Soliciting or vending is not permitted on Pavilion grounds unless previously authorized by Pavilion management.",
+        "Small blankets are allowed at most shows. Blankets that wrap into a carrying case must be permanently attached to the case, and will be subject to review upon entry.",
+        "Guests who show signs of illegal substance abuse or intoxication may be refused entry.",
+        "Guests are permitted to stand or dance in front of their seat. Standing ON seats is not allowed.",
+        "Standing or dancing in the aisles is not permitted.",
+        "Guests (even children) are not allowed to sit or stand on the shoulders of another guest. No throwing objects of any kind.",
+        "No reselling (scalping) tickets at any time on The Pavilion grounds.",
+        "No tailgating is allowed at The Pavilion or in surrounding parking lots.",
+        "Flying drones on or over The Pavilion's property is not permitted at any time.",
+        "In an effort to keep unticketed guests from occupying your reserved seat, ticket stubs or your live mobile ticket (no screenshots) are required for entry into the reserved seating area. It's a good idea to transfer a ticket to each member of your group for this reason.",
+        "Moshing and crowd surfing can be dangerous and are strongly discouraged. Guests assume all risk associated with such activities. Please be aware of your surroundings and avoid these activities and those associated with them for your own safety."
+      ]
+    },
+    {
+      "title": "Parking",
+      "slug": "parking",
+      "summary": "Lots open 30 minutes before gates. Most guests should navigate to 2203 Timberloch Place for free parking.",
+      "locations": [
+        {"label": "Free Parking", "address": "2203 Timberloch Place", "cta": "Get Me to Free Parking", "url": "https://maps.app.goo.gl/9Xxa95dCiio6uY6K8"},
+        {"label": "Paid Parking", "address": "9809 Six Pines Drive, The Woodlands, TX 77380", "body": "Paid parking is limited in space. Paid parking can be purchased prior to the event, as available, and is typically $45. Parking at Performing Arts shows is typically $15."},
+        {"label": "Accessible Parking", "address": "9809 Six Pines Drive, The Woodlands, TX 77380", "body": "Accessible Parking is free on a first-come, first-served basis. Please have your proper credentials displayed upon arrival. Overflow accessible parking is available at 9669 Grogans Mill Road."},
+        {"label": "Drop-Off and Pick-Up", "address": "2005 Lake Robbins Drive, The Woodlands, TX 77380"}
+      ]
+    },
+    {
+      "title": "Accessibility",
+      "slug": "accessibility",
+      "summary": "The Pavilion is committed to creating an enjoyable and accessible experience for all guests. Guests who need assistance before their visit are encouraged to contact The Pavilion in advance or call the Box Office at 281-364-3024.",
+      "sections": ["Arrival and Parking", "Wheelchair and Mobility Assistance", "Accessible Tickets", "Accessible Facilities", "ASL Interpretation and Assistive Listening", "Service Animals", "Sensory Accommodations"]
+    },
+    {
+      "title": "Concessions",
+      "slug": "concessions",
+      "summary": "Awesome eats and cold drinks amplify the experience of an epic show. Stay fueled up with a variety of concessions options located in the North, South and Lawn plazas. All transactions are now cashless."
+    },
+    {
+      "title": "Ticket Info",
+      "slug": "ticket-info",
+      "summary": "All shows at The Pavilion are rain or shine. Please have your digital tickets pulled up in your Ticketmaster or Live Nation app when you arrive at the gates.",
+      "sections": ["Accepted Tickets", "Unaccepted Ticket Examples", "Box Office Hours", "Official Ticketing Source", "Transfer Tickets to Each Member of Your Party", "Children"]
+    },
+    {"title": "Facilities & Rentals", "slug": "facilities-rentals"}
+  ],
+  "mission": {
+    "title": "Arts access for you. Arts access for all.",
+    "subtitle": "The Arts are the live performances and invigorating creations that bind us together through a shared experience of beauty. We believe access to the Arts is fundamental to human thriving. That’s why our non-profit mission is to make sure that everyone has the chance to experience the arts for themselves - today, and far into the future.",
+    "impactStats": [
+      {"value": "225K", "label": "People Impacted by Arts Programs"},
+      {"value": "$1.31M", "label": "Awarded in Arts Scholarships and Grants"},
+      {"value": "67", "label": "Arts Outreach Events across the city"}
+    ]
+  },
+  "seasonSeats": {
+    "title": "Season Seats at The Pavilion",
+    "subtitle": "Season Seats at The Pavilion are the ideal way to entertain clients, reward employees or share with friends and family as you enjoy ultimate amenities and experience world-class entertainment from the best seats in the house.",
+    "tabs": ["Seamless Experience", "Club Access", "Dining Included"]
+  },
+  "grantPrograms": [
+    {"title": "Professional Development Grants for Arts Educators", "slug": "professional-development", "cta": "Apply Now", "destination": "Foundant"},
+    {"title": "Arts Resource Grants", "slug": "resources", "cta": "Apply Now", "destination": "Foundant"},
+    {"title": "Arts Travel Grants", "slug": "travel", "cta": "Apply Now", "destination": "Foundant"},
+    {"title": "Community Arts Grants", "slug": "arts-organizations", "cta": "Apply Now", "destination": "Foundant"},
+    {"title": "Fine Arts Scholarships", "slug": "scholarships", "cta": "Apply Now", "destination": "Acceptd"}
+  ],
+  "outreachPrograms": [
+    {"title": "Instrument Petting Zoo", "slug": "instrument-petting-zoo"},
+    {"title": "Fine Arts Education Days", "slug": "fine-arts-education-days"},
+    {"title": "Hats Off to Reading", "slug": "hats-off-to-reading"},
+    {"title": "Mini Pavilion Maestros", "slug": "mini-pavilion-maestros"},
+    {"title": "Arts in Action Awards", "slug": "arts-in-action-awards"},
+    {"title": "Arts On The Go", "slug": "arts-on-the-go"},
+    {"title": "Chamberfest Strings Camp", "slug": "chamberfest-strings-camp"},
+    {"title": "Scout Days", "slug": "scout-days"},
+    {"title": "Arts Educator Resources and Programs", "slug": "arts-educators", "visibility": "hidden"}
+  ],
+  "storyTopics": ["Arts in Schools", "Fans", "Shows", "Scholarships", "Grants", "Backstage", "Supporters", "Outreach"]
+}

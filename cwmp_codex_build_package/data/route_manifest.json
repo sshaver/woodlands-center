@@ -1,0 +1,58 @@
+{
+  "notes": [
+    "Implement every route listed here and preserve all content requirements in docs/SITE_OUTLINE_EXACT.md.",
+    "Slug choices are implementation defaults; page title/content must follow the outline exactly.",
+    "External CTA destinations must be CMS-configurable rather than hard-coded."
+  ],
+  "routes": [
+    {"path": "/", "name": "Home / Events", "template": "home-events", "cmsCollection": "siteSettings"},
+    {"path": "/events", "name": "Events Listing", "template": "home-events", "cmsCollection": "events"},
+    {"path": "/events/[slug]", "name": "Event Detail Pages", "template": "event-detail", "cmsCollection": "events"},
+    {"path": "/season-seats", "name": "Season Seats Landing Page", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/plan-your-visit", "name": "Plan Your Visit", "template": "plan-your-visit", "cmsCollection": "planVisitTopics"},
+    {"path": "/mission", "name": "Arts Access Mission Landing Page", "template": "mission-landing", "cmsCollection": "mission"},
+
+    {"path": "/mission/performing-arts-membership", "name": "Arts Membership at The Pavilion", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/mission/volunteer-membership", "name": "Pavilion Partners", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/mission/volunteer-membership/resources", "name": "Partners Resource Page", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/mission/corporate-partnership", "name": "Corporate Partnership", "template": "landing-page", "cmsCollection": "landingPages"},
+
+    {"path": "/mission/funding/professional-development", "name": "Professional Development Grants for Arts Educators", "template": "landing-page", "cmsCollection": "grantPrograms"},
+    {"path": "/mission/funding/resources", "name": "Arts Resource Grants", "template": "landing-page", "cmsCollection": "grantPrograms"},
+    {"path": "/mission/funding/travel", "name": "Arts Travel Grants", "template": "landing-page", "cmsCollection": "grantPrograms"},
+    {"path": "/mission/funding/arts-organizations", "name": "Community Arts Grants", "template": "landing-page", "cmsCollection": "grantPrograms"},
+    {"path": "/mission/funding/scholarships", "name": "Fine Arts Scholarships", "template": "landing-page", "cmsCollection": "grantPrograms"},
+
+    {"path": "/mission/outreach/instrument-petting-zoo", "name": "Instrument Petting Zoo", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/fine-arts-education-days", "name": "Fine Arts Education Days", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/hats-off-to-reading", "name": "Hats Off to Reading", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/mini-pavilion-maestros", "name": "Mini Pavilion Maestros", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/arts-in-action-awards", "name": "Arts in Action Awards", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/arts-on-the-go", "name": "Arts On The Go", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/chamberfest-strings-camp", "name": "Chamberfest Strings Camp", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/outreach/scout-days", "name": "Scout Days", "template": "landing-page", "cmsCollection": "outreachPrograms"},
+    {"path": "/mission/arts-educators", "name": "Arts Educator Resources and Programs", "template": "landing-page", "cmsCollection": "landingPages", "visibility": "hidden"},
+
+    {"path": "/arts-shows/membership", "name": "Arts Membership", "template": "external-or-redirect-page", "cmsCollection": "landingPages"},
+    {"path": "/arts-shows/free-shows", "name": "Free Community Shows", "template": "landing-page-with-event-listing", "cmsCollection": "landingPages"},
+
+    {"path": "/story-hub", "name": "Story Hub", "template": "story-hub", "cmsCollection": "stories"},
+    {"path": "/story-hub/topic/[topic]", "name": "Stories by Topic", "template": "story-hub-topic", "cmsCollection": "stories"},
+    {"path": "/story-hub/[slug]", "name": "Story Detail", "template": "story-detail", "cmsCollection": "stories"},
+
+    {"path": "/staff", "name": "The Pavilion’s Staff", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/leadership", "name": "Board of Directors", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/history", "name": "The Pavilion’s Powerful History", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/press", "name": "Press Inquiries", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/work-at-cwmp", "name": "Work at The Pavilion", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/rent", "name": "Rent The Pavilion", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/volunteer", "name": "Volunteer Landing Page", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/sponsors", "name": "Sponsors Landing Page", "template": "landing-page", "cmsCollection": "landingPages"},
+    {"path": "/donate", "name": "Donate", "template": "external-link", "cmsCollection": "navigation"},
+    {"path": "/staff-login", "name": "Staff Login", "template": "external-link", "cmsCollection": "navigation"}
+  ],
+  "popovers": [
+    {"id": "contact", "name": "Contact", "template": "popover-cta", "cmsCollection": "forms"},
+    {"id": "get-emails", "name": "Get Emails", "template": "popover-cta", "cmsCollection": "forms"}
+  ]
+}
