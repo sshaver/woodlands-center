@@ -202,6 +202,11 @@ export const events = [
   bagPolicyLink: '/plan-your-visit#bag-policy',
   parkingLink: '/plan-your-visit#parking',
   lawnChairLink: '/plan-your-visit#lawn-chairs',
+  hotelLink: 'CONFIGURE_HOTEL_PARTNER_URL_IN_CMS',
+  parkingPurchaseLink: 'CONFIGURE_PARKING_PURCHASE_URL_IN_CMS',
+  lawnChairPurchaseLink: 'CONFIGURE_LAWN_CHAIR_RENTAL_URL_IN_CMS',
+  textUpdatesCode: 'TEXT CWMP TO 888777',
+  textUpdatesBody: 'Get weather, traffic, and show-time updates sent to your phone before and during the event.',
   showSchedule: [
     { time: event.gateOpenTime, label: 'Gates open' },
     { time: event.eventStartTime, label: 'Show begins' }

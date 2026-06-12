@@ -366,6 +366,13 @@ p {
   gap: clamp(2.25rem, 5vw, 4rem);
 }
 
+.event-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.45fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
 .hero-copy,
 .detail-copy,
 .landing-hero-copy,
@@ -399,6 +406,10 @@ p {
   max-width: min(100%, 980px);
 }
 
+.event-hero-grid .detail-copy {
+  max-width: min(100%, 860px);
+}
+
 .landing-hero-copy h1,
 .detail-copy h1,
 .mission-copy h1,
@@ -411,6 +422,57 @@ p {
 .mission-copy > p:not(.eyebrow),
 .visit-copy > p:not(.eyebrow) {
   max-width: min(100%, 980px);
+}
+
+.event-action-icons {
+  display: grid;
+  gap: 0.85rem;
+  align-self: center;
+}
+
+.event-action-icons a {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  grid-template-areas:
+    "icon title"
+    "icon meta";
+  gap: 0.1rem 0.85rem;
+  align-items: center;
+  min-height: 5rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(64, 189, 244, 0.44);
+  border-radius: var(--radius-card-sm);
+  color: white;
+  text-decoration: none;
+  background: rgba(4, 21, 36, 0.74);
+  box-shadow: var(--shadow-blue-glow-soft);
+}
+
+.event-action-icons a > span {
+  grid-area: icon;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: var(--color-blue-400);
+  background: rgba(64, 189, 244, 0.14);
+  font-size: 1.35rem;
+}
+
+.event-action-icons strong {
+  grid-area: title;
+  font-size: 1rem;
+}
+
+.event-action-icons small {
+  grid-area: meta;
+  color: var(--color-muted);
+  font-weight: 800;
+}
+
+.action-label-short {
+  display: none;
 }
 
 .home-show-rail {
@@ -611,6 +673,10 @@ p {
 .story-card div,
 .html-card,
 .policy-card,
+.event-side-card,
+.text-code-card,
+.schedule-card,
+.know-before-grid article,
 .tab-panel,
 .answer-card,
 .policy-section {
@@ -619,6 +685,10 @@ p {
 
 .html-card,
 .policy-card,
+.event-side-card,
+.text-code-card,
+.schedule-card,
+.know-before-grid article,
 .tab-panel,
 .answer-card,
 .policy-section {
@@ -634,6 +704,7 @@ p {
 .tab-panel .btn,
 .html-card .btn,
 .policy-card .btn,
+.event-side-card .btn,
 .answer-card .btn,
 .policy-section .btn {
   margin-top: 0.85rem;
@@ -687,6 +758,10 @@ p {
   align-items: center;
 }
 
+.detail-grid {
+  align-items: start;
+}
+
 .feature-grid {
   grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1fr);
 }
@@ -695,6 +770,10 @@ p {
 .video-poster,
 .html-card,
 .policy-card,
+.event-side-card,
+.text-code-card,
+.schedule-card,
+.know-before-grid article,
 .answer-card,
 .story-feature {
   border: 1px solid rgba(64, 189, 244, 0.44);
@@ -702,6 +781,111 @@ p {
   box-shadow: var(--shadow-blue-glow);
   overflow: hidden;
   background: rgba(4, 21, 36, 0.72);
+}
+
+.event-side-card {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  overflow: visible;
+}
+
+.text-code-card,
+.schedule-card {
+  overflow: visible;
+}
+
+.text-code-card h2 {
+  font-size: clamp(1.5rem, 3vw, 2.35rem);
+  margin-bottom: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.schedule-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+}
+
+.schedule-list div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(64, 189, 244, 0.24);
+}
+
+.schedule-list div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.schedule-list dt {
+  color: var(--color-blue-400);
+  font-family: var(--font-ui);
+  font-weight: 900;
+}
+
+.schedule-list dd {
+  margin: 0;
+  color: var(--color-text);
+  font-weight: 900;
+}
+
+.rich-text {
+  display: grid;
+  gap: 1rem;
+  max-width: 76ch;
+}
+
+.rich-text h2 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.know-before-band {
+  padding-top: 0;
+}
+
+.know-before-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.know-before-grid article {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 100%;
+}
+
+.know-before-grid span {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: var(--color-blue-400);
+  background: rgba(64, 189, 244, 0.14);
+  font-size: 1.25rem;
+}
+
+.know-before-grid h3 {
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+}
+
+.know-before-grid p {
+  color: var(--color-muted);
+}
+
+.know-before-grid a {
+  margin-top: auto;
+  color: var(--color-blue-400);
+  font-weight: 900;
 }
 
 .video-block {
@@ -1195,7 +1379,15 @@ p {
     padding-bottom: 4rem;
   }
 
+  .detail-hero {
+    min-height: auto;
+    align-items: center;
+    padding-top: 7rem;
+    padding-bottom: 3rem;
+  }
+
   .hero-grid,
+  .event-hero-grid,
   .feature-grid,
   .landing-grid,
   .detail-grid,
@@ -1216,9 +1408,24 @@ p {
 
   .link-grid,
   .answer-grid,
+  .know-before-grid,
   .story-grid,
   .stat-strip {
     grid-template-columns: 1fr;
+  }
+
+  .event-action-icons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .event-action-icons a {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "icon"
+      "title"
+      "meta";
+    justify-items: center;
+    text-align: center;
   }
 
   .mission-subnav-panel {
@@ -1283,6 +1490,50 @@ p {
 
   .event-card {
     flex-basis: 84%;
+  }
+
+  .event-action-icons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .event-action-icons a {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "icon"
+      "title";
+    justify-items: center;
+    min-height: 3.8rem;
+    padding: 0.5rem 0.4rem;
+    text-align: center;
+  }
+
+  .event-action-icons a > span {
+    width: 2.1rem;
+    height: 2.1rem;
+    font-size: 1.1rem;
+  }
+
+  .event-action-icons strong {
+    font-size: 0.78rem;
+    line-height: 1.05;
+  }
+
+  .action-label-full {
+    display: none;
+  }
+
+  .action-label-short {
+    display: inline;
+  }
+
+  .event-action-icons small {
+    display: none;
+  }
+
+  .schedule-list div {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
   }
 
   .home-show-rail {

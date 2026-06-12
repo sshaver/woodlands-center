@@ -474,32 +474,79 @@ const eventDetailPage = (event) =>
     body: `
       <article>
         <section class="detail-hero" style="--hero-image:url('${attr(event.headerImage)}')">
-          <div class="container detail-copy">
-            <p class="eyebrow">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</p>
-            <h1>${esc(event.title)}</h1>
-            <p>${esc(event.subheader || '')}</p>
-            <div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true })}</div>
+          <div class="container event-hero-grid">
+            <div class="detail-copy">
+              <p class="eyebrow">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</p>
+              <h1>${esc(event.title)}</h1>
+              <p>${esc(event.subheader || '')}</p>
+              <div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true })}</div>
+            </div>
+            <nav class="event-action-icons" aria-label="Event add-ons">
+              <a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer">
+                <span aria-hidden="true">▤</span>
+                <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short">Chairs</span></strong>
+                <small>Reserve seating</small>
+              </a>
+              <a href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer">
+                <span aria-hidden="true">⌖</span>
+                <strong><span class="action-label-full">Buy Parking</span><span class="action-label-short">Parking</span></strong>
+                <small>Buy or view lots</small>
+              </a>
+              <a href="${attr(event.hotelLink || '#')}" target="_blank" rel="noopener noreferrer">
+                <span aria-hidden="true">⌂</span>
+                <strong><span class="action-label-full">Book Hotel</span><span class="action-label-short">Hotel</span></strong>
+                <small>Book nearby</small>
+              </a>
+            </nav>
           </div>
         </section>
         <section class="section">
           <div class="container detail-grid">
             <div>
-              ${sectionHeading('Show Schedule', 'Your Night at a Glance', 'Event content is pulled from the Events collection.')}
-              <dl class="schedule-list">
-                ${event.showSchedule.map((row) => `<div><dt>${esc(row.time)}</dt><dd>${esc(row.label)}</dd></div>`).join('')}
-              </dl>
               <div class="rich-text">
                 <h2>Event Description</h2>
                 <p>${esc(event.eventDescription)}</p>
                 ${event.policyOverrides ? `<p><strong>Event note:</strong> ${esc(event.policyOverrides)}</p>` : ''}
               </div>
             </div>
-            <aside class="policy-card">
-              <h2>Know Before You Go</h2>
-              <a href="${attr(event.bagPolicyLink)}">Bag Policy</a>
-              <a href="${attr(event.parkingLink)}">Parking</a>
-              <a href="${attr(event.lawnChairLink)}">Lawn Chairs</a>
+            <aside class="event-side-card">
+              <div class="text-code-card">
+                <p class="eyebrow">Text Updates</p>
+                <h2>${esc(event.textUpdatesCode || 'Text CWMP for updates')}</h2>
+                <p>${esc(event.textUpdatesBody || 'Receive important event updates by text.')}</p>
+              </div>
+              <div class="schedule-card">
+                <p class="eyebrow">Show Schedule</p>
+                <dl class="schedule-list">
+                  ${event.showSchedule.map((row) => `<div><dt>${esc(row.time)}</dt><dd>${esc(row.label)}</dd></div>`).join('')}
+                </dl>
+              </div>
             </aside>
+          </div>
+        </section>
+        <section class="section know-before-band">
+          <div class="container">
+            ${sectionHeading('Know Before You Go', 'Key arrival and entry information', 'The most important Plan Your Visit details for this event.')}
+            <div class="know-before-grid">
+              <article>
+                <span aria-hidden="true">▣</span>
+                <h3>Bag Policy and Rules</h3>
+                <p>Clear bags 12" x 12" or smaller are permitted. Small clutches are allowed, and all belongings are subject to search. Outside chairs, large umbrellas, weapons, coolers, and outside liquids are not allowed.</p>
+                <a href="${attr(event.bagPolicyLink)}">Review bag policy</a>
+              </article>
+              <article>
+                <span aria-hidden="true">⌖</span>
+                <h3>Parking Directions</h3>
+                <p>Check your event parking before you arrive. Lots, shuttle service, and traffic flow can vary by show, so give yourself extra time around gate opening.</p>
+                <a href="${attr(event.parkingLink)}">See parking details</a>
+              </article>
+              <article>
+                <span aria-hidden="true">🎟</span>
+                <h3>Ticket Information</h3>
+                <p>Have mobile tickets ready before you reach the gate. Event timing, entry policies, and artist-specific notes may change, so review this page again before leaving.</p>
+                <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer">Open tickets</a>
+              </article>
+            </div>
           </div>
         </section>
         ${eventListBlock('More Events')}
