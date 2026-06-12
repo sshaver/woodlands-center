@@ -231,8 +231,8 @@ const missionSubnav = () => {
   `;
 };
 
-const featureBlock = () => `
-  <section class="section feature-band">
+const featureBlock = (tone = 'section-wash-blue') => `
+  <section class="section feature-band ${attr(tone)}">
     <div class="container feature-grid">
       <div class="glow-media">${image({ src: content.blocks.feature.image, alt: 'Fans entering The Pavilion plaza.' })}</div>
       <div>
@@ -242,8 +242,8 @@ const featureBlock = () => `
   </section>
 `;
 
-const videoBlock = (video = content.blocks.video) => `
-  <section class="section">
+const videoBlock = (video = content.blocks.video, tone = 'section-wash-deep') => `
+  <section class="section ${attr(tone)}">
     <div class="container video-block">
       <div class="video-poster">
         <img src="${attr(video.poster || video.image)}" alt="${attr(video.title)}" loading="lazy" decoding="async">
@@ -254,16 +254,16 @@ const videoBlock = (video = content.blocks.video) => `
   </section>
 `;
 
-const statsBlock = (stats) => `
-  <section class="section stats-section" aria-label="Data highlights">
+const statsBlock = (stats, tone = 'section-wash-blue') => `
+  <section class="section stats-section ${attr(tone)}" aria-label="Data highlights">
     <div class="container stat-strip">
       ${stats.map((stat) => `<div><strong>${esc(stat.value)}</strong><span>${esc(stat.label)}</span></div>`).join('')}
     </div>
   </section>
 `;
 
-const seasonSeatsBlock = () => `
-  <section class="section season-block">
+const seasonSeatsBlock = (tone = 'section-wash-lift') => `
+  <section class="section season-block ${attr(tone)}">
     <div class="container landing-grid">
       <div class="glow-media">${image({ src: content.seasonSeats.image, alt: 'Pavilion audience enjoying a concert.' })}</div>
       <div>
@@ -295,8 +295,8 @@ const storyCards = (stories = content.stories.slice(0, 3)) => `
   </div>
 `;
 
-const storyBlock = () => `
-  <section class="section">
+const storyBlock = (tone = 'section-wash-deep') => `
+  <section class="section ${attr(tone)}">
     <div class="container">
       ${sectionHeading('Story Hub', 'Arts access has stories behind it', 'Stories can be featured by slot, topic, publish date, or page relationship.', cta({ label: 'Visit Story Hub', href: '/story-hub' }, 'primary'))}
       ${storyCards()}
@@ -458,10 +458,10 @@ const homePage = (routePath = '/') => {
           </div>
         </div>
       </section>
-      ${featureBlock()}
-      ${videoBlock()}
-      ${seasonSeatsBlock()}
-      ${storyBlock()}
+      ${featureBlock('section-wash-blue')}
+      ${videoBlock(content.blocks.video, 'section-wash-deep')}
+      ${seasonSeatsBlock('section-wash-lift')}
+      ${storyBlock('section-wash-blue')}
     `
   });
 };
@@ -620,16 +620,16 @@ const missionPage = () =>
           ${cta(content.mission.donateCTA)}
         </div>
       </section>
-      ${statsBlock(content.mission.impactStats)}
-      ${videoBlock(content.mission.video)}
-      <section class="section">
+      ${statsBlock(content.mission.impactStats, 'section-wash-blue')}
+      ${videoBlock(content.mission.video, 'section-wash-deep')}
+      <section class="section section-wash-lift">
         <div class="container">
           ${sectionHeading('Mission pathways', 'Support, funding, outreach, shows, and stories', 'The mission page links the full outline hierarchy into reusable CMS sections.')}
           ${tabs(content.mission.tabs, 'mission-tabs')}
           ${missionSubnav()}
         </div>
       </section>
-      ${storyBlock()}
+      ${storyBlock('section-wash-blue')}
     `
   });
 

@@ -220,7 +220,49 @@ textarea {
 }
 
 .section {
+  position: relative;
   padding: clamp(4.5rem, 8vw, 7.5rem) 0;
+}
+
+.section > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.section-wash-blue,
+.section-wash-deep,
+.section-wash-lift {
+  overflow: hidden;
+}
+
+.section-wash-blue {
+  background:
+    linear-gradient(180deg, rgba(5, 9, 13, 0), rgba(7, 40, 64, 0.68) 22%, rgba(7, 40, 64, 0.68) 78%, rgba(5, 9, 13, 0)),
+    radial-gradient(circle at 18% 35%, rgba(64, 189, 244, 0.16), transparent 30rem);
+}
+
+.section-wash-deep {
+  background:
+    linear-gradient(180deg, rgba(5, 9, 13, 0), rgba(2, 18, 32, 0.9) 18%, rgba(2, 18, 32, 0.9) 82%, rgba(5, 9, 13, 0)),
+    radial-gradient(circle at 84% 18%, rgba(9, 90, 135, 0.22), transparent 28rem);
+}
+
+.section-wash-lift {
+  background:
+    linear-gradient(180deg, rgba(5, 9, 13, 0), rgba(8, 52, 78, 0.58) 20%, rgba(4, 21, 36, 0.74) 82%, rgba(5, 9, 13, 0)),
+    radial-gradient(circle at 68% 55%, rgba(64, 189, 244, 0.2), transparent 34rem);
+}
+
+.section-wash-blue::before,
+.section-wash-deep::before,
+.section-wash-lift::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(5, 9, 13, 0.5), transparent 18%, transparent 82%, rgba(5, 9, 13, 0.42)),
+    linear-gradient(180deg, rgba(5, 9, 13, 0.86), transparent 16%, transparent 84%, rgba(5, 9, 13, 0.86));
 }
 
 .section-row {
