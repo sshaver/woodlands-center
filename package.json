@@ -6,7 +6,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
-    "lint": "node --check scripts/build.mjs && node --check scripts/validate.mjs && node --check scripts/prepare-sites-artifact.mjs && node --check src/scripts/site.js && node --check src/content/site-data.mjs",
+    "outline:checklist": "node scripts/generate-outline-checklist.mjs",
+    "lint": "node --check scripts/build.mjs && node --check scripts/validate.mjs && node --check scripts/prepare-sites-artifact.mjs && node --check scripts/generate-outline-checklist.mjs && node --check src/scripts/site.js && node --check src/content/site-data.mjs",
     "test": "npm run lint && npm run build && npm run validate",
     "sites:artifact": "node scripts/prepare-sites-artifact.mjs",
     "serve": "node scripts/serve-prototype.mjs"

@@ -13,6 +13,7 @@ import {
   seasonSeats,
   settings,
   stories,
+  storyPillars,
   storyTopics
 } from './site-data.mjs';
 
@@ -38,6 +39,7 @@ export const content = {
   outreachPrograms,
   landingPages,
   stories,
+  storyPillars,
   storyTopics,
   externalRoutes,
   getEvent: (slug) => eventMap.get(slug),

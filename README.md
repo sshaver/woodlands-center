@@ -9,6 +9,7 @@ npm run build
 npm run validate
 npm run test
 npm run serve
+npm run outline:checklist
 ```
 
 The local preview server defaults to [http://127.0.0.1:4321/](http://127.0.0.1:4321/).
@@ -61,3 +62,7 @@ External destinations are intentionally not hard-coded with secrets or final ven
 - form fallbacks/config placeholders;
 - `.env.example` variables;
 - generated route files when `dist/` exists.
+
+## Outline Completeness
+
+Run `npm run outline:checklist` to regenerate `checklists/OUTLINE_CONTENT_COMPLETENESS.md` from `cwmp_codex_build_package/docs/SITE_OUTLINE_EXACT.md`. The checklist marks every outline bullet as represented, drafted, or deferred based on the current routes, fixtures, templates, and integration placeholders.

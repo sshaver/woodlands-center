@@ -13,7 +13,7 @@ document.querySelectorAll('[data-tabs]').forEach((tabs) => {
       const active = buttonIndex === index;
       button.setAttribute('aria-selected', String(active));
       button.tabIndex = active ? 0 : -1;
-      panels[buttonIndex].hidden = !active;
+      if (panels[buttonIndex]) panels[buttonIndex].hidden = !active;
     });
     tabs.dispatchEvent(new CustomEvent('tabs:change', { detail: { index } }));
     buttons[index].focus();
@@ -37,6 +37,7 @@ document.querySelector('[data-mission-subnav]')?.closest('.container')?.querySel
 
 const missionPreview = document.querySelector('[data-mission-preview-card]');
 if (missionPreview) {
+  const supportsHoverPreview = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const image = missionPreview.querySelector('[data-mission-preview-image]');
   const title = missionPreview.querySelector('[data-mission-preview-title]');
   const copy = missionPreview.querySelector('[data-mission-preview-copy]');
@@ -66,13 +67,15 @@ if (missionPreview) {
     missionPreview.classList.remove('is-active');
     missionPreview.hidden = true;
   };
-  document.querySelectorAll('[data-preview-title]').forEach((link) => {
-    link.addEventListener('mouseenter', (event) => showPreview(link, event));
-    link.addEventListener('mousemove', (event) => positionPreview(event.clientX, event.clientY));
-    link.addEventListener('mouseleave', hidePreview);
-    link.addEventListener('focus', () => showPreview(link));
-    link.addEventListener('blur', hidePreview);
-  });
+  if (supportsHoverPreview) {
+    document.querySelectorAll('[data-preview-title]').forEach((link) => {
+      link.addEventListener('mouseenter', (event) => showPreview(link, event));
+      link.addEventListener('mousemove', (event) => positionPreview(event.clientX, event.clientY));
+      link.addEventListener('mouseleave', hidePreview);
+      link.addEventListener('focus', () => showPreview(link));
+      link.addEventListener('blur', hidePreview);
+    });
+  }
 }
 
 document.querySelectorAll('[data-event-view]').forEach((button) => {
@@ -153,7 +156,7 @@ document.querySelectorAll('[data-placeholder-form]').forEach((form) => {
     event.preventDefault();
     const message = document.createElement('p');
     message.className = 'form-success';
-    message.textContent = 'Thanks. This placeholder will submit through the configured CMS/HubSpot destination.';
+    message.textContent = 'Thanks. A Pavilion team member will follow up with the next best step.';
     form.replaceWith(message);
   });
 });
@@ -163,8 +166,8 @@ topicTabs?.addEventListener('click', (event) => {
   const button = event.target.closest('[data-topic-target]');
   if (!button) return;
   topicTabs.querySelectorAll('button').forEach((tab) => tab.classList.toggle('is-active', tab === button));
-  document.querySelectorAll('[data-topic-card]').forEach((card) => {
-    card.hidden = card.dataset.topicCard !== button.dataset.topicTarget;
+  document.querySelectorAll('[data-topic-panel]').forEach((panel) => {
+    panel.hidden = panel.dataset.topicPanel !== button.dataset.topicTarget;
   });
 });
 

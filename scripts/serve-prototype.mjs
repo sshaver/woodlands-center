@@ -15,6 +15,7 @@ const mime = {
   '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
   '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
   '.pdf': 'application/pdf'
 };
 

@@ -15,6 +15,25 @@ const esc = (value = '') =>
 
 const attr = esc;
 
+const svgIconCache = new Map();
+
+const svgIcon = (name, options = {}) => {
+  const { className = 'site-icon', label = '', style = 'regular' } = options;
+  if (!name) return '';
+  const iconKey = `${style}/${name}`;
+  if (!svgIconCache.has(iconKey)) {
+    const iconPath = path.resolve('cwmp_codex_build_package/assets/icons/svgs', style, `${name}.svg`);
+    if (!fs.existsSync(iconPath)) {
+      throw new Error(`Missing SVG icon: ${iconKey}`);
+    }
+    svgIconCache.set(iconKey, fs.readFileSync(iconPath, 'utf8').replace(/<!--[\s\S]*?-->/g, '').trim());
+  }
+  const labelAttrs = label ? ` role="img" aria-label="${attr(label)}"` : ' aria-hidden="true"';
+  return svgIconCache
+    .get(iconKey)
+    .replace('<svg ', `<svg class="${attr(className)}" focusable="false"${labelAttrs} `);
+};
+
 const fmtDate = (date) =>
   new Intl.DateTimeFormat('en-US', {
     weekday: 'short',
@@ -23,6 +42,8 @@ const fmtDate = (date) =>
     year: 'numeric',
     timeZone: 'UTC'
   }).format(new Date(date));
+
+const byEventDate = (a, b) => new Date(a.eventDate) - new Date(b.eventDate);
 
 const routeFile = (routePath) => {
   if (routePath === '/') return path.join(dist, 'index.html');
@@ -56,7 +77,7 @@ const cta = (item = {}, style = item.style || 'primary') => {
   const href = item.href || (item.type === 'popover' ? `#${item.popoverId}` : '#');
   const popoverAttrs = item.popoverId ? ` data-popover-open="${attr(item.popoverId)}"` : '';
   const externalAttrs = item.openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
-  return `<a class="btn btn-${style}" href="${attr(href)}"${popoverAttrs}${externalAttrs}>${esc(item.label)}<span aria-hidden="true">→</span></a>`;
+  return `<a class="btn btn-${style}" href="${attr(href)}"${popoverAttrs}${externalAttrs}>${esc(item.label)}${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>`;
 };
 
 const image = (media, className = '', loading = 'lazy') =>
@@ -71,6 +92,17 @@ const sectionHeading = (eyebrow, title, subtitle, extra = '') => `
   </div>
 `;
 
+const templateEyebrow = (page) => {
+  const labels = {
+    supportArts: 'Arts Access',
+    blankFlow: 'Resources',
+    redirect: 'Arts Access',
+    freeShows: 'Free Performing Arts',
+    footerPage: 'The Pavilion'
+  };
+  return labels[page.templatePreset] || page.templatePreset || 'Explore';
+};
+
 const tabs = (items, idPrefix) => {
   const tabItems = items || [];
   if (!tabItems.length) return '';
@@ -84,8 +116,10 @@ const tabs = (items, idPrefix) => {
     .map(
       (tab, index) => `
         <div class="tab-panel" id="${idPrefix}-panel-${index}" role="tabpanel" aria-labelledby="${idPrefix}-tab-${index}" ${index === 0 ? '' : 'hidden'}>
+          ${tab.image ? `<img class="tab-panel-image" src="${attr(tab.image)}" alt="${attr(tab.label)}" loading="lazy" decoding="async">` : ''}
           <h3>${esc(tab.label)}</h3>
-          <p>${esc(tab.body || tab.summary || '')}</p>
+          ${tab.body || tab.summary ? `<p>${esc(tab.body || tab.summary || '')}</p>` : ''}
+          ${tab.items?.length ? `<ul>${tab.items.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>` : ''}
           ${tab.cta ? cta(tab.cta, 'secondary') : ''}
         </div>
       `
@@ -99,8 +133,29 @@ const tabs = (items, idPrefix) => {
   `;
 };
 
+const missionPathwayTabs = () => `
+  <div class="tabs mission-pathway-tabs" data-tabs>
+    <div class="tab-list" role="tablist" aria-label="Mission pathways">
+      ${content.mission.tabs
+        .map(
+          (tab, index) =>
+            `<button class="tab-pill" id="mission-pathways-tab-${index}" type="button" role="tab" aria-selected="${index === 0}" aria-controls="mission-pathways-panel-${index}" tabindex="${index === 0 ? '0' : '-1'}">${esc(tab.label)}</button>`
+        )
+        .join('')}
+    </div>
+    <div class="mission-pathway-descriptions">
+      ${content.mission.tabs
+        .map(
+          (tab, index) =>
+            `<div class="mission-pathway-description" id="mission-pathways-description-${index}" role="tabpanel" aria-labelledby="mission-pathways-tab-${index}" ${index === 0 ? '' : 'hidden'}><p>${esc(tab.body)}</p></div>`
+        )
+        .join('')}
+    </div>
+  </div>
+`;
+
 const eventCard = (event, featured = false) => `
-  <article class="event-card ${featured ? 'is-featured' : ''}">
+  <article class="event-card event-type-${attr(event.eventType)} ${featured ? 'is-featured' : ''}">
     <a href="/events/${attr(event.slug)}/" class="event-card-image" aria-label="${attr(event.title)} event details">
       <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="lazy" decoding="async">
     </a>
@@ -121,7 +176,7 @@ const eventRows = (events) => `
     ${events
       .map(
         (event) => `
-          <article class="event-row">
+          <article class="event-row event-type-${attr(event.eventType)}">
             <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))}</time>
             <div>
               <h3><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h3>
@@ -136,12 +191,14 @@ const eventRows = (events) => `
 `;
 
 const eventListBlock = (heading = 'Upcoming Events', filterType = null) => {
-  const events = filterType ? content.events.filter((event) => event.eventType === filterType) : content.events;
+  const events = (filterType ? content.events.filter((event) => event.eventType === filterType) : content.events)
+    .slice()
+    .sort(byEventDate);
   return `
     <section class="section events-section" id="events">
       <div class="container">
         <div class="section-row">
-          ${sectionHeading('Home / Events', heading, 'Choose a card-forward concert view or a quick list view.')}
+          ${sectionHeading('Home / Events', heading, 'Browse upcoming concerts, performing arts nights and community events.')}
           <div class="view-toggle" role="group" aria-label="Event display">
             <button class="is-active" type="button" data-event-view="cards">Cards</button>
             <button type="button" data-event-view="list">List</button>
@@ -158,16 +215,6 @@ const eventListBlock = (heading = 'Upcoming Events', filterType = null) => {
 
 const missionSubnav = () => {
   const supportPage = (slug) => content.getLandingPage(slug) || {};
-  const supportLinks = [
-    { label: 'Performing Arts Membership', href: '/mission/performing-arts-membership', page: supportPage('mission/performing-arts-membership') },
-    { label: 'Volunteer Membership', href: '/mission/volunteer-membership', page: supportPage('mission/volunteer-membership') },
-    { label: 'Corporate Partnership', href: '/mission/corporate-partnership', page: supportPage('mission/corporate-partnership') }
-  ].map((link) => ({
-    label: link.label,
-    href: link.href,
-    image: link.page.heroImage || content.mission.heroImage,
-    copy: link.page.subtitle || 'Support arts access through this mission pathway.'
-  }));
   const fundingLinks = content.grantPrograms.map((program) => ({
     label: program.title,
     href: `/mission/funding/${program.slug}`,
@@ -180,19 +227,26 @@ const missionSubnav = () => {
     image: program.image,
     copy: program.subtitle
   }));
-  const showLinks = content.events
-    .filter((event) => event.eventType === 'freeCommunity' || event.eventType === 'performingArts')
-    .map((event) => ({
-      label: event.title,
-      href: `/events/${event.slug}/`,
-      image: event.cardImage || event.headerImage,
-      copy: `${event.subheader || 'Performing Arts show'} · ${fmtDate(event.eventDate)}`
-    }));
+  const showLinks = [
+    {
+      label: 'Performing Arts Membership',
+      href: '/mission/performing-arts-membership',
+      image: supportPage('mission/performing-arts-membership').heroImage || content.mission.heroImage,
+      copy: 'Support free performing arts and enjoy a closer connection to the season.'
+    },
+    ...content.events
+      .filter((event) => event.eventType === 'freeCommunity' || event.eventType === 'performingArts')
+      .map((event) => ({
+        label: event.title,
+        href: `/events/${event.slug}/`,
+        image: event.cardImage || event.headerImage,
+        copy: `${event.subheader || 'Performing Arts show'} · ${fmtDate(event.eventDate)}`
+      }))
+  ];
   const previewLink = (link) => `
     <a href="${attr(link.href)}" class="mission-preview-link" data-preview-title="${attr(link.label)}" data-preview-copy="${attr(link.copy)}" data-preview-image="${attr(link.image)}">${esc(link.label)}</a>
   `;
   const groups = [
-    supportLinks,
     fundingLinks,
     outreachLinks,
     showLinks.length
@@ -211,7 +265,7 @@ const missionSubnav = () => {
       ${groups
         .map(
           (links, index) => `
-            <div class="mission-subnav-panel" data-mission-subnav-panel="${index}" ${index === 0 ? '' : 'hidden'}>
+            <div class="mission-subnav-panel" id="mission-pathways-panel-${index}" data-mission-subnav-panel="${index}" ${index === 0 ? '' : 'hidden'}>
               <div class="link-grid mission-link-grid">
                 ${links.map(previewLink).join('')}
               </div>
@@ -231,9 +285,9 @@ const missionSubnav = () => {
   `;
 };
 
-const featureBlock = (tone = 'section-wash-blue') => `
+const featureBlock = (tone = 'section-wash-blue', imageSide = 'left') => `
   <section class="section feature-band ${attr(tone)}">
-    <div class="container feature-grid">
+    <div class="container feature-grid media-block media-${attr(imageSide)}">
       <div class="glow-media">${image({ src: content.blocks.feature.image, alt: 'Fans entering The Pavilion plaza.' })}</div>
       <div>
         ${sectionHeading('Fan essentials', content.blocks.feature.title, content.blocks.feature.subtitle, cta(content.blocks.feature.cta, 'primary'))}
@@ -242,34 +296,36 @@ const featureBlock = (tone = 'section-wash-blue') => `
   </section>
 `;
 
-const videoBlock = (video = content.blocks.video, tone = 'section-wash-deep') => `
+const videoBlock = (video = content.blocks.video, tone = 'section-wash-deep', imageSide = 'left') => `
   <section class="section ${attr(tone)}">
-    <div class="container video-block">
+    <div class="container video-block media-block media-${attr(imageSide)}">
       <div class="video-poster">
         <img src="${attr(video.poster || video.image)}" alt="${attr(video.title)}" loading="lazy" decoding="async">
-        <a class="play-button" href="${attr(video.href || '/mission')}" aria-label="Play ${attr(video.title)}">▶</a>
+        <a class="play-button" href="${attr(video.href || '/mission')}" aria-label="Play ${attr(video.title)}">${svgIcon('play', { className: 'play-icon icon-white' })}</a>
       </div>
-      ${sectionHeading('Video', video.title, video.subtitle || 'A reusable video feature block with CMS-managed poster, caption, and embed URL.', cta(video.cta || { label: 'Explore', href: '/mission' }, 'secondary'))}
+      ${sectionHeading('Video', video.title, video.subtitle || 'See how Pavilion programs turn live arts into lasting community moments.', cta(video.cta || { label: 'Explore', href: '/mission' }, 'secondary'))}
     </div>
   </section>
 `;
 
-const statsBlock = (stats, tone = 'section-wash-blue') => `
+const statsBlock = (stats, tone = 'section-wash-blue', heading = null) => `
   <section class="section stats-section ${attr(tone)}" aria-label="Data highlights">
+    <div class="container">
+      ${heading ? sectionHeading(heading.eyebrow, heading.title, heading.subtitle) : ''}
+    </div>
     <div class="container stat-strip">
       ${stats.map((stat) => `<div><strong>${esc(stat.value)}</strong><span>${esc(stat.label)}</span></div>`).join('')}
     </div>
   </section>
 `;
 
-const seasonSeatsBlock = (tone = 'section-wash-lift') => `
+const seasonSeatsBlock = (tone = 'section-wash-lift', imageSide = 'top') => `
   <section class="section season-block ${attr(tone)}">
-    <div class="container landing-grid">
+    <div class="container landing-grid media-block media-${attr(imageSide)}">
       <div class="glow-media">${image({ src: content.seasonSeats.image, alt: 'Pavilion audience enjoying a concert.' })}</div>
       <div>
         ${sectionHeading('Season Seats', content.seasonSeats.title, content.seasonSeats.subtitle)}
-        <div class="cta-row season-cta-row">${cta(content.seasonSeats.primaryCTA)}</div>
-        ${tabs(content.seasonSeats.tabs, 'season-seats')}
+        <div class="cta-row season-cta-row">${cta(content.seasonSeats.learnMoreCTA || { label: 'Learn More', href: '/season-seats' })}</div>
       </div>
     </div>
   </section>
@@ -296,15 +352,15 @@ const storyCards = (stories = content.stories.slice(0, 3)) => `
 `;
 
 const storyBlock = (tone = 'section-wash-deep') => `
-  <section class="section ${attr(tone)}">
+  <section class="section story-prefooter ${attr(tone)}">
     <div class="container">
-      ${sectionHeading('Story Hub', 'Arts access has stories behind it', 'Stories can be featured by slot, topic, publish date, or page relationship.', cta({ label: 'Visit Story Hub', href: '/story-hub' }, 'primary'))}
+      ${sectionHeading('Story Hub', 'Arts access has stories behind it', 'Meet the students, families, artists, educators, volunteers and supporters who bring The Pavilion mission to life.', cta({ label: 'Visit Story Hub', href: '/story-hub' }, 'primary'))}
       ${storyCards()}
     </div>
   </section>
 `;
 
-const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '' }) => `<!doctype html>
+const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '', storyFooter = true }) => `<!doctype html>
 <html lang="en" data-theme="${attr(theme)}">
 <head>
   <meta charset="utf-8">
@@ -321,6 +377,7 @@ const shell = ({ title, description, path: routePath, theme = 'dark', body, extr
   <main id="main">
     ${body}
   </main>
+  ${storyFooter ? storyBlock(theme === 'light' ? 'story-prefooter-light' : 'section-wash-blue') : ''}
   ${footer(theme)}
   ${mobileDock(routePath)}
   ${popoverMarkup()}
@@ -334,7 +391,7 @@ const alertBanner = () => `
       <strong>${esc(content.alert.title)}</strong>
       <span>${esc(content.alert.message)}</span>
       ${content.alert.cta ? `<a href="${attr(content.alert.cta.href)}">${esc(content.alert.cta.label)}</a>` : ''}
-      ${content.alert.dismissible ? '<button type="button" data-alert-close aria-label="Dismiss alert">×</button>' : ''}
+      ${content.alert.dismissible ? `<button type="button" data-alert-close aria-label="Dismiss alert">${svgIcon('xmark', { className: 'control-icon icon-white' })}</button>` : ''}
     </div>
   </aside>
 `;
@@ -347,17 +404,17 @@ const header = (routePath, theme) => `
       </a>
       <nav class="desktop-nav" aria-label="Primary">
         ${content.navigation.desktopPrimary
-          .map((item) => `<a class="${routePath.startsWith(item.href) ? 'is-active' : ''}" href="${attr(item.href)}"><span>${esc(item.icon)}</span>${esc(item.label)}</a>`)
+          .map((item) => `<a class="${routePath.startsWith(item.href) ? 'is-active' : ''}" href="${attr(item.href)}"><span class="nav-icon">${svgIcon(item.icon, { className: 'site-icon icon-blue' })}</span>${esc(item.label)}</a>`)
           .join('')}
       </nav>
       <div class="utility-nav">
         ${content.navigation.utility.map((item) => `<a href="${attr(item.href)}" data-popover-open="${attr(item.popoverId)}">${esc(item.label)}</a>`).join('')}
-        <button type="button" class="menu-button" data-menu-open aria-label="Open menu">☰</button>
+        <button type="button" class="menu-button" data-menu-open aria-label="Open menu">${svgIcon('bars', { className: 'control-icon' })}</button>
       </div>
     </div>
     <div class="mobile-menu" data-mobile-menu hidden>
       <div class="mobile-menu-panel" role="dialog" aria-modal="true" aria-label="Site menu">
-        <button type="button" data-menu-close aria-label="Close menu">×</button>
+        <button type="button" data-menu-close aria-label="Close menu">${svgIcon('xmark', { className: 'control-icon icon-white' })}</button>
         <img src="${attr(content.settings.logoWhite)}" alt="" aria-hidden="true">
         <nav aria-label="Mobile menu">
           ${[...content.navigation.desktopPrimary, ...content.navigation.footer.slice(0, 6)]
@@ -375,7 +432,7 @@ const footer = (theme) => `
     <div class="container footer-grid">
       <div>
         <img src="${attr(theme === 'light' ? content.settings.logoBlue : content.settings.logoWhite)}" alt="${attr(content.settings.siteName)}">
-        <p>Real HTML, CMS-shaped content, reusable blocks, configurable CTAs, and local fixture data ready for a future CMS adapter.</p>
+        <p>The Pavilion brings world-class performances, free arts experiences, education programs and community moments to The Woodlands all season long.</p>
       </div>
       <nav aria-label="Footer">
         ${content.navigation.footer.map((item) => `<a href="${attr(item.href)}">${esc(item.label)}</a>`).join('')}
@@ -391,7 +448,7 @@ const footer = (theme) => `
 const mobileDock = (routePath) => `
   <nav class="mobile-dock" aria-label="Mobile dock">
     ${content.navigation.mobileDock
-      .map((item) => `<a class="${routePath.startsWith(item.href) ? 'is-active' : ''}" href="${attr(item.href)}"><span aria-hidden="true">${esc(item.icon)}</span>${esc(item.label)}</a>`)
+      .map((item) => `<a class="${routePath.startsWith(item.href) ? 'is-active' : ''}" href="${attr(item.href)}"><span class="dock-icon">${svgIcon(item.icon, { className: 'site-icon icon-blue' })}</span>${esc(item.label)}</a>`)
       .join('')}
   </nav>
 `;
@@ -403,16 +460,16 @@ const popoverMarkup = () => `
       .map(
         ([id, form]) => `
           <section class="popover" data-popover="${attr(id)}" role="dialog" aria-modal="true" aria-labelledby="${attr(id)}-title" hidden>
-            <button type="button" class="popover-close" data-popover-close aria-label="Close">×</button>
-            <p class="eyebrow">${esc(form.type)} form placeholder</p>
+            <button type="button" class="popover-close" data-popover-close aria-label="Close">${svgIcon('xmark', { className: 'control-icon icon-white' })}</button>
+            <p class="eyebrow">Send a note</p>
             <h2 id="${attr(id)}-title">${esc(form.title)}</h2>
             <p>${esc(form.subtitle)}</p>
             <form class="native-form" data-placeholder-form>
               <label>Email <input type="email" name="email" required placeholder="you@example.com"></label>
               <label>Message <textarea name="message" rows="4" placeholder="How can we help?"></textarea></label>
-              <button class="btn btn-primary" type="submit">Submit placeholder <span aria-hidden="true">→</span></button>
+              <button class="btn btn-primary" type="submit">Submit ${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</button>
             </form>
-            <p class="fine-print">${esc(form.privacyCopy || 'Configure HubSpot IDs in the CMS or .env before launch.')}</p>
+            <p class="fine-print">${esc(form.privacyCopy || 'A Pavilion team member will follow up with the next best step.')}</p>
             <a href="${attr(form.fallbackUrl || 'mailto:info@woodlandscenter.org')}">Fallback contact link</a>
           </section>
         `
@@ -422,6 +479,12 @@ const popoverMarkup = () => `
 `;
 
 const homePage = (routePath = '/') => {
+  const homeMissionBlock = {
+    ...content.blocks.video,
+    title: content.mission.title,
+    subtitle: content.mission.subtitle,
+    cta: { label: 'Explore the mission', href: '/mission' }
+  };
   return shell({
     title: routePath === '/' ? 'Home / Events' : 'Events',
     description: 'Upcoming events at The Cynthia Woods Mitchell Pavilion.',
@@ -432,18 +495,17 @@ const homePage = (routePath = '/') => {
           <div class="hero-copy">
             <p class="eyebrow">Home / Events</p>
             <h1>Shows at The Pavilion</h1>
-            <p>Browse the rail of upcoming concerts, performing arts nights, and community shows.</p>
             <div class="cta-row">
-              ${cta({ label: 'All Events', href: '/events' }, 'primary')}
-              ${cta({ label: 'Plan Your Visit', href: '/plan-your-visit' }, 'secondary')}
+              ${cta({ label: 'Plan Your Visit', href: '/plan-your-visit' }, 'primary')}
             </div>
           </div>
           <div class="home-show-rail" aria-label="Upcoming shows">
             ${content.events
-              .slice(0, 7)
+              .slice()
+              .sort(byEventDate)
               .map(
                 (event, index) => `
-                  <article class="rail-show-card">
+                  <article class="rail-show-card event-type-${attr(event.eventType)}">
                     <a href="/events/${attr(event.slug)}/">
                       <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="${index < 2 ? 'eager' : 'lazy'}" decoding="async">
                       <span>
@@ -458,10 +520,9 @@ const homePage = (routePath = '/') => {
           </div>
         </div>
       </section>
-      ${featureBlock('section-wash-blue')}
-      ${videoBlock(content.blocks.video, 'section-wash-deep')}
-      ${seasonSeatsBlock('section-wash-lift')}
-      ${storyBlock('section-wash-blue')}
+      ${videoBlock(homeMissionBlock, 'section-wash-blue', 'left')}
+      ${seasonSeatsBlock('section-wash-lift', 'top')}
+      ${featureBlock('section-wash-deep', 'left')}
     `
   });
 };
@@ -482,18 +543,22 @@ const eventDetailPage = (event) =>
               <div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true })}</div>
             </div>
             <nav class="event-action-icons" aria-label="Event add-ons">
-              <a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer">
-                <span aria-hidden="true">▤</span>
-                <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short">Chairs</span></strong>
-                <small>Reserve seating</small>
-              </a>
+              ${
+                event.eventType === 'freeCommunity'
+                  ? ''
+                  : `<a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer">
+                      <span class="action-icon">${svgIcon('chair', { className: 'site-icon icon-blue' })}</span>
+                      <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short">Chairs</span></strong>
+                      <small>Reserve seating</small>
+                    </a>`
+              }
               <a href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer">
-                <span aria-hidden="true">⌖</span>
+                <span class="action-icon">${svgIcon('square-parking', { className: 'site-icon icon-blue' })}</span>
                 <strong><span class="action-label-full">Buy Parking</span><span class="action-label-short">Parking</span></strong>
                 <small>Buy or view lots</small>
               </a>
               <a href="${attr(event.hotelLink || '#')}" target="_blank" rel="noopener noreferrer">
-                <span aria-hidden="true">⌂</span>
+                <span class="action-icon">${svgIcon('hotel', { className: 'site-icon icon-blue' })}</span>
                 <strong><span class="action-label-full">Book Hotel</span><span class="action-label-short">Hotel</span></strong>
                 <small>Book nearby</small>
               </a>
@@ -510,16 +575,16 @@ const eventDetailPage = (event) =>
               </div>
             </div>
             <aside class="event-side-card">
-              <div class="text-code-card">
-                <p class="eyebrow">Text Updates</p>
-                <h2>${esc(event.textUpdatesCode || 'Text CWMP for updates')}</h2>
-                <p>${esc(event.textUpdatesBody || 'Receive important event updates by text.')}</p>
-              </div>
               <div class="schedule-card">
                 <p class="eyebrow">Show Schedule</p>
                 <dl class="schedule-list">
                   ${event.showSchedule.map((row) => `<div><dt>${esc(row.time)}</dt><dd>${esc(row.label)}</dd></div>`).join('')}
                 </dl>
+              </div>
+              <div class="text-code-card">
+                <p class="eyebrow">Text Updates</p>
+                <h2>${esc(event.textUpdatesCode || 'Text CWMP for updates')}</h2>
+                <p>${esc(event.textUpdatesBody || 'Receive important event updates by text.')}</p>
               </div>
             </aside>
           </div>
@@ -529,21 +594,21 @@ const eventDetailPage = (event) =>
             ${sectionHeading('Know Before You Go', 'Key arrival and entry information', 'The most important Plan Your Visit details for this event.')}
             <div class="know-before-grid">
               <article>
-                <span aria-hidden="true">▣</span>
+                <span class="info-icon">${svgIcon('bag-shopping', { className: 'site-icon icon-blue' })}</span>
                 <h3>Bag Policy and Rules</h3>
-                <p>Clear bags 12" x 12" or smaller are permitted. Small clutches are allowed, and all belongings are subject to search. Outside chairs, large umbrellas, weapons, coolers, and outside liquids are not allowed.</p>
+                <p>Clear bags 12" x 12" or smaller are permitted. Small clutches are allowed and all belongings are subject to search. Outside chairs, large umbrellas, weapons, coolers and outside liquids are not allowed.</p>
                 <a href="${attr(event.bagPolicyLink)}">Review bag policy</a>
               </article>
               <article>
-                <span aria-hidden="true">⌖</span>
+                <span class="info-icon">${svgIcon('square-parking', { className: 'site-icon icon-blue' })}</span>
                 <h3>Parking Directions</h3>
-                <p>Check your event parking before you arrive. Lots, shuttle service, and traffic flow can vary by show, so give yourself extra time around gate opening.</p>
+                <p>Check your event parking before you arrive. Lots, shuttle service and traffic flow can vary by show, so give yourself extra time around gate opening.</p>
                 <a href="${attr(event.parkingLink)}">See parking details</a>
               </article>
               <article>
-                <span aria-hidden="true">🎟</span>
+                <span class="info-icon">${svgIcon('ticket', { className: 'site-icon icon-blue' })}</span>
                 <h3>Ticket Information</h3>
-                <p>Have mobile tickets ready before you reach the gate. Event timing, entry policies, and artist-specific notes may change, so review this page again before leaving.</p>
+                <p>Have mobile tickets ready before you reach the gate. Event timing, entry policies and artist-specific notes may change, so review this page again before leaving.</p>
                 <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer">Open tickets</a>
               </article>
             </div>
@@ -554,13 +619,76 @@ const eventDetailPage = (event) =>
     `
   });
 
-const landingHero = (page, eyebrow = page.templatePreset || 'Landing Page') => `
+const landingHero = (page, eyebrow = templateEyebrow(page)) => `
   <section class="landing-hero" style="--hero-image:url('${attr(page.heroImage || content.settings.fallbackImage)}')">
     <div class="container landing-hero-copy">
       <p class="eyebrow">${esc(eyebrow)}</p>
       <h1>${esc(page.title)}</h1>
       <p>${esc(page.subtitle || '')}</p>
       <div class="cta-row">${cta(page.primaryCTA)}${page.secondaryCTA ? cta(page.secondaryCTA, 'secondary') : ''}</div>
+    </div>
+  </section>
+`;
+
+const conversionCard = (page) => {
+  const conversion = page.conversion || {
+    eyebrow: 'Keep exploring',
+    title: 'Stay close to the mission',
+    body: 'Get stories, program opportunities and simple next steps for connecting with The Pavilion’s arts access work.',
+    cta: { label: 'Join the email list', type: 'popover', popoverId: 'get-emails' }
+  };
+  return `
+    <aside class="conversion-card">
+      <p class="eyebrow">${esc(conversion.eyebrow || 'Next Step')}</p>
+      <h2>${esc(conversion.title)}</h2>
+      <p>${esc(conversion.body)}</p>
+      ${conversion.cta ? cta(conversion.cta, 'primary') : ''}
+      <form class="compact-email-form" data-placeholder-form>
+        <label class="sr-only">Email address</label>
+        <input type="email" required placeholder="you@example.com" aria-label="Email address">
+        <button type="submit" aria-label="Submit email signup">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
+      </form>
+    </aside>
+  `;
+};
+
+const programDetailSection = (page) => `
+  <section class="section program-detail-section">
+    <div class="container program-detail-grid">
+      <div>
+        ${sectionHeading(templateEyebrow(page), page.title, page.subtitle || 'Find the details, benefits and next steps for this Pavilion experience.')}
+        ${tabs(page.tabs || [{ label: 'Overview', slug: 'overview', body: `${page.title} connects people with The Pavilion experience.` }], `tabs-${page.slug.replaceAll('/', '-')}`)}
+        ${
+          page.quoteHighlight || page.finalCTA
+            ? `<div class="outline-callout">
+                ${page.quoteHighlight ? `<p>${esc(page.quoteHighlight)}</p>` : ''}
+                ${page.finalCTA ? cta(page.finalCTA, 'primary') : ''}
+              </div>`
+            : ''
+        }
+      </div>
+      ${conversionCard(page)}
+    </div>
+  </section>
+  ${page.video ? videoBlock(page.video, 'section-wash-deep', 'left') : ''}
+`;
+
+const seasonSeatsExtras = () => `
+  <section class="section season-extras-section section-wash-lift">
+    <div class="container season-extras-grid">
+      <article class="info-card">
+        <p class="eyebrow">${esc(content.seasonSeats.pricing.eyebrow)}</p>
+        <h2>${esc(content.seasonSeats.pricing.title)}</h2>
+        <p>${esc(content.seasonSeats.pricing.body)}</p>
+      </article>
+      <article class="info-card seating-map-card">
+        <p class="eyebrow">${esc(content.seasonSeats.seatingMap.eyebrow)}</p>
+        <h2>${esc(content.seasonSeats.seatingMap.title)}</h2>
+        <div class="seating-map-placeholder" aria-label="Seating map placeholder">
+          <span>Seating Map</span>
+        </div>
+        <p>${esc(content.seasonSeats.seatingMap.body)}</p>
+      </article>
     </div>
   </section>
 `;
@@ -572,25 +700,8 @@ const landingPage = (page, routePath = `/${page.slug}`) =>
     path: routePath,
     body: `
       ${landingHero(page)}
-      <section class="section">
-        <div class="container landing-grid">
-          <div>
-            ${sectionHeading('CMS block stack', page.title, page.subtitle || 'This page uses the reusable Landing Page template.')}
-            ${tabs(page.tabs || [{ label: 'Overview', slug: 'overview', body: `${page.title} content is ready for CMS editing.` }], `tabs-${page.slug.replaceAll('/', '-')}`)}
-          </div>
-          <div class="html-card">
-            <h2>Editable Content Areas</h2>
-            <p>This template supports hero, video, stats, tabs, media/text, HTML, story, event listing, CTA band, and footer link blocks.</p>
-            <ul>
-              <li>Primary and secondary CTAs are CMS configurable.</li>
-              <li>External links are placeholders until integrations are connected.</li>
-              <li>Seasonal visibility can hide or dim program tabs.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      ${programDetailSection(page)}
       ${page.templatePreset === 'freeShows' ? eventListBlock('Free Community Shows', 'freeCommunity') : ''}
-      ${storyBlock()}
     `
   });
 
@@ -600,9 +711,19 @@ const seasonSeatsPage = () =>
     description: content.seasonSeats.subtitle,
     path: '/season-seats',
     body: `
-      ${landingHero({ ...content.seasonSeats, heroImage: content.seasonSeats.image, templatePreset: 'Season Seats' })}
-      ${seasonSeatsBlock()}
-      ${eventListBlock('Concert Nights for Clients, Friends, and Family')}
+      ${landingHero({
+        ...content.seasonSeats,
+        heroImage: content.seasonSeats.image,
+        templatePreset: 'Season Seats',
+        secondaryCTA: content.seasonSeats.holderLoginCTA
+      })}
+      ${programDetailSection({
+        ...content.seasonSeats,
+        slug: 'season-seats',
+        templatePreset: 'Season Seats'
+      })}
+      ${seasonSeatsExtras()}
+      ${eventListBlock('Concert Nights for Clients, Friends and Family')}
     `
   });
 
@@ -620,16 +741,19 @@ const missionPage = () =>
           ${cta(content.mission.donateCTA)}
         </div>
       </section>
-      ${statsBlock(content.mission.impactStats, 'section-wash-blue')}
+      ${statsBlock(content.mission.impactStats, 'section-wash-blue', content.mission.impactHeading)}
       ${videoBlock(content.mission.video, 'section-wash-deep')}
-      <section class="section section-wash-lift">
-        <div class="container">
-          ${sectionHeading('Mission pathways', 'Support, funding, outreach, shows, and stories', 'The mission page links the full outline hierarchy into reusable CMS sections.')}
-          ${tabs(content.mission.tabs, 'mission-tabs')}
+      <section class="section section-wash-lift mission-pathways-section">
+        <div class="container mission-pathways-layout">
+          <div class="mission-pathways-intro">
+            <p class="eyebrow">Mission pathways</p>
+            <h2>How We Expand Arts Access</h2>
+            <p>Explore the programs, grants, scholarships and free performances that help more people find their way into the arts.</p>
+          </div>
+          ${missionPathwayTabs()}
           ${missionSubnav()}
         </div>
       </section>
-      ${storyBlock('section-wash-blue')}
     `
   });
 
@@ -641,6 +765,8 @@ const grantPage = (program) =>
     templatePreset: 'Funding the Arts',
     primaryCTA: program.applicationCTA,
     tabs: program.tabs,
+    quoteHighlight: program.quoteHighlight,
+    finalCTA: program.finalCTA,
     slug: `mission/funding/${program.slug}`
   });
 
@@ -661,7 +787,7 @@ const planVisitPage = () =>
     description: 'Search Pavilion policies and browse topic-based answers.',
     path: '/plan-your-visit',
     body: `
-      <section class="visit-hero" style="--hero-image:url('${attr('/assets/content-images/plan-your-visit/Fans-7.jpg')}')">
+      <section class="visit-hero" style="--hero-image:url('${attr('/assets/content-images/mission/26_Plan Your Visit_Hero.jpg')}')">
         <div class="container visit-copy">
           <p class="eyebrow">Plan Your Visit</p>
           <h1>Plan your visit</h1>
@@ -669,29 +795,16 @@ const planVisitPage = () =>
           <form class="ai-search" data-ai-search>
             <label class="sr-only" for="visit-search">Ask a question about visiting The Pavilion</label>
             <input id="visit-search" name="query" type="search" placeholder="Bag policy, parking, umbrellas, gate times..." autocomplete="off">
-            <button type="submit" aria-label="Search">→</button>
+            <button type="submit" aria-label="Search">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
           </form>
           <div class="ai-result" data-ai-result hidden></div>
         </div>
       </section>
-      <section class="section">
+      <section class="section topic-picker-section">
         <div class="container">
-          ${sectionHeading('Or find answers by topic', 'Venue policies and visit essentials', 'Tabs update the content below and all sections are indexed by the local search MVP.')}
+          ${sectionHeading('Or find answers by topic', 'Venue policies and visit essentials', 'Choose a topic to see the full set of related policies, tips and arrival details.')}
           <div class="topic-tabs" data-topic-tabs>
-            ${content.planVisitTopics.map((topic, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-topic-target="${attr(topic.slug)}">${esc(topic.icon)} ${esc(topic.title)}</button>`).join('')}
-          </div>
-          <div class="answer-grid">
-            ${content.planVisitTopics
-              .map(
-                (topic, index) => `
-                  <article class="answer-card" data-topic-card="${attr(topic.slug)}" ${index > 2 ? 'hidden' : ''}>
-                    <h3>${esc(topic.title)}</h3>
-                    <p>${esc(topic.summary)}</p>
-                    <a href="#${attr(topic.slug)}">Review ${esc(topic.title)}</a>
-                  </article>
-                `
-              )
-              .join('')}
+            ${content.planVisitTopics.map((topic, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-topic-target="${attr(topic.slug)}">${svgIcon(topic.icon, { className: 'topic-tab-icon icon-blue' })}<span>${esc(topic.title)}</span></button>`).join('')}
           </div>
         </div>
       </section>
@@ -699,8 +812,8 @@ const planVisitPage = () =>
         <div class="container">
           ${content.planVisitTopics
             .map(
-              (topic) => `
-                <section class="policy-topic" id="${attr(topic.slug)}">
+              (topic, index) => `
+                <section class="policy-topic" id="${attr(topic.slug)}" data-topic-panel="${attr(topic.slug)}" ${index === 0 ? '' : 'hidden'}>
                   <h2>${esc(topic.title)}</h2>
                   <p>${esc(topic.summary)}</p>
                   ${topic.sections
@@ -776,7 +889,7 @@ const emailSignup = () => `
       <form class="email-form" data-placeholder-form>
         <label class="sr-only" for="email-signup">Email address</label>
         <input id="email-signup" type="email" required placeholder="you@example.com">
-        <button type="submit" aria-label="Submit email signup">→</button>
+        <button type="submit" aria-label="Submit email signup">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
       </form>
     </div>
   </section>
@@ -788,7 +901,7 @@ const storyHubPage = (topic = null) => {
   const large = content.stories.find((story) => story.featuredSlot === 'largeFeature') || content.stories[1];
   return shell({
     title: topic ? `Stories: ${topic}` : 'Story Hub',
-    description: 'Stories from The Pavilion mission, fans, shows, scholarships, grants, and backstage.',
+    description: 'Stories from The Pavilion mission, fans, shows, scholarships, grants and backstage.',
     path: topic ? `/story-hub/topic/${topic}` : '/story-hub',
     theme: 'light',
     body: `
@@ -813,6 +926,19 @@ const storyHubPage = (topic = null) => {
           <div class="topic-filter-row">
             <a class="${topic ? '' : 'is-active'}" href="/story-hub/">All</a>
             ${content.storyTopics.map((item) => `<a class="${topic === slugifyTopic(item) ? 'is-active' : ''}" href="/story-hub/topic/${slugifyTopic(item)}/">${esc(item)}</a>`).join('')}
+          </div>
+          <div class="story-pillar-grid" aria-label="Story pillars">
+            ${content.storyPillars
+              .map(
+                (pillar) => `
+                  <a class="story-pillar-card" href="${attr(pillar.href)}">
+                    <span>Pillar</span>
+                    <strong>${esc(pillar.title)}</strong>
+                    <em>${esc(pillar.body)}</em>
+                  </a>
+                `
+              )
+              .join('')}
           </div>
           ${storyCards(stories)}
         </div>
@@ -847,7 +973,7 @@ const storyDetailPage = (story) =>
         <section class="section">
           <div class="container article-body">
             <p>${esc(story.body)}</p>
-            <p>Publication date: ${esc(fmtDate(story.publishDate))}. Story metadata, body blocks, topic tags, and media are CMS-editable.</p>
+            <p>Published ${esc(fmtDate(story.publishDate))}. More voices, photos and related resources can be added as the story grows.</p>
           </div>
         </section>
       </article>
@@ -863,7 +989,7 @@ const externalPlaceholderPage = (routePath) => {
     body: `
       <section class="landing-hero external-placeholder">
         <div class="container landing-hero-copy">
-          <p class="eyebrow">External Link Placeholder</p>
+          <p class="eyebrow">Next Step</p>
           <h1>${esc(page.title)}</h1>
           <p>${esc(page.subtitle)}</p>
           ${cta(page.cta)}
