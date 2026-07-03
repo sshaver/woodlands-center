@@ -1228,6 +1228,7 @@ const externalPlaceholderPage = (routePath) => {
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
 copyRecursive('cwmp_codex_build_package/assets', path.join(dist, 'assets'));
+copyRecursive('public/assets', path.join(dist, 'assets'));
 copyRecursive('src/styles', path.join(dist, 'styles'));
 copyRecursive('src/scripts', path.join(dist, 'scripts'));
 copyRecursive('cloudflare/_headers', path.join(dist, '_headers'));
