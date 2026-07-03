@@ -7,7 +7,7 @@
 - Production branch for staging: `staging`
 - Production domain after approval: `woodlandscenter.org` and `www.woodlandscenter.org`
 - Staging domain: `preview.woodlandscenter.org`
-- Staging access: password required; store the shared password in Cloudflare, not in Git
+- Staging access: Basic Auth enabled by `STAGING_BASIC_AUTH_PASSWORD`; username `cwmp`; store the shared password in Cloudflare, not in Git
 - Build failure notifications: `sshaver@woodlandscenter.org`
 - Sanity admin access: needed for deploy webhook setup
 
@@ -40,7 +40,7 @@
 - Foundant grant application URL: `https://www.grantinterface.com/Home/Logon?urlkey=woodlandscenter`
 - Acceptd application URL: `https://app.getacceptd.com/woodlandscenter`
 - Paycom jobs URL: `https://www.paycomonline.net/v4/ats/web.php/portal/7A49DACE0D1DB8C334B6809498FC517D/career-page`
-- Google Sheets / public workflow URL: optional. Use only if a public registration/signup CTA points to a Google Form or Sheet-backed workflow instead of HubSpot, Foundant, Acceptd or another system.
+- Google Sheets / public workflow URL: intentionally blank for now. Use only if a public registration/signup CTA later points to a Google Form or Sheet-backed workflow instead of HubSpot, Foundant, Acceptd or another system.
 - Staff login URL: `https://staff.woodlandscenter.org/`
 - Chamberfest URL: `https://www.thewoodlandschamberfest.com/`
 - Tarvia story video: `https://www.youtube.com/watch?v=r1MWnchjmKY`

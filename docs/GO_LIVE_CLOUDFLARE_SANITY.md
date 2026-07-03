@@ -41,6 +41,8 @@ HUBSPOT_SEASON_SEATS_FORM_ID=1c82a8a1-5f2a-4332-a59d-68c90681dc2b
 HUBSPOT_MISSION_SEEKERS_FORM_ID=49ba2210-9592-44b9-bf40-bb5a742c79db
 HUBSPOT_PROGRAM_REMINDER_FORM_ID=6988d41c-6dcd-4106-b2ad-ac487b58b055
 HUBSPOT_GRANTS_FORM_ID=63965007-2942-49bc-bc13-c18ca02d4f1d
+STAGING_BASIC_AUTH_USERNAME=cwmp
+STAGING_BASIC_AUTH_PASSWORD=
 TICKETMASTER_BASE_URL=https://www.ticketmaster.com/the-cynthia-woods-mitchell-pavilion-sponsored-tickets-woodlands/venue/98413
 ACCOUNT_MANAGER_URL=https://am.ticketmaster.com/woodlands/
 PARKING_PURCHASE_URL=https://www.ticketmaster.com/the-cynthia-woods-mitchell-pavilion-sponsored-tickets-woodlands/venue/98413
@@ -62,7 +64,7 @@ Notes:
 
 - `SANITY_REQUIRE_CONTENT=true` makes production fail if Sanity cannot be reached.
 - Use `HUBSPOT_TRACKING_MODE=direct` only if HubSpot tracking is not installed through GTM.
-- Staging should use Cloudflare Access or Pages password protection so `preview.woodlandscenter.org` is protected but shareable with reviewers. Keep the shared staging password in Cloudflare, not in the Git repository.
+- Staging is protected by the Pages Function in `functions/_middleware.js` when `STAGING_BASIC_AUTH_PASSWORD` is set in Cloudflare. Use username `cwmp` and store the shared password only in Cloudflare, not in Git.
 - Build failure notifications should go to `sshaver@woodlandscenter.org`.
 - The repo includes `wrangler.toml` for direct `wrangler pages deploy` use if needed.
 
