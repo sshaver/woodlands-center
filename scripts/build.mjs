@@ -69,16 +69,43 @@ const attr = esc;
 
 const svgIconCache = new Map();
 
+const fallbackIconPath = (name) => {
+  const paths = {
+    'arrow-right': '<path d="M5 12h13m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+    'bag-shopping': '<path d="M7 8h10l1 12H6L7 8Zm3 0a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+    chair: '<path d="M7 4v8h9a3 3 0 0 1 3 3v5M7 12v8m0-8H5m2 8h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    crown: '<path d="m4 8 4 4 4-7 4 7 4-4v11H4V8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+    'hand-holding-heart': '<path d="M3 15h5l3 3h4l6-5m-9-2c-2-2-5-1-5 2 0 2 3 4 5 6 2-2 5-4 5-6 0-3-3-4-5-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    hotel: '<path d="M4 20V5h9v15M4 11h16v9M8 8h1m3 0h1m-5 4h1m3 0h1m4 2h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    'location-dot': '<path d="M12 21s7-6 7-12a7 7 0 1 0-14 0c0 6 7 12 7 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+    play: '<path d="M8 5v14l11-7L8 5Z" fill="currentColor"/>',
+    'square-parking': '<path d="M5 4h14v16H5V4Zm5 12V8h3a2.5 2.5 0 0 1 0 5h-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    ticket: '<path d="M4 8h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4V8Zm6 3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    violin: '<path d="M14 4c3 2 3 6 0 9l-5 5c-2 2-5-1-3-3l5-5c3-3 7-3 9 0M5 19l-2 2m12-17 4-2m-2 4 4-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    xmark: '<path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'
+  };
+  return paths[name] || '<circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2"/>';
+};
+
+const fallbackSvgIcon = (name) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">${fallbackIconPath(name)}</svg>`;
+
 const svgIcon = (name, options = {}) => {
   const { className = 'site-icon', label = '', style = 'regular' } = options;
   if (!name) return '';
   const iconKey = `${style}/${name}`;
   if (!svgIconCache.has(iconKey)) {
-    const iconPath = path.resolve('cwmp_codex_build_package/assets/icons/svgs', style, `${name}.svg`);
-    if (!fs.existsSync(iconPath)) {
-      throw new Error(`Missing SVG icon: ${iconKey}`);
-    }
-    svgIconCache.set(iconKey, fs.readFileSync(iconPath, 'utf8').replace(/<!--[\s\S]*?-->/g, '').trim());
+    const iconPaths = [
+      path.resolve('cwmp_codex_build_package/assets/icons/svgs', style, `${name}.svg`),
+      path.resolve('cwmp_codex_build_package/assets/icons/svgs/solid', `${name}.svg`)
+    ];
+    const iconPath = iconPaths.find((candidate) => fs.existsSync(candidate));
+    svgIconCache.set(
+      iconKey,
+      iconPath
+        ? fs.readFileSync(iconPath, 'utf8').replace(/<!--[\s\S]*?-->/g, '').trim()
+        : fallbackSvgIcon(name)
+    );
   }
   const labelAttrs = label ? ` role="img" aria-label="${attr(label)}"` : ' aria-hidden="true"';
   return svgIconCache
