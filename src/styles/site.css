@@ -170,10 +170,12 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.82rem 1.08rem;
+  padding: 0.62rem 0.92rem;
   border: 1px solid rgba(64, 189, 244, 0.44);
   color: var(--color-white);
   background: rgba(2, 18, 32, 0.86);
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .site-icon,
@@ -186,6 +188,7 @@ textarea {
   height: 1rem;
   flex: 0 0 auto;
   fill: currentColor;
+  overflow: visible;
 }
 
 .icon-blue {
@@ -360,13 +363,14 @@ p {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  min-height: 2.75rem;
-  padding: 0.78rem 1.15rem;
+  min-height: 2.55rem;
+  padding: 0.62rem 1rem;
   border-radius: var(--radius-pill);
   text-decoration: none;
   border-bottom: 0;
   font-family: var(--font-ui);
   font-weight: 900;
+  line-height: 1.1;
 }
 
 .section-heading .btn {
@@ -1039,17 +1043,25 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.58rem;
   border: 1px solid rgba(64, 189, 244, 0.32);
   background: rgba(255, 255, 255, 0.06);
   color: inherit;
   cursor: pointer;
-  padding: 0.65rem 0.95rem;
+  min-height: 3.15rem;
+  padding: 0.58rem 0.95rem;
+  line-height: 1.12;
+  text-align: center;
 }
 
 .topic-tab-icon {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.topic-tabs button span {
+  display: inline-block;
+  max-width: 12rem;
 }
 
 .feature-grid,
@@ -2062,18 +2074,22 @@ p {
   .mission-link-grid a {
     width: auto;
     flex: 0 1 auto;
-    min-height: 3rem;
+    min-height: 2.75rem;
     justify-content: center;
     text-align: center;
     white-space: normal;
-    padding: 0.75rem 1rem;
-    line-height: 1.15;
+    padding: 0.58rem 0.9rem;
+    line-height: 1.08;
   }
 
   .topic-tabs button span,
   .tab-pill {
     overflow-wrap: normal;
     word-break: normal;
+  }
+
+  .topic-tabs button span {
+    max-width: 9.5rem;
   }
 
   .link-grid,
@@ -2142,9 +2158,10 @@ p {
     display: grid;
     place-items: center;
     gap: 0.18rem;
-    min-height: 3.75rem;
+    min-height: 3.25rem;
     font-size: 0.76rem;
     font-weight: 800;
+    line-height: 1.08;
     text-decoration: none;
     color: white;
   }
