@@ -1,9 +1,61 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { content } from '../src/content/client.mjs';
+import { loadContent } from '../src/content/client.mjs';
+import { loadEnvFile } from './load-env.mjs';
 
 const dist = path.resolve('dist');
 const routeManifest = JSON.parse(fs.readFileSync('cwmp_codex_build_package/data/route_manifest.json', 'utf8'));
+loadEnvFile();
+
+const placeholderEnvMap = {
+  CONFIGURE_ACCEPTD_URL_IN_CMS: 'ACCEPTD_APPLICATION_URL',
+  CONFIGURE_ACCOUNT_MANAGER_URL_IN_CMS: 'ACCOUNT_MANAGER_URL',
+  CONFIGURE_CHAMBERFEST_URL_IN_CMS: 'CHAMBERFEST_URL',
+  CONFIGURE_CONTACT_FORM_ID: 'HUBSPOT_CONTACT_FORM_ID',
+  CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS: 'DONORPERFECT_DONATION_URL',
+  CONFIGURE_DONORPERFECT_URL_IN_CMS: 'DONORPERFECT_DONATION_URL',
+  CONFIGURE_EMAIL_FORM_ID: 'HUBSPOT_EMAIL_FORM_ID',
+  CONFIGURE_FOUNDANT_URL_IN_CMS: 'FOUNDANT_BASE_URL',
+  CONFIGURE_FREE_SHOW_REGISTRATION_IN_CMS: 'TICKETMASTER_BASE_URL',
+  CONFIGURE_GOOGLE_SHEETS_URL_IN_CMS: 'GOOGLE_SHEETS_BASE_URL',
+  CONFIGURE_HOTEL_PARTNER_URL_IN_CMS: 'HOTEL_PARTNER_URL',
+  CONFIGURE_HUBSPOT_PORTAL_ID: 'HUBSPOT_PORTAL_ID',
+  CONFIGURE_LAWN_CHAIR_RENTAL_URL_IN_CMS: 'LAWN_CHAIR_RENTAL_URL',
+  CONFIGURE_MISSION_VIDEO_URL_IN_CMS: 'MISSION_VIDEO_URL',
+  CONFIGURE_PARKING_PURCHASE_URL_IN_CMS: 'PARKING_PURCHASE_URL',
+  CONFIGURE_PAYCOM_URL_IN_CMS: 'PAYCOM_URL',
+  CONFIGURE_PROGRAM_VIDEO_URL_IN_CMS: 'PROGRAM_VIDEO_URL',
+  CONFIGURE_SEASON_SEATS_FORM_ID: 'HUBSPOT_SEASON_SEATS_FORM_ID',
+  CONFIGURE_STAFF_LOGIN_URL_IN_CMS: 'STAFF_LOGIN_URL',
+  CONFIGURE_TARVIA_STORY_VIDEO_URL_IN_CMS: 'TARVIA_STORY_VIDEO_URL',
+  CONFIGURE_TICKET_LINK_IN_CMS: 'TICKETMASTER_BASE_URL',
+  CONFIGURE_TICKETMASTER_URL_IN_CMS: 'TICKETMASTER_BASE_URL'
+};
+
+const configuredValue = (value, envKey = '') => {
+  if (!value) return '';
+  const stringValue = String(value);
+  if (!stringValue.startsWith('CONFIGURE_')) return value;
+  return process.env[placeholderEnvMap[stringValue] || envKey] || '';
+};
+
+const resolvePlaceholdersInContent = (value) => {
+  if (typeof value === 'string') return configuredValue(value);
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => {
+      value[index] = resolvePlaceholdersInContent(item);
+    });
+    return value;
+  }
+  if (value && typeof value === 'object') {
+    for (const [key, item] of Object.entries(value)) {
+      if (typeof item !== 'function') value[key] = resolvePlaceholdersInContent(item);
+    }
+  }
+  return value;
+};
+
+const content = resolvePlaceholdersInContent(await loadContent());
 
 const esc = (value = '') =>
   String(value)
@@ -72,12 +124,64 @@ const copyRecursive = (source, target) => {
 
 const slugifyTopic = (topic) => topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+const gtmContainerId = configuredValue(process.env.GTM_CONTAINER_ID);
+const ga4MeasurementId = configuredValue(process.env.GA4_MEASUREMENT_ID);
+const hubspotPortalId = configuredValue(process.env.HUBSPOT_PORTAL_ID);
+const hubspotTrackingMode = configuredValue(process.env.HUBSPOT_TRACKING_MODE) || 'gtm';
+
+const analyticsAttrs = (eventName, params = {}) => {
+  if (!eventName) return '';
+  return Object.entries({ event: eventName, ...params })
+    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .map(([key, value]) => ` data-analytics-${attr(key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`))}="${attr(value)}"`)
+    .join('');
+};
+
+const analyticsEventForCta = (item = {}) => {
+  const label = String(item.label || '').toLowerCase();
+  const href = String(item.href || '').toLowerCase();
+  if (item.analyticsEvent) return item.analyticsEvent;
+  if (label.includes('ticket') || label.includes('rsvp')) return 'get_tickets_click';
+  if (label.includes('parking') || href.includes('parking')) return 'parking_click';
+  if (label.includes('lawn') || label.includes('chair')) return 'lawn_chair_click';
+  if (label.includes('hotel')) return 'hotel_click';
+  if (label.includes('email') || label.includes('mission') || label.includes('support') || item.popoverId === 'get-emails') return 'mission_signup_click';
+  return 'cta_click';
+};
+
 const cta = (item = {}, style = item.style || 'primary') => {
   if (!item.label) return '';
   const href = item.href || (item.type === 'popover' ? `#${item.popoverId}` : '#');
   const popoverAttrs = item.popoverId ? ` data-popover-open="${attr(item.popoverId)}"` : '';
   const externalAttrs = item.openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
-  return `<a class="btn btn-${style}" href="${attr(href)}"${popoverAttrs}${externalAttrs}>${esc(item.label)}${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>`;
+  const trackingAttrs = analyticsAttrs(analyticsEventForCta(item), {
+    label: item.label,
+    url: href,
+    context: item.analyticsContext || ''
+  });
+  return `<a class="btn btn-${style}" href="${attr(href)}"${popoverAttrs}${externalAttrs}${trackingAttrs}>${esc(item.label)}${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>`;
+};
+
+let hubspotFormCount = 0;
+const hubspotFormShell = (formKey = 'get-emails', className = '') => {
+  const form = content.forms[formKey] || content.forms['get-emails'] || {};
+  const portalId = configuredValue(form.portalId, 'HUBSPOT_PORTAL_ID');
+  const region = configuredValue(form.region, 'HUBSPOT_REGION') || 'na1';
+  const formId = configuredValue(form.formId);
+  hubspotFormCount += 1;
+  return `
+    <div
+      class="hubspot-form-shell ${attr(className)}"
+      id="hubspot-${attr(formKey)}-${hubspotFormCount}"
+      data-hubspot-form
+      data-portal-id="${attr(portalId)}"
+      data-region="${attr(region)}"
+      data-form-id="${attr(formId)}"
+      data-fallback-url="${attr(form.fallbackUrl || 'mailto:info@woodlandscenter.org')}"
+    >
+      <p class="hubspot-form-status">Loading form...</p>
+    </div>
+  `;
 };
 
 const image = (media, className = '', loading = 'lazy') =>
@@ -156,17 +260,14 @@ const missionPathwayTabs = () => `
 
 const eventCard = (event, featured = false) => `
   <article class="event-card event-type-${attr(event.eventType)} ${featured ? 'is-featured' : ''}">
-    <a href="/events/${attr(event.slug)}/" class="event-card-image" aria-label="${attr(event.title)} event details">
+    <a href="/events/${attr(event.slug)}/" class="event-card-image" aria-label="${attr(event.title)} event details"${analyticsAttrs('event_card_click', { eventName: event.title, eventSlug: event.slug, eventType: event.eventType })}>
       <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="lazy" decoding="async">
+      <span class="card-link-arrow" aria-hidden="true">${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</span>
     </a>
     <div class="event-card-body">
       <p class="event-date">${esc(fmtDate(event.eventDate))}</p>
       <h3><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h3>
       ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
-      <div class="card-actions">
-        ${cta({ label: event.ctaLabel || 'Get Tickets', href: event.ticketLink, openInNewTab: true }, 'primary')}
-        ${cta({ label: 'Details', href: `/events/${event.slug}/` }, 'secondary')}
-      </div>
     </div>
   </article>
 `;
@@ -182,7 +283,29 @@ const eventRows = (events) => `
               <h3><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h3>
               <p>${esc(event.subheader || event.eventStartTime)}</p>
             </div>
-            ${cta({ label: event.ctaLabel || 'Get Tickets', href: event.ticketLink, openInNewTab: true }, 'primary')}
+            <a class="row-link-arrow" href="/events/${attr(event.slug)}/" aria-label="${attr(event.title)} event details">${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>
+          </article>
+        `
+      )
+      .join('')}
+  </div>
+`;
+
+const showRail = (events = content.events, { eagerCount = 0 } = {}) => `
+  <div class="home-show-rail" aria-label="Upcoming shows">
+    ${events
+      .slice()
+      .sort(byEventDate)
+      .map(
+        (event, index) => `
+          <article class="rail-show-card event-type-${attr(event.eventType)}">
+            <a href="/events/${attr(event.slug)}/"${analyticsAttrs('event_card_click', { eventName: event.title, eventSlug: event.slug, eventType: event.eventType, context: 'show_rail' })}>
+              <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="${index < eagerCount ? 'eager' : 'lazy'}" decoding="async">
+              <span>
+                <small>${esc(fmtDate(event.eventDate))}</small>
+                <strong>${esc(event.title)}</strong>
+              </span>
+            </a>
           </article>
         `
       )
@@ -197,17 +320,8 @@ const eventListBlock = (heading = 'Upcoming Events', filterType = null) => {
   return `
     <section class="section events-section" id="events">
       <div class="container">
-        <div class="section-row">
-          ${sectionHeading('Home / Events', heading, 'Browse upcoming concerts, performing arts nights and community events.')}
-          <div class="view-toggle" role="group" aria-label="Event display">
-            <button class="is-active" type="button" data-event-view="cards">Cards</button>
-            <button type="button" data-event-view="list">List</button>
-          </div>
-        </div>
-        <div class="event-carousel" data-event-cards>
-          ${events.map((event) => eventCard(event, false)).join('')}
-        </div>
-        ${eventRows(events)}
+        ${sectionHeading('Home / Events', heading, 'Browse upcoming concerts, performing arts nights and community events.')}
+        ${showRail(events)}
       </div>
     </section>
   `;
@@ -308,24 +422,38 @@ const videoBlock = (video = content.blocks.video, tone = 'section-wash-deep', im
   </section>
 `;
 
-const statsBlock = (stats, tone = 'section-wash-blue', heading = null) => `
+const statsBlock = (stats, tone = 'section-wash-blue', heading = null, proof = null) => `
   <section class="section stats-section ${attr(tone)}" aria-label="Data highlights">
     <div class="container">
       ${heading ? sectionHeading(heading.eyebrow, heading.title, heading.subtitle) : ''}
     </div>
-    <div class="container stat-strip">
-      ${stats.map((stat) => `<div><strong>${esc(stat.value)}</strong><span>${esc(stat.label)}</span></div>`).join('')}
+    <div class="container impact-proof-grid">
+      <div class="stat-strip">
+        ${stats.map((stat) => `<div><strong>${esc(stat.value)}</strong><span>${esc(stat.label)}</span></div>`).join('')}
+      </div>
+      ${
+        proof
+          ? `<article class="mission-proof-card">
+              <img src="${attr(proof.image)}" alt="${attr(proof.title)}" loading="lazy" decoding="async">
+              <div>
+                <p class="eyebrow">${esc(proof.eyebrow || 'Mission Story')}</p>
+                <h3>${esc(proof.title)}</h3>
+                <p>${esc(proof.body)}</p>
+                ${proof.cta ? cta(proof.cta, 'secondary') : ''}
+              </div>
+            </article>`
+          : ''
+      }
     </div>
   </section>
 `;
 
-const seasonSeatsBlock = (tone = 'section-wash-lift', imageSide = 'top') => `
+const seasonSeatsBlock = (tone = 'section-wash-lift', imageSide = 'left') => `
   <section class="section season-block ${attr(tone)}">
     <div class="container landing-grid media-block media-${attr(imageSide)}">
       <div class="glow-media">${image({ src: content.seasonSeats.image, alt: 'Pavilion audience enjoying a concert.' })}</div>
       <div>
-        ${sectionHeading('Season Seats', content.seasonSeats.title, content.seasonSeats.subtitle)}
-        <div class="cta-row season-cta-row">${cta(content.seasonSeats.learnMoreCTA || { label: 'Learn More', href: '/season-seats' })}</div>
+        ${sectionHeading('Season Seats', content.seasonSeats.title, content.seasonSeats.subtitle, `<div class="cta-row season-cta-row">${cta(content.seasonSeats.learnMoreCTA || { label: 'Learn More', href: '/season-seats' })}</div>`)}
       </div>
     </div>
   </section>
@@ -360,6 +488,24 @@ const storyBlock = (tone = 'section-wash-deep') => `
   </section>
 `;
 
+const analyticsHead = () => {
+  const snippets = [];
+  if (gtmContainerId) {
+    snippets.push(`<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${attr(gtmContainerId)}');</script>`);
+  } else if (ga4MeasurementId) {
+    snippets.push(`<script async src="https://www.googletagmanager.com/gtag/js?id=${attr(ga4MeasurementId)}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${attr(ga4MeasurementId)}');</script>`);
+  }
+  if (hubspotPortalId && hubspotTrackingMode === 'direct') {
+    snippets.push(`<script async defer id="hs-script-loader" src="https://js.hs-scripts.com/${attr(hubspotPortalId)}.js"></script>`);
+  }
+  return snippets.join('\n  ');
+};
+
+const gtmBody = () =>
+  gtmContainerId
+    ? `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${attr(gtmContainerId)}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`
+    : '';
+
 const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '', storyFooter = true }) => `<!doctype html>
 <html lang="en" data-theme="${attr(theme)}">
 <head>
@@ -367,10 +513,12 @@ const shell = ({ title, description, path: routePath, theme = 'dark', body, extr
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(title)} | ${esc(content.settings.siteName)}</title>
   <meta name="description" content="${attr(description || 'The redesigned Cynthia Woods Mitchell Pavilion website prototype.')}">
+  ${analyticsHead()}
   <link rel="stylesheet" href="/styles/site.css">
   ${extraHead}
 </head>
 <body data-route="${attr(routePath)}">
+  ${gtmBody()}
   <a class="skip-link" href="#main">Skip to content</a>
   ${alertBanner()}
   ${header(routePath, theme)}
@@ -457,23 +605,32 @@ const popoverMarkup = () => `
   <div class="popover-layer" data-popover-layer hidden>
     ${Object.entries(content.forms)
       .filter(([id]) => id === 'contact' || id === 'get-emails')
-      .map(
-        ([id, form]) => `
+      .map(([id, form]) => {
+        const portalId = configuredValue(form.portalId, 'HUBSPOT_PORTAL_ID');
+        const region = configuredValue(form.region, 'HUBSPOT_REGION') || 'na1';
+        const formId = configuredValue(form.formId);
+        return `
           <section class="popover" data-popover="${attr(id)}" role="dialog" aria-modal="true" aria-labelledby="${attr(id)}-title" hidden>
             <button type="button" class="popover-close" data-popover-close aria-label="Close">${svgIcon('xmark', { className: 'control-icon icon-white' })}</button>
             <p class="eyebrow">Send a note</p>
             <h2 id="${attr(id)}-title">${esc(form.title)}</h2>
-            <p>${esc(form.subtitle)}</p>
-            <form class="native-form" data-placeholder-form>
-              <label>Email <input type="email" name="email" required placeholder="you@example.com"></label>
-              <label>Message <textarea name="message" rows="4" placeholder="How can we help?"></textarea></label>
-              <button class="btn btn-primary" type="submit">Submit ${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</button>
-            </form>
+            ${form.subtitle ? `<p>${esc(form.subtitle)}</p>` : ''}
+            <div
+              class="hubspot-form-shell"
+              id="hubspot-${attr(id)}"
+              data-hubspot-form
+              data-portal-id="${attr(portalId)}"
+              data-region="${attr(region)}"
+              data-form-id="${attr(formId)}"
+              data-fallback-url="${attr(form.fallbackUrl || 'mailto:info@woodlandscenter.org')}"
+            >
+              <p class="hubspot-form-status">Loading form...</p>
+            </div>
             <p class="fine-print">${esc(form.privacyCopy || 'A Pavilion team member will follow up with the next best step.')}</p>
-            <a href="${attr(form.fallbackUrl || 'mailto:info@woodlandscenter.org')}">Fallback contact link</a>
+            <a class="hubspot-fallback-link" href="${attr(form.fallbackUrl || 'mailto:info@woodlandscenter.org')}">Use fallback contact link</a>
           </section>
-        `
-      )
+        `;
+      })
       .join('')}
   </div>
 `;
@@ -496,33 +653,64 @@ const homePage = (routePath = '/') => {
             <p class="eyebrow">Home / Events</p>
             <h1>Shows at The Pavilion</h1>
             <div class="cta-row">
-              ${cta({ label: 'Plan Your Visit', href: '/plan-your-visit' }, 'primary')}
+              ${cta({ label: 'Get Tickets', href: '/events' }, 'primary')}
+              ${cta({ label: 'Plan Your Visit', href: '/plan-your-visit' }, 'secondary')}
             </div>
           </div>
-          <div class="home-show-rail" aria-label="Upcoming shows">
-            ${content.events
-              .slice()
-              .sort(byEventDate)
-              .map(
-                (event, index) => `
-                  <article class="rail-show-card event-type-${attr(event.eventType)}">
-                    <a href="/events/${attr(event.slug)}/">
-                      <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="${index < 2 ? 'eager' : 'lazy'}" decoding="async">
-                      <span>
-                        <small>${esc(fmtDate(event.eventDate))}</small>
-                        <strong>${esc(event.title)}</strong>
-                      </span>
-                    </a>
-                  </article>
-                `
-              )
-              .join('')}
-          </div>
+          ${showRail(content.events, { eagerCount: 2 })}
         </div>
       </section>
       ${videoBlock(homeMissionBlock, 'section-wash-blue', 'left')}
-      ${seasonSeatsBlock('section-wash-lift', 'top')}
+      ${seasonSeatsBlock('section-wash-lift', 'left')}
       ${featureBlock('section-wash-deep', 'left')}
+    `
+  });
+};
+
+const eventsPage = () => {
+  const events = content.events.slice().sort(byEventDate);
+  return shell({
+    title: 'Events',
+    description: 'Find tickets, parking and lawn chair rentals for upcoming Pavilion shows.',
+    path: '/events',
+    storyFooter: false,
+    body: `
+      <section class="section events-chart-hero">
+        <div class="container">
+          ${sectionHeading('Events', 'Tickets, parking and lawn chairs', 'One simple place to get ready for every upcoming Pavilion show.')}
+        </div>
+      </section>
+      <section class="section events-chart-section">
+        <div class="container events-chart">
+          ${events
+            .map(
+              (event) => `
+                <article class="events-chart-row event-type-${attr(event.eventType)}">
+                  <a class="events-chart-image" href="/events/${attr(event.slug)}/" aria-label="${attr(event.title)} event details"${analyticsAttrs('event_card_click', { eventName: event.title, eventSlug: event.slug, eventType: event.eventType, context: 'events_chart' })}>
+                    <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="lazy" decoding="async">
+                  </a>
+                  <div class="events-chart-copy">
+                    <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</time>
+                    <h2><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h2>
+                    ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
+                  </div>
+                  <div class="events-chart-actions">
+                    ${cta({ label: event.ctaLabel || 'Get Tickets', href: event.ticketLink, openInNewTab: true, analyticsContext: 'events_chart' }, 'primary')}
+                    <a class="icon-action" href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer" aria-label="Buy parking for ${attr(event.title)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
+                      ${svgIcon('square-parking', { className: 'site-icon icon-blue' })}
+                      <span>Parking</span>
+                    </a>
+                    <a class="icon-action" href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs for ${attr(event.title)}"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
+                      ${svgIcon('chair', { className: 'site-icon icon-blue' })}
+                      <span>Lawn Chairs</span>
+                    </a>
+                  </div>
+                </article>
+              `
+            )
+            .join('')}
+        </div>
+      </section>
     `
   });
 };
@@ -532,6 +720,7 @@ const eventDetailPage = (event) =>
     title: event.title,
     description: event.eventDescription,
     path: `/events/${event.slug}`,
+    storyFooter: false,
     body: `
       <article>
         <section class="detail-hero" style="--hero-image:url('${attr(event.headerImage)}')">
@@ -540,31 +729,36 @@ const eventDetailPage = (event) =>
               <p class="eyebrow">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</p>
               <h1>${esc(event.title)}</h1>
               <p>${esc(event.subheader || '')}</p>
-              <div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true })}</div>
+              <div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true, analyticsContext: 'event_hero' })}</div>
             </div>
             <nav class="event-action-icons" aria-label="Event add-ons">
               ${
                 event.eventType === 'freeCommunity'
                   ? ''
-                  : `<a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer">
+                  : `<a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
                       <span class="action-icon">${svgIcon('chair', { className: 'site-icon icon-blue' })}</span>
-                      <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short">Chairs</span></strong>
+                      <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short" aria-hidden="true">Chairs</span></strong>
                       <small>Reserve seating</small>
                     </a>`
               }
-              <a href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer">
+              <a href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer" aria-label="Buy parking"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
                 <span class="action-icon">${svgIcon('square-parking', { className: 'site-icon icon-blue' })}</span>
-                <strong><span class="action-label-full">Buy Parking</span><span class="action-label-short">Parking</span></strong>
+                <strong><span class="action-label-full">Buy Parking</span><span class="action-label-short" aria-hidden="true">Parking</span></strong>
                 <small>Buy or view lots</small>
               </a>
-              <a href="${attr(event.hotelLink || '#')}" target="_blank" rel="noopener noreferrer">
+              <a href="${attr(event.hotelLink || '#')}" target="_blank" rel="noopener noreferrer" aria-label="Book hotel"${analyticsAttrs('hotel_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
                 <span class="action-icon">${svgIcon('hotel', { className: 'site-icon icon-blue' })}</span>
-                <strong><span class="action-label-full">Book Hotel</span><span class="action-label-short">Hotel</span></strong>
+                <strong><span class="action-label-full">Book Hotel</span><span class="action-label-short" aria-hidden="true">Hotel</span></strong>
                 <small>Book nearby</small>
               </a>
             </nav>
           </div>
         </section>
+        <nav class="event-sticky-bar" data-event-sticky-bar aria-label="Quick event actions">
+          <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('ticket', { className: 'site-icon icon-blue' })}<span>${esc(event.ctaLabel || 'Get Tickets')}</span></a>
+          <a href="${attr(event.parkingLink)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('square-parking', { className: 'site-icon icon-blue' })}<span>Parking</span></a>
+          <a href="${attr(event.bagPolicyLink)}"${analyticsAttrs('bag_policy_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('bag-shopping', { className: 'site-icon icon-blue' })}<span>Bag Policy</span></a>
+        </nav>
         <section class="section">
           <div class="container detail-grid">
             <div>
@@ -603,13 +797,13 @@ const eventDetailPage = (event) =>
                 <span class="info-icon">${svgIcon('square-parking', { className: 'site-icon icon-blue' })}</span>
                 <h3>Parking Directions</h3>
                 <p>Check your event parking before you arrive. Lots, shuttle service and traffic flow can vary by show, so give yourself extra time around gate opening.</p>
-                <a href="${attr(event.parkingLink)}">See parking details</a>
+                <a href="${attr(event.parkingLink)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'know_before_you_go' })}>See parking details</a>
               </article>
               <article>
                 <span class="info-icon">${svgIcon('ticket', { className: 'site-icon icon-blue' })}</span>
                 <h3>Ticket Information</h3>
                 <p>Have mobile tickets ready before you reach the gate. Event timing, entry policies and artist-specific notes may change, so review this page again before leaving.</p>
-                <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer">Open tickets</a>
+                <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'know_before_you_go' })}>Open tickets</a>
               </article>
             </div>
           </div>
@@ -643,11 +837,7 @@ const conversionCard = (page) => {
       <h2>${esc(conversion.title)}</h2>
       <p>${esc(conversion.body)}</p>
       ${conversion.cta ? cta(conversion.cta, 'primary') : ''}
-      <form class="compact-email-form" data-placeholder-form>
-        <label class="sr-only">Email address</label>
-        <input type="email" required placeholder="you@example.com" aria-label="Email address">
-        <button type="submit" aria-label="Submit email signup">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
-      </form>
+      ${hubspotFormShell('missionSeekers', 'hubspot-form-compact')}
     </aside>
   `;
 };
@@ -698,6 +888,7 @@ const landingPage = (page, routePath = `/${page.slug}`) =>
     title: page.title,
     description: page.subtitle,
     path: routePath,
+    storyFooter: false,
     body: `
       ${landingHero(page)}
       ${programDetailSection(page)}
@@ -738,12 +929,15 @@ const missionPage = () =>
           <p class="eyebrow">Arts Access Mission</p>
           <h1>${esc(content.mission.title)}</h1>
           <p>${esc(content.mission.subtitle)}</p>
-          ${cta(content.mission.donateCTA)}
+          <div class="cta-row mission-hero-actions">
+            ${cta(content.mission.donateCTA)}
+            ${cta(content.mission.programsCTA, 'secondary')}
+          </div>
         </div>
       </section>
-      ${statsBlock(content.mission.impactStats, 'section-wash-blue', content.mission.impactHeading)}
+      ${statsBlock(content.mission.impactStats, 'section-wash-blue', content.mission.impactHeading, content.mission.humanProof)}
       ${videoBlock(content.mission.video, 'section-wash-deep')}
-      <section class="section section-wash-lift mission-pathways-section">
+      <section class="section section-wash-lift mission-pathways-section" id="mission-pathways">
         <div class="container mission-pathways-layout">
           <div class="mission-pathways-intro">
             <p class="eyebrow">Mission pathways</p>
@@ -764,6 +958,12 @@ const grantPage = (program) =>
     heroImage: program.image,
     templatePreset: 'Funding the Arts',
     primaryCTA: program.applicationCTA,
+    conversion: {
+      eyebrow: 'Mission seekers',
+      title: program.slug === 'scholarships' ? 'Get scholarship and mission updates' : 'Get grant and outreach updates',
+      body: 'Get emails from The Pavilion to learn more about our arts outreach programs and the people they impact.',
+      cta: { label: 'Join the mission email list', type: 'popover', popoverId: 'get-emails' }
+    },
     tabs: program.tabs,
     quoteHighlight: program.quoteHighlight,
     finalCTA: program.finalCTA,
@@ -848,6 +1048,8 @@ const knowledgeChunks = () => {
         title: `${topic.title}: ${section.heading}`,
         body: [topic.summary, section.body, ...(section.items || [])].join(' '),
         sourceType: 'planVisit',
+        topicSlug: topic.slug,
+        sectionSlug: section.slug,
         url: `/plan-your-visit/#${section.slug}`,
         keywords: topic.aiKeywords || [],
         priority: 10
@@ -886,11 +1088,7 @@ const emailSignup = () => `
         <h2>${esc(content.blocks.email.title)}</h2>
         <p>${esc(content.blocks.email.subtitle)}</p>
       </div>
-      <form class="email-form" data-placeholder-form>
-        <label class="sr-only" for="email-signup">Email address</label>
-        <input id="email-signup" type="email" required placeholder="you@example.com">
-        <button type="submit" aria-label="Submit email signup">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
-      </form>
+      ${hubspotFormShell('get-emails', 'hubspot-form-inline')}
     </div>
   </section>
 `;
@@ -924,8 +1122,8 @@ const storyHubPage = (topic = null) => {
         <div class="container">
           ${sectionHeading('Recent Stories', 'Fresh from The Pavilion', 'Filter by topic or browse the latest stories.')}
           <div class="topic-filter-row">
-            <a class="${topic ? '' : 'is-active'}" href="/story-hub/">All</a>
-            ${content.storyTopics.map((item) => `<a class="${topic === slugifyTopic(item) ? 'is-active' : ''}" href="/story-hub/topic/${slugifyTopic(item)}/">${esc(item)}</a>`).join('')}
+            <a class="${topic ? '' : 'is-active'}" href="/story-hub/"${analyticsAttrs('story_filter', { topic: 'All' })}>All</a>
+            ${content.storyTopics.map((item) => `<a class="${topic === slugifyTopic(item) ? 'is-active' : ''}" href="/story-hub/topic/${slugifyTopic(item)}/"${analyticsAttrs('story_filter', { topic: item })}>${esc(item)}</a>`).join('')}
           </div>
           <div class="story-pillar-grid" aria-label="Story pillars">
             ${content.storyPillars
@@ -935,6 +1133,7 @@ const storyHubPage = (topic = null) => {
                     <span>Pillar</span>
                     <strong>${esc(pillar.title)}</strong>
                     <em>${esc(pillar.body)}</em>
+                    <b>${esc(pillar.ctaLabel || 'Read stories')}${svgIcon('arrow-right', { className: 'btn-icon icon-blue' })}</b>
                   </a>
                 `
               )
@@ -1004,9 +1203,11 @@ fs.mkdirSync(dist, { recursive: true });
 copyRecursive('cwmp_codex_build_package/assets', path.join(dist, 'assets'));
 copyRecursive('src/styles', path.join(dist, 'styles'));
 copyRecursive('src/scripts', path.join(dist, 'scripts'));
+copyRecursive('cloudflare/_headers', path.join(dist, '_headers'));
+copyRecursive('cloudflare/_redirects', path.join(dist, '_redirects'));
 
 writeRoute('/', homePage('/'));
-writeRoute('/events', homePage('/events'));
+writeRoute('/events', eventsPage());
 
 for (const event of content.events) {
   writeRoute(`/events/${event.slug}`, eventDetailPage(event));

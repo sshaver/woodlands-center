@@ -1,6 +1,36 @@
 const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 let lastFocused = null;
 
+window.dataLayer = window.dataLayer || [];
+
+const analyticsDatasetToParams = (dataset = {}) => {
+  const params = {};
+  Object.entries(dataset).forEach(([key, value]) => {
+    if (!key.startsWith('analytics') || key === 'analyticsEvent') return;
+    const paramKey = key
+      .replace(/^analytics/, '')
+      .replace(/^[A-Z]/, (letter) => letter.toLowerCase())
+      .replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+    params[paramKey] = value;
+  });
+  return params;
+};
+
+const pushAnalyticsEvent = (eventName, params = {}) => {
+  if (!eventName) return;
+  window.dataLayer.push({
+    event: eventName,
+    page_path: window.location.pathname,
+    ...params
+  });
+};
+
+document.addEventListener('click', (event) => {
+  const target = event.target.closest('[data-analytics-event]');
+  if (!target) return;
+  pushAnalyticsEvent(target.dataset.analyticsEvent, analyticsDatasetToParams(target.dataset));
+});
+
 document.querySelectorAll('[data-alert-close]').forEach((button) => {
   button.addEventListener('click', () => button.closest('[data-alert]')?.remove());
 });
@@ -78,6 +108,27 @@ if (missionPreview) {
   }
 }
 
+const eventStickyBar = document.querySelector('[data-event-sticky-bar]');
+const eventHeroActions = document.querySelector('.event-action-icons');
+if (eventStickyBar && eventHeroActions) {
+  const setStickyVisibility = (visible) => {
+    eventStickyBar.classList.toggle('is-visible', visible);
+    eventStickyBar.setAttribute('aria-hidden', String(!visible));
+  };
+  setStickyVisibility(false);
+  if ('IntersectionObserver' in window) {
+    const stickyObserver = new IntersectionObserver(
+      ([entry]) => setStickyVisibility(!entry.isIntersecting),
+      { threshold: 0, rootMargin: '-84px 0px 0px 0px' }
+    );
+    stickyObserver.observe(eventHeroActions);
+  } else {
+    const checkSticky = () => setStickyVisibility(eventHeroActions.getBoundingClientRect().bottom < 84);
+    checkSticky();
+    window.addEventListener('scroll', checkSticky, { passive: true });
+  }
+}
+
 document.querySelectorAll('[data-event-view]').forEach((button) => {
   button.addEventListener('click', () => {
     const view = button.dataset.eventView;
@@ -151,6 +202,80 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
+const hubspotTargets = [...document.querySelectorAll('[data-hubspot-form]')];
+const hubspotConfigured = (target) =>
+  target.dataset.portalId &&
+  target.dataset.formId &&
+  !target.dataset.portalId.startsWith('CONFIGURE_') &&
+  !target.dataset.formId.startsWith('CONFIGURE_');
+const showHubspotFallback = (target) => {
+  const fallbackUrl = target.dataset.fallbackUrl || 'mailto:info@woodlandscenter.org';
+  const wrapper = document.createElement('div');
+  const message = document.createElement('p');
+  const link = document.createElement('a');
+  wrapper.className = 'hubspot-fallback';
+  message.textContent = 'This form is ready for HubSpot configuration.';
+  link.className = 'btn btn-secondary';
+  link.href = fallbackUrl;
+  link.textContent = 'Contact The Pavilion';
+  wrapper.append(message, link);
+  target.replaceChildren(wrapper);
+  pushAnalyticsEvent('hubspot_form_fallback', {
+    form_id: target.dataset.formId || '',
+    portal_id: target.dataset.portalId || ''
+  });
+};
+const loadHubspotScript = (() => {
+  let promise;
+  return () => {
+    promise ??= new Promise((resolve, reject) => {
+      if (window.hbspt?.forms?.create) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://js.hsforms.net/forms/embed/v2.js';
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.append(script);
+    });
+    return promise;
+  };
+})();
+
+if (hubspotTargets.length) {
+  hubspotTargets.forEach((target) => {
+    if (!hubspotConfigured(target)) {
+      showHubspotFallback(target);
+      return;
+    }
+    loadHubspotScript()
+      .then(() => {
+        target.querySelector('.hubspot-form-status')?.remove();
+        window.hbspt.forms.create({
+          region: target.dataset.region || 'na1',
+          portalId: target.dataset.portalId,
+          formId: target.dataset.formId,
+          target: `#${CSS.escape(target.id)}`,
+          onFormReady: () => {
+            pushAnalyticsEvent('hubspot_form_load', {
+              form_id: target.dataset.formId || '',
+              portal_id: target.dataset.portalId || ''
+            });
+          },
+          onFormSubmitted: () => {
+            pushAnalyticsEvent('hubspot_form_submit', {
+              form_id: target.dataset.formId || '',
+              portal_id: target.dataset.portalId || ''
+            });
+          }
+        });
+      })
+      .catch(() => showHubspotFallback(target));
+  });
+}
+
 document.querySelectorAll('[data-placeholder-form]').forEach((form) => {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -176,15 +301,76 @@ const resultBox = document.querySelector('[data-ai-result]');
 const knowledgeNode = document.querySelector('#knowledge-data');
 const knowledge = knowledgeNode ? JSON.parse(knowledgeNode.textContent) : [];
 
+const searchSynonyms = {
+  bags: ['bag', 'clear', 'clutch'],
+  bag: ['bags', 'clear', 'clutch'],
+  parking: ['park', 'lot', 'shuttle', 'directions'],
+  park: ['parking', 'lot', 'shuttle'],
+  tickets: ['ticket', 'ticketmaster', 'mobile', 'box office'],
+  ticket: ['tickets', 'ticketmaster', 'mobile', 'box office'],
+  umbrella: ['umbrellas', 'rain'],
+  umbrellas: ['umbrella', 'rain'],
+  food: ['drink', 'concessions', 'menu'],
+  drinks: ['food', 'concessions', 'bottle'],
+  accessible: ['accessibility', 'wheelchair', 'service animals'],
+  accessibility: ['accessible', 'wheelchair', 'service animals'],
+  rules: ['policy', 'policies', 'prohibited'],
+  policy: ['rules', 'policies', 'prohibited'],
+  policies: ['policy', 'rules', 'prohibited']
+};
+
+const normalizeText = (value = '') => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const sanitizeSearchTerm = (value = '') =>
+  normalizeText(
+    value
+      .toLowerCase()
+      .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '[email]')
+      .replace(/\b(?:\+?1[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)\d{3}[-.\s]?\d{4}\b/g, '[phone]')
+  )
+    .slice(0, 120);
+
+const expandTerms = (terms) => [...new Set(terms.flatMap((term) => [term, ...(searchSynonyms[term] || [])].flatMap((item) => normalizeText(item).split(' '))).filter(Boolean))];
+
 const scoreChunk = (chunk, terms) => {
-  const haystack = `${chunk.title} ${chunk.body} ${(chunk.keywords || []).join(' ')}`.toLowerCase();
-  return terms.reduce((score, term) => score + (haystack.includes(term) ? 2 : 0) + (chunk.title.toLowerCase().includes(term) ? 3 : 0), chunk.priority || 0);
+  const title = normalizeText(chunk.title);
+  const body = normalizeText(chunk.body);
+  const keywords = normalizeText((chunk.keywords || []).join(' '));
+  return terms.reduce((score, term) => {
+    const titleMatch = title.includes(term) ? 8 : 0;
+    const keywordMatch = keywords.includes(term) ? 5 : 0;
+    const bodyMatch = body.includes(term) ? 2 : 0;
+    return score + titleMatch + keywordMatch + bodyMatch;
+  }, chunk.priority || 0);
+};
+
+const quoteForMatch = (chunk, terms) => {
+  const sentences = chunk.body
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+  return sentences.find((sentence) => terms.some((term) => normalizeText(sentence).includes(term))) || sentences[0] || chunk.body;
+};
+
+const activateVisitTopic = (chunk) => {
+  if (!chunk.topicSlug) return;
+  const button = document.querySelector(`[data-topic-target="${CSS.escape(chunk.topicSlug)}"]`);
+  if (button) {
+    topicTabs?.querySelectorAll('button').forEach((tab) => tab.classList.toggle('is-active', tab === button));
+  }
+  document.querySelectorAll('[data-topic-panel]').forEach((panel) => {
+    panel.hidden = panel.dataset.topicPanel !== chunk.topicSlug;
+  });
+  const source = document.querySelector(`#${CSS.escape(chunk.sectionSlug || chunk.topicSlug)}`) || document.querySelector(`#${CSS.escape(chunk.topicSlug)}`);
+  source?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 searchForm?.addEventListener('submit', (event) => {
   event.preventDefault();
   const query = new FormData(searchForm).get('query')?.toString().trim() || '';
-  const terms = query.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+  pushAnalyticsEvent('plan_visit_search', {
+    search_term: sanitizeSearchTerm(query)
+  });
+  const terms = expandTerms(query.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean));
   resultBox.hidden = false;
   if (!terms.length) {
     resultBox.innerHTML = '<strong>Ask a question first.</strong><p>Try “Can I bring an umbrella?” or “Is Sting playing?”</p>';
@@ -206,9 +392,24 @@ searchForm?.addEventListener('submit', (event) => {
   const best = matches[0].chunk;
   resultBox.innerHTML = `
     <strong>${best.title}</strong>
-    <p>${best.body.split('. ').slice(0, 2).join('. ')}.</p>
+    <p>“${quoteForMatch(best, terms)}”</p>
     <div class="source-links">
-      ${matches.map(({ chunk }) => `<a href="${chunk.url}">${chunk.title}</a>`).join('')}
+      ${matches
+        .map(({ chunk }) => {
+          const topicAttrs = chunk.topicSlug ? ` data-topic-source="${chunk.topicSlug}" data-section-source="${chunk.sectionSlug || chunk.topicSlug}"` : '';
+          return `<a href="${chunk.url}"${topicAttrs}>${chunk.title}</a>`;
+        })
+        .join('')}
     </div>
   `;
+});
+
+resultBox?.addEventListener('click', (event) => {
+  const sourceLink = event.target.closest('[data-topic-source]');
+  if (!sourceLink) return;
+  event.preventDefault();
+  activateVisitTopic({
+    topicSlug: sourceLink.dataset.topicSource,
+    sectionSlug: sourceLink.dataset.sectionSource
+  });
 });

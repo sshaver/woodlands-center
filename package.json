@@ -5,10 +5,15 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "build:production": "SANITY_REQUIRE_CONTENT=true SANITY_PREVIEW_DRAFTS=false node scripts/build.mjs",
+    "build:preview": "SANITY_PREVIEW_DRAFTS=true node scripts/build.mjs",
     "validate": "node scripts/validate.mjs",
+    "validate:cms": "node scripts/validate-cms-fallback.mjs",
     "outline:checklist": "node scripts/generate-outline-checklist.mjs",
-    "lint": "node --check scripts/build.mjs && node --check scripts/validate.mjs && node --check scripts/prepare-sites-artifact.mjs && node --check scripts/generate-outline-checklist.mjs && node --check src/scripts/site.js && node --check src/content/site-data.mjs",
-    "test": "npm run lint && npm run build && npm run validate",
+    "cms:seed": "node scripts/export-sanity-seed.mjs",
+    "lint": "node --check scripts/build.mjs && node --check scripts/load-env.mjs && node --check scripts/validate.mjs && node --check scripts/validate-cms-fallback.mjs && node --check scripts/export-sanity-seed.mjs && node --check scripts/prepare-sites-artifact.mjs && node --check scripts/generate-outline-checklist.mjs && node --check src/scripts/site.js && node --check src/content/site-data.mjs && node --check src/content/client.mjs && node --check src/content/sanity-client.mjs",
+    "test": "npm run lint && npm run build && npm run validate && npm run validate:cms",
+    "cloudflare:deploy": "npm run build:production && npx wrangler pages deploy dist --project-name cwmp-redesign-static-build",
     "sites:artifact": "node scripts/prepare-sites-artifact.mjs",
     "serve": "node scripts/serve-prototype.mjs"
   }

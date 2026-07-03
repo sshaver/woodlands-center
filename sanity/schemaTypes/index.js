@@ -1,0 +1,67 @@
+import {
+  cta,
+  conversionBlock,
+  formReference,
+  mediaBlock,
+  mediaAsset,
+  navItem,
+  policySection,
+  routeItem,
+  scheduleRow,
+  seo,
+  stat,
+  tab,
+  tabGroup
+} from './objects.js';
+import {
+  alert,
+  blocks,
+  externalRoutes,
+  forms,
+  mission,
+  navigation,
+  seasonSeats,
+  settings
+} from './singletons.js';
+import {
+  event,
+  grantProgram,
+  landingPage,
+  outreachProgram,
+  planVisitTopic,
+  story,
+  storyPillar,
+  storyTopic
+} from './documents.js';
+
+export const schemaTypes = [
+  cta,
+  conversionBlock,
+  mediaBlock,
+  mediaAsset,
+  seo,
+  stat,
+  scheduleRow,
+  tab,
+  tabGroup,
+  policySection,
+  routeItem,
+  formReference,
+  navItem,
+  settings,
+  navigation,
+  forms,
+  alert,
+  mission,
+  seasonSeats,
+  blocks,
+  externalRoutes,
+  event,
+  planVisitTopic,
+  grantProgram,
+  outreachProgram,
+  landingPage,
+  story,
+  storyPillar,
+  storyTopic
+];

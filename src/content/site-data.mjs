@@ -484,10 +484,18 @@ export const mission = {
     href: 'CONFIGURE_MISSION_VIDEO_URL_IN_CMS'
   },
   donateCTA: { label: 'Support The Arts', href: '/mission/support-the-arts' },
+  programsCTA: { label: 'See how the mission works', href: '#mission-pathways' },
   impactHeading: {
     eyebrow: 'Data Highlight',
     title: 'Missional Impact in 2025',
     subtitle: 'A quick look at how arts access moved from the stage into classrooms, scholarships and community programs.'
+  },
+  humanProof: {
+    eyebrow: 'Mission Story',
+    title: "Tarvia's Story",
+    body: 'Use this feature spot for a short video or cut-out portrait that lets one real Pavilion person connect the impact numbers to a human story.',
+    image: asset('content-images/mission/Schol-Award-82.jpg'),
+    cta: { label: 'Add story video', href: 'CONFIGURE_TARVIA_STORY_VIDEO_URL_IN_CMS', type: 'external', openInNewTab: true }
   },
   impactStats: [
     { value: '225K', label: 'People Impacted by Arts Programs' },
@@ -746,8 +754,8 @@ export const outreachPrograms = [
   primaryCTA: outreachProgramDetails[slug]?.primaryCTA || { label: 'Start here', type: 'popover', popoverId: 'contact' },
   conversion: {
     eyebrow: 'Mission seekers',
-    title: 'Keep exploring arts access',
-    body: `Curious how ${title} fits into The Pavilion's larger mission? Join our email list for program stories, educator opportunities and invitations to mission moments throughout the season.`,
+    title: title.includes('Education') || title.includes('Educator') || title.includes('Zoo') || title.includes('Maestros') || title.includes('Scout') || title.includes('Arts On The Go') ? 'Get educator and outreach updates' : 'Get mission stories in your inbox',
+    body: 'Get emails from The Pavilion to learn more about our arts outreach programs and the people they impact.',
     cta: { label: 'Join the mission email list', type: 'popover', popoverId: 'get-emails' }
   },
   video: {
@@ -1109,17 +1117,20 @@ export const storyPillars = [
   {
     title: 'Mission in Motion',
     body: 'Stories that show how arts access reaches classrooms, community groups, families and first-time arts participants.',
-    href: '/story-hub/topic/outreach/'
+    href: '/story-hub/topic/outreach/',
+    ctaLabel: 'Read outreach stories'
   },
   {
     title: 'People of The Pavilion',
     body: 'Profiles of students, educators, volunteers, artists, fans and supporters who make the mission visible.',
-    href: '/story-hub/topic/supporters/'
+    href: '/story-hub/topic/supporters/',
+    ctaLabel: 'Meet supporters'
   },
   {
     title: 'Behind the Experience',
     body: 'A closer look at what happens backstage, before the gates open and after the encore fades.',
-    href: '/story-hub/topic/backstage/'
+    href: '/story-hub/topic/backstage/',
+    ctaLabel: 'Go backstage'
   }
 ];
 
