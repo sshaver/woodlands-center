@@ -72,6 +72,30 @@ export const forms = {
     type: 'hubspot',
     portalId: 'CONFIGURE_HUBSPOT_PORTAL_ID',
     formId: 'CONFIGURE_SEASON_SEATS_FORM_ID'
+  },
+  missionSeekers: {
+    title: 'Mission Seekers',
+    subtitle: 'Get emails from The Pavilion to learn more about our arts outreach programs and the people they impact.',
+    type: 'hubspot',
+    portalId: 'CONFIGURE_HUBSPOT_PORTAL_ID',
+    formId: 'CONFIGURE_MISSION_SEEKERS_FORM_ID',
+    fallbackUrl: 'mailto:info@woodlandscenter.org?subject=Mission%20Updates'
+  },
+  programReminder: {
+    title: 'Program Reminders',
+    subtitle: 'Get reminders about program dates, registration windows and next steps.',
+    type: 'hubspot',
+    portalId: 'CONFIGURE_HUBSPOT_PORTAL_ID',
+    formId: 'CONFIGURE_PROGRAM_REMINDER_FORM_ID',
+    fallbackUrl: 'mailto:info@woodlandscenter.org?subject=Program%20Reminder'
+  },
+  grants: {
+    title: 'Grant Updates',
+    subtitle: 'Get updates about grant timelines, requirements and application reminders.',
+    type: 'hubspot',
+    portalId: 'CONFIGURE_HUBSPOT_PORTAL_ID',
+    formId: 'CONFIGURE_GRANTS_FORM_ID',
+    fallbackUrl: 'mailto:info@woodlandscenter.org?subject=Grant%20Updates'
   }
 };
 
