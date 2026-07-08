@@ -1560,7 +1560,7 @@ p {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 1000;
+  z-index: 10000;
   width: min(340px, calc(100vw - 2rem));
   border: 1px solid rgba(64, 189, 244, 0.42);
   border-radius: var(--radius-card-md);

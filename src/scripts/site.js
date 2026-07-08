@@ -3,6 +3,25 @@ let lastFocused = null;
 
 window.dataLayer = window.dataLayer || [];
 
+const fallbackImage = document.body?.dataset.fallbackImage;
+
+if (fallbackImage) {
+  document.addEventListener(
+    'error',
+    (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLImageElement) || target.dataset.fallbackApplied === 'true') return;
+      target.dataset.fallbackApplied = 'true';
+      target.src = fallbackImage;
+      pushAnalyticsEvent('image_fallback_loaded', {
+        image_alt: target.alt || '',
+        image_context: target.closest('article, section')?.className || ''
+      });
+    },
+    true
+  );
+}
+
 const analyticsDatasetToParams = (dataset = {}) => {
   const params = {};
   Object.entries(dataset).forEach(([key, value]) => {
@@ -67,6 +86,7 @@ document.querySelector('[data-mission-subnav]')?.closest('.container')?.querySel
 
 const missionPreview = document.querySelector('[data-mission-preview-card]');
 if (missionPreview) {
+  document.body.append(missionPreview);
   const supportsHoverPreview = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const image = missionPreview.querySelector('[data-mission-preview-image]');
   const title = missionPreview.querySelector('[data-mission-preview-title]');
@@ -77,7 +97,7 @@ if (missionPreview) {
     const height = missionPreview.offsetHeight || 360;
     const left = Math.min(x + offset, window.innerWidth - width - 16);
     const top = Math.min(y + offset, window.innerHeight - height - 16);
-    missionPreview.style.transform = `translate(${Math.max(16, left)}px, ${Math.max(16, top)}px)`;
+    missionPreview.style.transform = `translate3d(${Math.max(16, left)}px, ${Math.max(16, top)}px, 0)`;
   };
   const showPreview = (link, event) => {
     image.src = link.dataset.previewImage;

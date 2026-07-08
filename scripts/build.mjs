@@ -547,7 +547,7 @@ const shell = ({ title, description, path: routePath, theme = 'dark', body, extr
   <link rel="stylesheet" href="/styles/site.css">
   ${extraHead}
 </head>
-<body data-route="${attr(routePath)}">
+<body data-route="${attr(routePath)}" data-fallback-image="${attr(content.settings.fallbackImage)}">
   ${gtmBody()}
   <a class="skip-link" href="#main">Skip to content</a>
   ${alertBanner()}
