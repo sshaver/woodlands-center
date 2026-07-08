@@ -96,6 +96,9 @@ const svgIcon = (name, options = {}) => {
   const iconKey = `${style}/${name}`;
   if (!svgIconCache.has(iconKey)) {
     const iconPaths = [
+      path.resolve('public/assets/icons/svgs', style, `${name}.svg`),
+      path.resolve('public/assets/icons/svgs/regular', `${name}.svg`),
+      path.resolve('public/assets/icons/svgs/solid', `${name}.svg`),
       path.resolve('cwmp_codex_build_package/assets/icons/svgs', style, `${name}.svg`),
       path.resolve('cwmp_codex_build_package/assets/icons/svgs/solid', `${name}.svg`)
     ];
