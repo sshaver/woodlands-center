@@ -47,12 +47,20 @@ const imageUrlFromRef = (ref, config) => {
   return `https://cdn.sanity.io/images/${config.projectId}/${config.dataset}/${id}-${dimensions}.${extension}`;
 };
 
+const imageUrlFromValue = (value, config) =>
+  value?.asset?.url ||
+  imageUrlFromRef(value?.asset?._ref, config) ||
+  imageUrlFromRef(value?.asset?.asset?._ref, config) ||
+  imageUrlFromRef(value?.asset?.asset?._ref || value?.asset?._ref, config) ||
+  value?.src ||
+  '';
+
 const normalizeValue = (value, config) => {
   if (Array.isArray(value)) return value.map((item) => normalizeValue(item, config));
   if (!value || typeof value !== 'object') return value;
   if (value._type === 'slug') return value.current || '';
   if (value._type === 'image' || value._type === 'mediaAsset' || value.src || value.asset?._ref || value.asset?.url) {
-    return value.asset?.url || imageUrlFromRef(value.asset?._ref, config) || value.src || '';
+    return imageUrlFromValue(value, config);
   }
   return Object.fromEntries(
     Object.entries(value)

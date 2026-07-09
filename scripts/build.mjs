@@ -730,6 +730,7 @@ const eventDetailPage = (event) => {
   const scheduleRows = Array.isArray(event.showSchedule) && event.showSchedule.length
     ? event.showSchedule
     : [{ time: event.gateOpenTime || event.eventStartTime || 'Event day', label: 'Check event updates for final timing.' }];
+  const heroImage = event.headerImage || event.cardImage || content.settings.fallbackImage;
 
   return shell({
     title: event.title,
@@ -738,7 +739,7 @@ const eventDetailPage = (event) => {
     storyFooter: false,
     body: `
       <article>
-        <section class="detail-hero" style="--hero-image:url('${attr(event.headerImage)}')">
+        <section class="detail-hero" style="--hero-image:url('${attr(heroImage)}')">
           <div class="container event-hero-grid">
             <div class="detail-copy">
               <p class="eyebrow">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</p>

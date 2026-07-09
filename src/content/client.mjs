@@ -9,6 +9,16 @@ const withFallback = (cmsValue, fixtureValue) => {
   return cmsValue || fixtureValue;
 };
 
+const mergeBySlug = (cmsValue, fixtureValue) => {
+  if (!Array.isArray(cmsValue) || !cmsValue.length) return fixtureValue;
+  const merged = new Map((fixtureValue || []).map((item) => [item.slug, item]));
+  cmsValue.forEach((item) => {
+    if (!item?.slug) return;
+    merged.set(item.slug, { ...(merged.get(item.slug) || {}), ...item });
+  });
+  return [...merged.values()];
+};
+
 const normalizeForms = (forms) => {
   if (!forms) return forms;
   const normalized = { ...forms };
@@ -35,15 +45,15 @@ const mergeSource = (cms = {}) => ({
   forms: withFallback(normalizeForms(cms.forms), fixtures.forms),
   alert: withFallback(cms.alert, fixtures.alert),
   blocks: withFallback(cms.blocks, fixtures.blocks),
-  events: withFallback(cms.events, fixtures.events),
-  planVisitTopics: withFallback(cms.planVisitTopics, fixtures.planVisitTopics),
+  events: mergeBySlug(cms.events, fixtures.events),
+  planVisitTopics: mergeBySlug(cms.planVisitTopics, fixtures.planVisitTopics),
   mission: withFallback(cms.mission, fixtures.mission),
   seasonSeats: withFallback(cms.seasonSeats, fixtures.seasonSeats),
-  grantPrograms: withFallback(cms.grantPrograms, fixtures.grantPrograms),
-  outreachPrograms: withFallback(cms.outreachPrograms, fixtures.outreachPrograms),
-  landingPages: withFallback(cms.landingPages, fixtures.landingPages),
-  stories: withFallback(cms.stories, fixtures.stories),
-  storyPillars: withFallback(cms.storyPillars, fixtures.storyPillars),
+  grantPrograms: mergeBySlug(cms.grantPrograms, fixtures.grantPrograms),
+  outreachPrograms: mergeBySlug(cms.outreachPrograms, fixtures.outreachPrograms),
+  landingPages: mergeBySlug(cms.landingPages, fixtures.landingPages),
+  stories: mergeBySlug(cms.stories, fixtures.stories),
+  storyPillars: mergeBySlug(cms.storyPillars, fixtures.storyPillars),
   storyTopics: withFallback(normalizeStoryTopics(cms.storyTopics), fixtures.storyTopics),
   externalRoutes: withFallback(normalizeExternalRoutes(cms.externalRoutes), fixtures.externalRoutes)
 });
