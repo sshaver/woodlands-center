@@ -1740,6 +1740,11 @@ p {
   background: linear-gradient(90deg, #062c48, #0d6b9b);
 }
 
+.email-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .story-hub-hero,
 .article-hero {
   padding: 7rem 0 4rem;
@@ -1950,20 +1955,6 @@ p {
   margin-top: 0.35rem;
 }
 
-.hubspot-form-compact,
-.hubspot-form-inline {
-  min-height: 5.5rem;
-}
-
-.hubspot-form-compact {
-  padding: 0.85rem;
-}
-
-.hubspot-form-inline {
-  width: min(100%, 34rem);
-  margin-left: auto;
-}
-
 .fine-print,
 .form-success {
   font-family: var(--font-ui);
@@ -2032,6 +2023,10 @@ p {
   .media-right > .video-poster,
   .media-right > div:not(.glow-media):not(.video-poster) {
     order: initial;
+  }
+
+  .email-actions {
+    justify-content: flex-start;
   }
 
   .alert-banner {

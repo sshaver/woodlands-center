@@ -195,28 +195,6 @@ const cta = (item = {}, style = item.style || 'primary') => {
   return `<a class="btn btn-${style}" href="${attr(href)}"${popoverAttrs}${externalAttrs}${trackingAttrs}>${esc(item.label)}${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>`;
 };
 
-let hubspotFormCount = 0;
-const hubspotFormShell = (formKey = 'get-emails', className = '') => {
-  const form = content.forms[formKey] || content.forms['get-emails'] || {};
-  const portalId = configuredValue(form.portalId, 'HUBSPOT_PORTAL_ID');
-  const region = configuredValue(form.region, 'HUBSPOT_REGION') || 'na1';
-  const formId = configuredValue(form.formId);
-  hubspotFormCount += 1;
-  return `
-    <div
-      class="hubspot-form-shell ${attr(className)}"
-      id="hubspot-${attr(formKey)}-${hubspotFormCount}"
-      data-hubspot-form
-      data-portal-id="${attr(portalId)}"
-      data-region="${attr(region)}"
-      data-form-id="${attr(formId)}"
-      data-fallback-url="${attr(form.fallbackUrl || 'mailto:info@woodlandscenter.org')}"
-    >
-      <p class="hubspot-form-status">Loading form...</p>
-    </div>
-  `;
-};
-
 const image = (media, className = '', loading = 'lazy') =>
   `<img class="${attr(className)}" src="${attr(media?.src || media || content.settings.fallbackImage)}" alt="${attr(media?.alt || '')}" loading="${loading}" decoding="async">`;
 
@@ -748,8 +726,12 @@ const eventsPage = () => {
   });
 };
 
-const eventDetailPage = (event) =>
-  shell({
+const eventDetailPage = (event) => {
+  const scheduleRows = Array.isArray(event.showSchedule) && event.showSchedule.length
+    ? event.showSchedule
+    : [{ time: event.gateOpenTime || event.eventStartTime || 'Event day', label: 'Check event updates for final timing.' }];
+
+  return shell({
     title: event.title,
     description: event.eventDescription,
     path: `/events/${event.slug}`,
@@ -805,7 +787,7 @@ const eventDetailPage = (event) =>
               <div class="schedule-card">
                 <p class="eyebrow">Show Schedule</p>
                 <dl class="schedule-list">
-                  ${event.showSchedule.map((row) => `<div><dt>${esc(row.time)}</dt><dd>${esc(row.label)}</dd></div>`).join('')}
+                  ${scheduleRows.map((row) => `<div><dt>${esc(row.time)}</dt><dd>${esc(row.label)}</dd></div>`).join('')}
                 </dl>
               </div>
               <div class="text-code-card">
@@ -845,6 +827,7 @@ const eventDetailPage = (event) =>
       </article>
     `
   });
+};
 
 const landingHero = (page, eyebrow = templateEyebrow(page)) => `
   <section class="landing-hero" style="--hero-image:url('${attr(page.heroImage || content.settings.fallbackImage)}')">
@@ -870,7 +853,6 @@ const conversionCard = (page) => {
       <h2>${esc(conversion.title)}</h2>
       <p>${esc(conversion.body)}</p>
       ${conversion.cta ? cta(conversion.cta, 'primary') : ''}
-      ${hubspotFormShell('missionSeekers', 'hubspot-form-compact')}
     </aside>
   `;
 };
@@ -1121,7 +1103,9 @@ const emailSignup = () => `
         <h2>${esc(content.blocks.email.title)}</h2>
         <p>${esc(content.blocks.email.subtitle)}</p>
       </div>
-      ${hubspotFormShell('get-emails', 'hubspot-form-inline')}
+      <div class="email-actions">
+        ${cta({ label: 'Join the email list', type: 'popover', popoverId: 'get-emails' }, 'primary')}
+      </div>
     </div>
   </section>
 `;
