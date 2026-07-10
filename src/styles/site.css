@@ -1289,6 +1289,39 @@ p {
   padding: clamp(1.5rem, 3.2vw, 2.35rem);
 }
 
+.season-place-card {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.season-place-card > h2 {
+  max-width: 760px;
+  margin-bottom: 0;
+}
+
+.season-place-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(320px, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+
+.season-place-copy {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.season-place-copy h3 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.5vw, 2.85rem);
+  line-height: 0.98;
+}
+
+.season-place-copy p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
 .seat-guidance-visual {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2166,6 +2199,7 @@ p {
   .support-landing-grid,
   .support-conversion-grid,
   .season-extras-grid,
+  .season-place-grid,
   .events-chart-row,
   .detail-grid,
   .video-block,

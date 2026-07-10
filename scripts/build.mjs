@@ -959,23 +959,29 @@ const programDetailSection = (page) => `
 
 const seasonSeatsExtras = () => `
   <section class="section season-extras-section section-wash-lift">
-    <div class="container season-extras-grid">
-      <article class="info-card">
-        <p class="eyebrow">${esc(content.seasonSeats.pricing.eyebrow)}</p>
-        <h2>${esc(content.seasonSeats.pricing.title)}</h2>
-        <p>${esc(content.seasonSeats.pricing.body)}</p>
-        ${content.seasonSeats.pricing.cta ? cta(content.seasonSeats.pricing.cta, 'primary') : ''}
-      </article>
-      <article class="info-card seating-map-card">
-        <p class="eyebrow">${esc(content.seasonSeats.seatingMap.eyebrow)}</p>
-        <h2>${esc(content.seasonSeats.seatingMap.title)}</h2>
-        <div class="seat-guidance-visual" aria-hidden="true">
-          <span>Stage</span>
-          <span>Premium Reserved</span>
-          <span>Club Access</span>
-          <span>Lawn</span>
+    <div class="container">
+      <article class="info-card season-place-card">
+        <p class="eyebrow">Season Seats</p>
+        <h2>Find Your Place at The Pavilion</h2>
+        <div class="season-place-grid">
+          <div class="season-place-copy">
+            <p class="eyebrow">${esc(content.seasonSeats.pricing.eyebrow)}</p>
+            <h3>${esc(content.seasonSeats.pricing.title)}</h3>
+            <p>${esc(content.seasonSeats.pricing.body)}</p>
+            ${content.seasonSeats.pricing.cta ? cta(content.seasonSeats.pricing.cta, 'primary') : ''}
+          </div>
+          <div class="season-place-copy">
+            <p class="eyebrow">${esc(content.seasonSeats.seatingMap.eyebrow)}</p>
+            <h3>${esc(content.seasonSeats.seatingMap.title)}</h3>
+            <div class="seat-guidance-visual" aria-hidden="true">
+              <span>Stage</span>
+              <span>Premium Reserved</span>
+              <span>Club Access</span>
+              <span>Lawn</span>
+            </div>
+            <p>${esc(content.seasonSeats.seatingMap.body)}</p>
+          </div>
         </div>
-        <p>${esc(content.seasonSeats.seatingMap.body)}</p>
       </article>
     </div>
   </section>
