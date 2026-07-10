@@ -145,7 +145,14 @@ export const landingPage = {
     { name: 'seo', title: 'SEO', type: 'seo' }
   ],
   preview: {
-    select: { title: 'title', subtitle: 'subtitle', media: 'heroImage' }
+    select: { title: 'title', slug: 'slug.current', subtitle: 'subtitle', media: 'heroImage' },
+    prepare({ title, slug, subtitle, media }) {
+      return {
+        title,
+        subtitle: slug ? `/${slug}` : subtitle,
+        media
+      };
+    }
   }
 };
 
