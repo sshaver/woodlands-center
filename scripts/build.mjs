@@ -195,6 +195,37 @@ const cta = (item = {}, style = item.style || 'primary') => {
   return `<a class="btn btn-${style}" href="${attr(href)}"${popoverAttrs}${externalAttrs}${trackingAttrs}>${esc(item.label)}${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>`;
 };
 
+const donorPerfectDonationUrl = configuredValue(
+  content.settings.integrations?.donorPerfect || 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS',
+  'DONORPERFECT_DONATION_URL'
+);
+
+const isDonationItem = (item = {}) => {
+  const label = String(item.label || '').toLowerCase();
+  const href = String(item.href || '').toLowerCase();
+  return label.includes('donate') || label.includes('gift') || href === '/donate';
+};
+
+const donationItem = (item = {}) => {
+  if (!isDonationItem(item) || !donorPerfectDonationUrl) return item;
+  return {
+    ...item,
+    href: donorPerfectDonationUrl,
+    type: 'external',
+    openInNewTab: true
+  };
+};
+
+const supportDonationPage = (page) => ({
+  ...page,
+  primaryCTA: donationItem(page.primaryCTA),
+  secondaryCTA: donationItem(page.secondaryCTA),
+  conversion: page.conversion ? { ...page.conversion, cta: donationItem(page.conversion.cta) } : page.conversion,
+  tabs: (page.tabs || []).map((tab) => ({ ...tab, cta: donationItem(tab.cta) }))
+});
+
+const navItem = (item = {}) => donationItem(item);
+
 const image = (media, className = '', loading = 'lazy') =>
   `<img class="${attr(className)}" src="${attr(media?.src || media || content.settings.fallbackImage)}" alt="${attr(media?.alt || '')}" loading="${loading}" decoding="async">`;
 
@@ -231,7 +262,7 @@ const tabs = (items, idPrefix) => {
     .map(
       (tab, index) => `
         <div class="tab-panel" id="${idPrefix}-panel-${index}" role="tabpanel" aria-labelledby="${idPrefix}-tab-${index}" ${index === 0 ? '' : 'hidden'}>
-          ${tab.image ? `<img class="tab-panel-image" src="${attr(tab.image)}" alt="${attr(tab.label)}" loading="lazy" decoding="async">` : ''}
+          ${tab.image ? image(tab.image, 'tab-panel-image') : ''}
           <h3>${esc(tab.label)}</h3>
           ${tab.body || tab.summary ? `<p>${esc(tab.body || tab.summary || '')}</p>` : ''}
           ${tab.items?.length ? `<ul>${tab.items.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>` : ''}
@@ -244,6 +275,47 @@ const tabs = (items, idPrefix) => {
     <div class="tabs" data-tabs>
       <div class="tab-list" role="tablist" aria-label="${attr(idPrefix.replaceAll('-', ' '))}">${buttons}</div>
       ${panels}
+    </div>
+  `;
+};
+
+const statCards = (items = [], className = 'landing-stat-grid') => {
+  if (!items.length) return '';
+  return `
+    <div class="${attr(className)}">
+      ${items
+        .map(
+          (item) => `
+            <article class="landing-stat-card">
+              <strong>${esc(item.value)}</strong>
+              <span>${esc(item.label)}</span>
+            </article>
+          `
+        )
+        .join('')}
+    </div>
+  `;
+};
+
+const pathwayCards = (items = [], className = 'pathway-card-grid') => {
+  if (!items.length) return '';
+  return `
+    <div class="${attr(className)}">
+      ${items
+        .map(
+          (item) => `
+            <article class="pathway-card">
+              ${item.image ? image(item.image, 'pathway-card-image') : ''}
+              <div class="pathway-card-copy">
+                <p class="eyebrow">${esc(item.summary || item.slug || 'Option')}</p>
+                <h3>${esc(item.label)}</h3>
+                <p>${esc(item.body || '')}</p>
+                ${item.cta ? cta(item.cta, 'secondary') : ''}
+              </div>
+            </article>
+          `
+        )
+        .join('')}
     </div>
   `;
 };
@@ -594,7 +666,10 @@ const footer = (theme) => `
         <p>The Pavilion brings world-class performances, free arts experiences, education programs and community moments to The Woodlands all season long.</p>
       </div>
       <nav aria-label="Footer">
-        ${content.navigation.footer.map((item) => `<a href="${attr(item.href)}">${esc(item.label)}</a>`).join('')}
+        ${content.navigation.footer.map((item) => {
+          const link = navItem(item);
+          return `<a href="${attr(link.href)}">${esc(link.label)}</a>`;
+        }).join('')}
       </nav>
       <div class="footer-actions">
         ${cta({ label: 'Contact', type: 'popover', popoverId: 'contact' }, 'secondary')}
@@ -607,7 +682,10 @@ const footer = (theme) => `
 const mobileDock = (routePath) => `
   <nav class="mobile-dock" aria-label="Mobile dock">
     ${content.navigation.mobileDock
-      .map((item) => `<a class="${routePath.startsWith(item.href) ? 'is-active' : ''}" href="${attr(item.href)}"><span class="dock-icon">${svgIcon(item.icon, { className: 'site-icon icon-blue' })}</span>${esc(item.label)}</a>`)
+      .map((item) => {
+        const link = navItem(item);
+        return `<a class="${routePath.startsWith(link.href) ? 'is-active' : ''}" href="${attr(link.href)}"><span class="dock-icon">${svgIcon(link.icon, { className: 'site-icon icon-blue' })}</span>${esc(link.label)}</a>`;
+      })
       .join('')}
   </nav>
 `;
@@ -615,7 +693,7 @@ const mobileDock = (routePath) => `
 const popoverMarkup = () => `
   <div class="popover-layer" data-popover-layer hidden>
     ${Object.entries(content.forms)
-      .filter(([id]) => id === 'contact' || id === 'get-emails')
+      .filter(([id]) => ['contact', 'get-emails', 'seasonSeats'].includes(id))
       .map(([id, form]) => {
         const portalId = configuredValue(form.portalId, 'HUBSPOT_PORTAL_ID');
         const region = configuredValue(form.region, 'HUBSPOT_REGION') || 'na1';
@@ -886,12 +964,16 @@ const seasonSeatsExtras = () => `
         <p class="eyebrow">${esc(content.seasonSeats.pricing.eyebrow)}</p>
         <h2>${esc(content.seasonSeats.pricing.title)}</h2>
         <p>${esc(content.seasonSeats.pricing.body)}</p>
+        ${content.seasonSeats.pricing.cta ? cta(content.seasonSeats.pricing.cta, 'primary') : ''}
       </article>
       <article class="info-card seating-map-card">
         <p class="eyebrow">${esc(content.seasonSeats.seatingMap.eyebrow)}</p>
         <h2>${esc(content.seasonSeats.seatingMap.title)}</h2>
-        <div class="seating-map-placeholder" aria-label="Seating map placeholder">
-          <span>Seating Map</span>
+        <div class="seat-guidance-visual" aria-hidden="true">
+          <span>Stage</span>
+          <span>Premium Reserved</span>
+          <span>Club Access</span>
+          <span>Lawn</span>
         </div>
         <p>${esc(content.seasonSeats.seatingMap.body)}</p>
       </article>
@@ -899,18 +981,73 @@ const seasonSeatsExtras = () => `
   </section>
 `;
 
-const landingPage = (page, routePath = `/${page.slug}`) =>
-  shell({
+const seasonSeatsLandingSection = () => `
+  <section class="section season-conversion-section section-wash-deep">
+    <div class="container season-conversion-grid">
+      <div>
+        ${sectionHeading(
+          'Why Season Seats',
+          'A premium plan for the people you want beside you',
+          'Use Season Seats as a business development tool, a team reward, a family tradition or the easiest way to say yes when the right show lands on the calendar.'
+        )}
+        ${pathwayCards(content.seasonSeats.tabs || [], 'season-benefit-grid')}
+      </div>
+      ${conversionCard(content.seasonSeats)}
+    </div>
+  </section>
+`;
+
+const supportArtsLandingSection = (page) => `
+  <section class="section support-landing-section section-wash-deep">
+    <div class="container support-landing-grid">
+      <div>
+        ${sectionHeading(
+          'Ways to support',
+          'Pick the path that matches how you want to make arts access possible',
+          'Some supporters want to give now. Some want membership, volunteer leadership or a company partnership. This page gets each visitor to the right next step quickly.'
+        )}
+        ${pathwayCards(page.tabs || [], 'support-pathway-grid')}
+      </div>
+      <aside class="support-proof-panel">
+        <p class="eyebrow">Mission proof</p>
+        <h2>Support becomes access people can feel.</h2>
+        <p>The Pavilion turns donor, volunteer and partner support into free community performances, scholarships, grants, educator resources and outreach across the region.</p>
+        ${statCards(content.mission.impactStats || [], 'support-stat-grid')}
+        ${page.primaryCTA ? cta(page.primaryCTA, 'primary') : ''}
+      </aside>
+    </div>
+  </section>
+  <section class="section support-conversion-band section-wash-lift">
+    <div class="container support-conversion-grid">
+      <div>
+        <p class="eyebrow">${esc(page.conversion?.eyebrow || 'Next step')}</p>
+        <h2>${esc(page.conversion?.title || 'Find your way into the mission')}</h2>
+        <p>${esc(page.conversion?.body || '')}</p>
+      </div>
+      <div class="cta-row">
+        ${page.primaryCTA ? cta(page.primaryCTA, 'primary') : ''}
+        ${page.secondaryCTA ? cta(page.secondaryCTA, 'secondary') : ''}
+        ${page.conversion?.cta ? cta(page.conversion.cta, 'secondary') : ''}
+      </div>
+    </div>
+  </section>
+`;
+
+const landingPage = (page, routePath = `/${page.slug}`) => {
+  const isSupportArtsPage = page.templatePreset === 'supportArts' && page.slug === 'mission/support-the-arts';
+  const renderPage = isSupportArtsPage ? supportDonationPage(page) : page;
+  return shell({
     title: page.title,
     description: page.subtitle,
     path: routePath,
     storyFooter: false,
     body: `
-      ${landingHero(page)}
-      ${programDetailSection(page)}
-      ${page.templatePreset === 'freeShows' ? eventListBlock('Free Community Shows', 'freeCommunity') : ''}
+      ${landingHero(renderPage)}
+      ${isSupportArtsPage ? supportArtsLandingSection(renderPage) : programDetailSection(renderPage)}
+      ${renderPage.templatePreset === 'freeShows' ? eventListBlock('Free Community Shows', 'freeCommunity') : ''}
     `
   });
+};
 
 const seasonSeatsPage = () =>
   shell({
@@ -924,11 +1061,7 @@ const seasonSeatsPage = () =>
         templatePreset: 'Season Seats',
         secondaryCTA: content.seasonSeats.holderLoginCTA
       })}
-      ${programDetailSection({
-        ...content.seasonSeats,
-        slug: 'season-seats',
-        templatePreset: 'Season Seats'
-      })}
+      ${seasonSeatsLandingSection()}
       ${seasonSeatsExtras()}
       ${eventListBlock('Concert Nights for Clients, Friends and Family')}
     `

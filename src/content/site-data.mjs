@@ -29,7 +29,7 @@ export const navigation = {
   ],
   mobileDock: [
     { label: 'Season Seats', href: '/season-seats', icon: 'crown' },
-    { label: 'Donate', href: '/donate', icon: 'hand-holding-heart' },
+    { label: 'Donate', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS', icon: 'hand-holding-heart' },
     { label: 'Events', href: '/events', icon: 'ticket' },
     { label: 'Visit', href: '/plan-your-visit', icon: 'location-dot' },
     { label: 'Mission', href: '/mission', icon: 'violin' }
@@ -43,7 +43,7 @@ export const navigation = {
     { label: 'Staff Log In', href: '/staff-login' },
     { label: 'Rent The Pavilion', href: '/rent' },
     { label: 'Volunteers', href: '/volunteer' },
-    { label: 'Donate', href: '/donate' },
+    { label: 'Donate', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS' },
     { label: 'Sponsors', href: '/sponsors' }
   ]
 };
@@ -68,10 +68,13 @@ export const forms = {
     privacyCopy: 'Email signup is ready for HubSpot configuration.'
   },
   seasonSeats: {
-    title: 'Season Seats Interest',
+    title: 'Request Season Seats Information',
+    subtitle: 'Tell us how you want to use Season Seats and a Pavilion team member will follow up with availability, options and next steps.',
     type: 'hubspot',
     portalId: 'CONFIGURE_HUBSPOT_PORTAL_ID',
-    formId: 'CONFIGURE_SEASON_SEATS_FORM_ID'
+    formId: 'CONFIGURE_SEASON_SEATS_FORM_ID',
+    fallbackUrl: 'mailto:info@woodlandscenter.org?subject=Season%20Seats%20Interest',
+    privacyCopy: 'Your request goes to the Pavilion team that handles Season Seats conversations.'
   },
   missionSeekers: {
     title: 'Mission Seekers',
@@ -534,32 +537,33 @@ export const mission = {
 };
 
 export const seasonSeats = {
-  title: 'Season Seats at The Pavilion',
-  subtitle: 'Season Seats at The Pavilion are the ideal way to entertain clients, reward employees or share with friends and family as you enjoy ultimate amenities and experience world-class entertainment from the best seats in the house.',
+  title: 'Turn every concert night into the best seat in the house.',
+  subtitle: 'Season Seats give clients, employees, friends and family a premium Pavilion experience with reserved seats, club access and a team ready to help you plan the nights that matter most.',
   image: asset('content-images/landing-pages/DSC00552.jpg'),
-  primaryCTA: { label: 'Request Season Seats', href: '/season-seats', type: 'internal' },
+  primaryCTA: { label: 'Request Availability', type: 'popover', popoverId: 'seasonSeats' },
   learnMoreCTA: { label: 'Learn More', href: '/season-seats' },
   holderLoginCTA: { label: 'SS Holder Log-In', href: 'CONFIGURE_ACCOUNT_MANAGER_URL_IN_CMS', type: 'external', openInNewTab: true },
   pricing: {
-    eyebrow: 'Pricing',
-    title: 'Season Seats pricing',
-    body: 'Add pricing ranges, payment timing, membership notes and package details here as the Season Seats offer is finalized.'
+    eyebrow: 'How it works',
+    title: 'A guided purchase, not a guessing game',
+    body: 'Share how many seats you need, who you want to host and the kinds of shows you care about. The Pavilion team will walk you through available locations, package timing and the right fit before you commit.',
+    cta: { label: 'Start the Conversation', type: 'popover', popoverId: 'seasonSeats' }
   },
   seatingMap: {
-    eyebrow: 'Seating Map',
-    title: 'Find your place in the house',
-    body: 'This space can hold a seating map, downloadable PDF or interactive map embed so guests can compare views and locations.'
+    eyebrow: 'Seat guidance',
+    title: 'Find the right view for the way you host',
+    body: 'Prefer easy arrival, a memorable client night, a close-to-the-stage feel or a comfortable home base for family and friends? We will help compare options around your priorities instead of making you sort through every section alone.'
   },
   conversion: {
-    eyebrow: 'Season Seats',
-    title: 'Connect with JD',
-    body: 'Tell us how you want to host, reward or celebrate and JD will help shape the Season Seats experience around your nights at The Pavilion.',
-    cta: { label: 'Connect with JD', type: 'popover', popoverId: 'contact' }
+    eyebrow: 'Ready when you are',
+    title: 'Ask about Season Seats availability',
+    body: 'Tell us whether you are entertaining clients, rewarding employees or making family concert nights easier. A Pavilion team member will follow up with practical options and next steps.',
+    cta: { label: 'Request Availability', type: 'popover', popoverId: 'seasonSeats' }
   },
   tabs: [
-    { label: 'Seamless Experience', slug: 'seamless-experience', image: asset('content-images/partners-sponsors/Fans-27.jpg'), body: 'From arrival to beyond the encore, every detail is designed for your ease and enjoyment. Private entry and parking and a dedicated support team let you put the focus back on the music, the moment and the memories.' },
-    { label: 'Club Access', slug: 'club-access', image: asset('content-images/partners-sponsors/SSS Fans-27.jpg'), body: 'Whether you’re hosting clients, sharing the night with friends or creating lasting memories with family, the Woodforest Bank Club is where The Pavilion experience truly comes together.' },
-      { label: 'Dining Included', slug: 'dining-included', image: asset('content-images/partners-sponsors/Fans-13.jpg'), body: 'Food and NA beverages are included with your Season Seats + enjoy three full service bars and nightly happy hour.' }
+    { label: 'Host with Ease', slug: 'host-with-ease', image: asset('content-images/partners-sponsors/Fans-27.jpg'), body: 'Invite clients, partners or employees without rebuilding the plan every time. Season Seats create a polished, repeatable way to host around major concert nights.', cta: { label: 'Request Availability', type: 'popover', popoverId: 'seasonSeats' } },
+    { label: 'Club Access', slug: 'club-access', image: asset('content-images/partners-sponsors/SSS Fans-27.jpg'), body: 'Make the night feel elevated before the show starts. Club access gives your guests a comfortable place to gather, connect and settle into the Pavilion experience.', cta: { label: 'Explore Options', type: 'popover', popoverId: 'seasonSeats' } },
+    { label: 'Easy to Share', slug: 'easy-to-share', image: asset('content-images/partners-sponsors/Fans-13.jpg'), body: 'Use your seats for business development, employee recognition, family nights or friends who never miss a show. The value is in having an easy yes ready when the calendar fills.', cta: { label: 'Talk to the Team', type: 'popover', popoverId: 'seasonSeats' } }
   ]
 };
 
@@ -800,21 +804,22 @@ export const landingPages = [
   {
     title: 'Support The Arts',
     slug: 'mission/support-the-arts',
-    subtitle: 'Choose the pathway that matches how you want to help more people experience live arts, education programs, scholarships, grants and outreach at The Pavilion.',
+    subtitle: 'Your gift helps open the gates wider: free performing arts, student programs, educator resources, scholarships, grants and outreach that bring live arts within reach.',
     templatePreset: 'supportArts',
     heroImage: asset('content-images/partners-sponsors/SSS Fans-28.jpg'),
-    primaryCTA: { label: 'Make a Gift', href: '/donate' },
+    primaryCTA: { label: 'Make a Gift', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS', type: 'external', openInNewTab: true },
+    secondaryCTA: { label: 'Find My Best Way to Help', type: 'popover', popoverId: 'contact' },
     conversion: {
       eyebrow: 'Your next step',
-      title: 'Find your way into the mission',
-      body: 'Whether you give, volunteer, sponsor or become a Stage Lighter, your support opens the gate for students, families, educators and neighbors across the region.',
+      title: 'Choose the support path that fits you',
+      body: 'Make a direct gift, become a Stage Lighter, volunteer, or start a corporate partnership. Every path helps more students, families, educators and neighbors experience the arts.',
       cta: { label: 'Get guidance', type: 'popover', popoverId: 'contact' }
     },
     tabs: [
-      { label: 'Donate', slug: 'donate', body: 'Make a direct gift that supports free performances, arts education, scholarships, grants and outreach that make The Pavilion more accessible for everyone.', cta: { label: 'Donate', href: '/donate' } },
-      { label: 'Volunteer', slug: 'volunteer', body: 'Join the Pavilion Partners community and help make arts access possible through fundraising, organization and hands-on event support.', cta: { label: 'Volunteer', href: '/mission/volunteer-membership' } },
-      { label: 'Corporate Partnership', slug: 'corporate-partnership', body: 'Create a partnership that can include sponsorships, volunteerism, brand exposure, activations, event support and program sponsorship.', cta: { label: 'Partner with us', href: '/mission/corporate-partnership' } },
-      { label: 'SL Membership', slug: 'sl-membership', body: 'Become a Stage Lighter to fund powerful performing arts experiences while enjoying elevated access, remarkable perks and a closer connection to the mission.', cta: { label: 'Join Stage Lighters', href: '/mission/performing-arts-membership' } }
+      { label: 'Give Today', slug: 'give-today', summary: 'Fastest way to fund arts access.', body: 'Make a direct gift that supports free performances, arts education, scholarships, grants and outreach that make The Pavilion more accessible for everyone.', cta: { label: 'Donate Now', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS', type: 'external', openInNewTab: true } },
+      { label: 'Join Stage Lighters', slug: 'stage-lighters', summary: 'A deeper membership connection.', body: 'Become a Stage Lighter to fund powerful performing arts experiences while enjoying elevated access, remarkable perks and a closer connection to the mission.', cta: { label: 'See Membership', href: '/mission/performing-arts-membership' } },
+      { label: 'Volunteer', slug: 'volunteer', summary: 'Give time and leadership.', body: 'Join the Pavilion Partners community and help make arts access possible through fundraising, organization and hands-on event support.', cta: { label: 'Volunteer', href: '/mission/volunteer-membership' } },
+      { label: 'Corporate Partnership', slug: 'corporate-partnership', summary: 'Align your company with access.', body: 'Create a partnership that can include sponsorships, volunteerism, brand exposure, activations, event support and program sponsorship.', cta: { label: 'Partner with Us', href: '/mission/corporate-partnership' } }
     ]
   },
   {

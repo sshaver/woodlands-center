@@ -1114,6 +1114,9 @@ p {
 .html-card,
 .conversion-card,
 .info-card,
+.pathway-card,
+.landing-stat-card,
+.support-proof-panel,
 .policy-card,
 .event-side-card,
 .text-code-card,
@@ -1143,6 +1146,138 @@ p {
   margin-top: 0.4rem;
 }
 
+.landing-stat-grid,
+.season-highlight-grid,
+.support-stat-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.landing-stat-grid,
+.season-highlight-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0;
+}
+
+.support-stat-grid {
+  margin: 1.4rem 0 1.2rem;
+}
+
+.landing-stat-card {
+  padding: 1rem;
+  border-radius: var(--radius-card-sm);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.landing-stat-card strong,
+.landing-stat-card span {
+  display: block;
+}
+
+.landing-stat-card strong {
+  color: white;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 4vw, 2.75rem);
+  font-style: italic;
+  line-height: 0.95;
+  overflow-wrap: anywhere;
+}
+
+.landing-stat-card span {
+  margin-top: 0.45rem;
+  color: var(--color-muted);
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+.pathway-card-grid,
+.season-benefit-grid,
+.support-pathway-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.season-benefit-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.support-pathway-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pathway-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-content: start;
+  min-height: 100%;
+}
+
+.pathway-card-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.pathway-card-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self: start;
+  gap: 0.7rem;
+  padding: clamp(1.2rem, 2.5vw, 1.65rem);
+}
+
+.pathway-card-copy h3 {
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+}
+
+.pathway-card-copy p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
+.pathway-card-copy .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.season-conversion-grid,
+.support-landing-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.42fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.support-proof-panel {
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.support-proof-panel h2 {
+  font-size: clamp(1.65rem, 3vw, 2.35rem);
+}
+
+.support-proof-panel > p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
+.support-conversion-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.support-conversion-grid h2 {
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+}
+
+.support-conversion-grid p:not(.eyebrow) {
+  max-width: 760px;
+  color: var(--color-muted);
+}
+
 .season-extras-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.7fr) minmax(320px, 1fr);
@@ -1154,22 +1289,40 @@ p {
   padding: clamp(1.5rem, 3.2vw, 2.35rem);
 }
 
-.seating-map-placeholder {
+.seat-guidance-visual {
   display: grid;
-  place-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: center;
+  gap: 0.75rem;
   min-height: clamp(220px, 36vw, 420px);
   margin: 1rem 0;
-  border: 1px dashed rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.44);
   border-radius: var(--radius-card-md);
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 50% 0, rgba(64, 189, 244, 0.22), transparent 48%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), transparent 48%),
     rgba(3, 16, 26, 0.52);
-  background-size: 32px 32px;
+  padding: clamp(1rem, 3vw, 2rem);
   color: white;
   font-family: var(--font-ui);
   font-weight: 900;
-  text-transform: uppercase;
+}
+
+.seat-guidance-visual span {
+  display: grid;
+  place-items: center;
+  min-height: 4rem;
+  border: 1px solid rgba(64, 189, 244, 0.44);
+  border-radius: var(--radius-card-sm);
+  background: rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.seat-guidance-visual span:first-child {
+  grid-column: 1 / -1;
+  min-height: 3rem;
+  color: #03101a;
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .compact-email-form {
@@ -2009,6 +2162,9 @@ p {
   .landing-grid,
   .season-block .landing-grid,
   .program-detail-grid,
+  .season-conversion-grid,
+  .support-landing-grid,
+  .support-conversion-grid,
   .season-extras-grid,
   .events-chart-row,
   .detail-grid,
@@ -2017,6 +2173,16 @@ p {
   .footer-grid,
   .story-feature {
     grid-template-columns: 1fr;
+  }
+
+  .season-highlight-grid,
+  .season-benefit-grid,
+  .support-pathway-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .support-conversion-grid .cta-row {
+    justify-content: flex-start;
   }
 
   .media-right > .glow-media,
@@ -2182,7 +2348,30 @@ p {
   }
 
   h1 {
-    font-size: clamp(2.5rem, 14vw, 3.8rem);
+    max-width: 100%;
+    font-size: clamp(2.35rem, 12vw, 3.25rem);
+    overflow-wrap: break-word;
+  }
+
+  h2 {
+    overflow-wrap: break-word;
+  }
+
+  .landing-hero-copy,
+  .detail-copy,
+  .mission-copy,
+  .visit-copy,
+  .landing-hero-copy h1,
+  .detail-copy h1,
+  .mission-copy h1,
+  .visit-copy h1 {
+    max-width: 100%;
+  }
+
+  .cta-row .btn,
+  .pathway-card-copy .btn {
+    max-width: 100%;
+    white-space: normal;
   }
 
   .event-card {
