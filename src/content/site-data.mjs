@@ -809,6 +809,17 @@ export const landingPages = [
     heroImage: asset('content-images/partners-sponsors/SSS Fans-28.jpg'),
     primaryCTA: { label: 'Make a Gift', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS', type: 'external', openInNewTab: true },
     secondaryCTA: { label: 'Find My Best Way to Help', type: 'popover', popoverId: 'contact' },
+    supportIntro: {
+      eyebrow: 'Ways to support',
+      title: 'Pick the path that matches how you want to make arts access possible',
+      subtitle: 'Some supporters want to give now. Some want membership, volunteer leadership or a company partnership. This page gets each visitor to the right next step quickly.'
+    },
+    supportProof: {
+      eyebrow: 'Mission proof',
+      title: 'Support becomes access people can feel.',
+      body: 'The Pavilion turns donor, volunteer and partner support into free community performances, scholarships, grants, educator resources and outreach across the region.',
+      cta: { label: 'Make a Gift', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS', type: 'external', openInNewTab: true }
+    },
     conversion: {
       eyebrow: 'Your next step',
       title: 'Choose the support path that fits you',

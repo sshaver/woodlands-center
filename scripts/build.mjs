@@ -221,6 +221,7 @@ const supportDonationPage = (page) => ({
   primaryCTA: donationItem(page.primaryCTA),
   secondaryCTA: donationItem(page.secondaryCTA),
   conversion: page.conversion ? { ...page.conversion, cta: donationItem(page.conversion.cta) } : page.conversion,
+  supportProof: page.supportProof ? { ...page.supportProof, cta: donationItem(page.supportProof.cta) } : page.supportProof,
   tabs: (page.tabs || []).map((tab) => ({ ...tab, cta: donationItem(tab.cta) }))
 });
 
@@ -1003,41 +1004,52 @@ const seasonSeatsLandingSection = () => `
   </section>
 `;
 
-const supportArtsLandingSection = (page) => `
-  <section class="section support-landing-section section-wash-deep">
-    <div class="container support-landing-grid">
-      <div>
-        ${sectionHeading(
-          'Ways to support',
-          'Pick the path that matches how you want to make arts access possible',
-          'Some supporters want to give now. Some want membership, volunteer leadership or a company partnership. This page gets each visitor to the right next step quickly.'
-        )}
-        ${pathwayCards(page.tabs || [], 'support-pathway-grid')}
+const supportArtsLandingSection = (page) => {
+  const supportIntro = {
+    eyebrow: 'Ways to support',
+    title: 'Pick the path that matches how you want to make arts access possible',
+    subtitle: 'Some supporters want to give now. Some want membership, volunteer leadership or a company partnership. This page gets each visitor to the right next step quickly.',
+    ...(page.supportIntro || {})
+  };
+  const supportProof = {
+    eyebrow: 'Mission proof',
+    title: 'Support becomes access people can feel.',
+    body: 'The Pavilion turns donor, volunteer and partner support into free community performances, scholarships, grants, educator resources and outreach across the region.',
+    cta: page.primaryCTA,
+    ...(page.supportProof || {})
+  };
+  return `
+    <section class="section support-landing-section section-wash-deep">
+      <div class="container support-landing-grid">
+        <div>
+          ${sectionHeading(supportIntro.eyebrow, supportIntro.title, supportIntro.subtitle || supportIntro.body)}
+          ${pathwayCards(page.tabs || [], 'support-pathway-grid')}
+        </div>
+        <aside class="support-proof-panel">
+          <p class="eyebrow">${esc(supportProof.eyebrow)}</p>
+          <h2>${esc(supportProof.title)}</h2>
+          <p>${esc(supportProof.body || supportProof.subtitle || '')}</p>
+          ${statCards(content.mission.impactStats || [], 'support-stat-grid')}
+          ${supportProof.cta ? cta(supportProof.cta, 'primary') : ''}
+        </aside>
       </div>
-      <aside class="support-proof-panel">
-        <p class="eyebrow">Mission proof</p>
-        <h2>Support becomes access people can feel.</h2>
-        <p>The Pavilion turns donor, volunteer and partner support into free community performances, scholarships, grants, educator resources and outreach across the region.</p>
-        ${statCards(content.mission.impactStats || [], 'support-stat-grid')}
-        ${page.primaryCTA ? cta(page.primaryCTA, 'primary') : ''}
-      </aside>
-    </div>
-  </section>
-  <section class="section support-conversion-band section-wash-lift">
-    <div class="container support-conversion-grid">
-      <div>
-        <p class="eyebrow">${esc(page.conversion?.eyebrow || 'Next step')}</p>
-        <h2>${esc(page.conversion?.title || 'Find your way into the mission')}</h2>
-        <p>${esc(page.conversion?.body || '')}</p>
+    </section>
+    <section class="section support-conversion-band section-wash-lift">
+      <div class="container support-conversion-grid">
+        <div>
+          <p class="eyebrow">${esc(page.conversion?.eyebrow || 'Next step')}</p>
+          <h2>${esc(page.conversion?.title || 'Find your way into the mission')}</h2>
+          <p>${esc(page.conversion?.body || '')}</p>
+        </div>
+        <div class="cta-row">
+          ${page.primaryCTA ? cta(page.primaryCTA, 'primary') : ''}
+          ${page.secondaryCTA ? cta(page.secondaryCTA, 'secondary') : ''}
+          ${page.conversion?.cta ? cta(page.conversion.cta, 'secondary') : ''}
+        </div>
       </div>
-      <div class="cta-row">
-        ${page.primaryCTA ? cta(page.primaryCTA, 'primary') : ''}
-        ${page.secondaryCTA ? cta(page.secondaryCTA, 'secondary') : ''}
-        ${page.conversion?.cta ? cta(page.conversion.cta, 'secondary') : ''}
-      </div>
-    </div>
-  </section>
-`;
+    </section>
+  `;
+};
 
 const landingPage = (page, routePath = `/${page.slug}`) => {
   const isSupportArtsPage = page.templatePreset === 'supportArts' && page.slug === 'mission/support-the-arts';

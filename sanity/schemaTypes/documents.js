@@ -134,6 +134,8 @@ export const landingPage = {
     statusField,
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
+    { name: 'supportIntro', title: 'Support Landing Intro', type: 'mediaBlock' },
+    { name: 'supportProof', title: 'Support Proof Panel', type: 'mediaBlock' },
     { name: 'tabs', title: 'Tabs', type: 'array', of: [{ type: 'tab' }] },
     { name: 'sections', title: 'Sections', type: 'array', of: [{ type: 'policySection' }] },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
