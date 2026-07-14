@@ -1460,8 +1460,16 @@ p {
 
 .video-poster img {
   display: block;
-  height: 100%;
   aspect-ratio: 16 / 9;
+}
+
+@media (min-width: 901px) {
+  .video-block .video-poster img {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    aspect-ratio: auto;
+  }
 }
 
 .play-button {
