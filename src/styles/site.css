@@ -1459,6 +1459,8 @@ p {
 }
 
 .video-poster img {
+  display: block;
+  height: 100%;
   aspect-ratio: 16 / 9;
 }
 
