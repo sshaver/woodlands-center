@@ -884,8 +884,8 @@ const eventsPage = () => {
 const pastEventRow = (event) => {
   const linkable = isLinkablePastEvent(event);
   const title = linkable
-    ? `<a href="/events/${attr(event.slug)}/">${esc(event.title)}</a>`
-    : `<span>${esc(event.title)}</span>`;
+    ? `<a class="past-event-title-link" href="/events/${attr(event.slug)}/">${esc(event.title)}</a>`
+    : `<span class="past-event-title-text">${esc(event.title)}</span>`;
   return `
     <article class="past-event-row" data-past-event data-search-text="${attr(`${event.title} ${event.subheader || ''} ${fmtDate(event.eventDate)} ${event.eventDate}`)}">
       <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))}</time>
@@ -893,7 +893,6 @@ const pastEventRow = (event) => {
         <h2>${title}</h2>
         ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
       </div>
-      ${linkable ? `<a class="row-link-arrow" href="/events/${attr(event.slug)}/" aria-label="${attr(event.title)} event details">${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>` : '<span class="archive-label">Archive listing</span>'}
     </article>
   `;
 };

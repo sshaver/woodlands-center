@@ -163,17 +163,19 @@ const pastEventSearch = document.querySelector('[data-past-event-search]');
 if (pastEventSearch) {
   const pastEventRows = [...document.querySelectorAll('[data-past-event]')];
   const pastEventEmpty = document.querySelector('[data-past-event-empty]');
+  const searchableText = (row) => `${row.dataset.searchText || ''} ${row.textContent || ''}`.toLowerCase();
   const filterPastEvents = () => {
     const query = pastEventSearch.value.trim().toLowerCase();
     let visibleCount = 0;
     pastEventRows.forEach((row) => {
-      const visible = !query || row.dataset.searchText.toLowerCase().includes(query);
+      const visible = !query || searchableText(row).includes(query);
       row.hidden = !visible;
       if (visible) visibleCount += 1;
     });
     if (pastEventEmpty) pastEventEmpty.hidden = visibleCount !== 0;
   };
   pastEventSearch.addEventListener('input', filterPastEvents);
+  pastEventSearch.addEventListener('search', filterPastEvents);
 }
 
 const menu = document.querySelector('[data-mobile-menu]');

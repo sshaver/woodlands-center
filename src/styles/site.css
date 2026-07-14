@@ -1066,42 +1066,49 @@ p {
 
 .past-event-list {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 
 .past-event-row {
   display: grid;
-  grid-template-columns: 190px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 1rem;
+  grid-template-columns: minmax(8.5rem, 0.24fr) minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(0.85rem, 2vw, 1.4rem);
   border: 1px solid rgba(64, 189, 244, 0.3);
   border-radius: var(--radius-card-sm);
   background: rgba(255, 255, 255, 0.055);
-  padding: 1rem;
+  padding: 0.78rem 0.9rem;
+}
+
+.past-event-row time {
+  color: var(--color-muted);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.2;
 }
 
 .past-event-row h2 {
   margin: 0;
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-size: clamp(1.02rem, 1.4vw, 1.25rem);
+  line-height: 1.14;
 }
 
-.past-event-row h2 a {
+.past-event-title-link {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.past-event-title-text {
   text-decoration: none;
 }
 
 .past-event-row p,
 .past-event-empty {
-  margin: 0.25rem 0 0;
+  margin: 0.18rem 0 0;
   color: var(--color-muted);
-}
-
-.archive-label {
-  justify-self: end;
-  color: var(--color-muted);
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: 900;
-  text-transform: uppercase;
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
 }
 
 .view-toggle {
@@ -2440,10 +2447,6 @@ p {
 
   .past-event-row {
     grid-template-columns: 1fr;
-  }
-
-  .archive-label {
-    justify-self: start;
   }
 
   .sponsor-group-grid {
