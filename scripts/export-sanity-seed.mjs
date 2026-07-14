@@ -30,7 +30,7 @@ const slugId = (prefix, slugOrTitle) =>
 let keyIndex = 0;
 const ctaFieldNames = new Set(['cta', 'primaryCTA', 'secondaryCTA', 'donateCTA', 'programsCTA', 'holderLoginCTA', 'learnMoreCTA', 'applicationCTA', 'finalCTA']);
 const formFieldNames = new Set(['contact', 'getEmails', 'seasonSeats', 'missionSeekers', 'programReminder']);
-const mediaBlockFieldNames = new Set(['feature', 'video', 'email', 'storyPrefooter', 'impactHeading', 'humanProof', 'pricing', 'seatingMap', 'conversionProof', 'supportIntro', 'supportProof']);
+const mediaBlockFieldNames = new Set(['feature', 'video', 'email', 'storyPrefooter', 'impactHeading', 'humanProof', 'placeMap', 'pricing', 'seatingMap', 'conversionProof', 'supportIntro', 'supportProof']);
 const blockScopedMediaFields = new Set(['seasonSeats']);
 const arrayItemTypes = {
   desktopPrimary: 'navItem',

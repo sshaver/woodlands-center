@@ -543,6 +543,13 @@ export const seasonSeats = {
   primaryCTA: { label: 'Request Availability', type: 'popover', popoverId: 'seasonSeats' },
   learnMoreCTA: { label: 'Learn More', href: '/season-seats' },
   holderLoginCTA: { label: 'SS Holder Log-In', href: 'CONFIGURE_ACCOUNT_MANAGER_URL_IN_CMS', type: 'external', openInNewTab: true },
+  placeMap: {
+    title: 'Find Your Place at The Pavilion',
+    image: {
+      src: asset('content-images/season-seats/pricing-map-ss-26.png'),
+      alt: 'Season Seats pricing map and seating chart'
+    }
+  },
   pricing: {
     eyebrow: 'How it works',
     title: 'A guided purchase, not a guessing game',

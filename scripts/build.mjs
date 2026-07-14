@@ -958,35 +958,24 @@ const programDetailSection = (page) => `
   ${page.video ? videoBlock(page.video, 'section-wash-deep', 'left') : ''}
 `;
 
-const seasonSeatsExtras = () => `
-  <section class="section season-extras-section section-wash-lift">
-    <div class="container">
-      <article class="info-card season-place-card">
-        <p class="eyebrow">Season Seats</p>
-        <h2>Find Your Place at The Pavilion</h2>
-        <div class="season-place-grid">
-          <div class="season-place-copy">
-            <p class="eyebrow">${esc(content.seasonSeats.pricing.eyebrow)}</p>
-            <h3>${esc(content.seasonSeats.pricing.title)}</h3>
-            <p>${esc(content.seasonSeats.pricing.body)}</p>
-            ${content.seasonSeats.pricing.cta ? cta(content.seasonSeats.pricing.cta, 'primary') : ''}
-          </div>
-          <div class="season-place-copy">
-            <p class="eyebrow">${esc(content.seasonSeats.seatingMap.eyebrow)}</p>
-            <h3>${esc(content.seasonSeats.seatingMap.title)}</h3>
-            <div class="seat-guidance-visual" aria-hidden="true">
-              <span>Stage</span>
-              <span>Premium Reserved</span>
-              <span>Club Access</span>
-              <span>Lawn</span>
-            </div>
-            <p>${esc(content.seasonSeats.seatingMap.body)}</p>
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
-`;
+const seasonSeatsExtras = () => {
+  const placeMap = content.seasonSeats.placeMap || {};
+  const placeMapImage =
+    typeof placeMap.image === 'string'
+      ? { src: placeMap.image, alt: placeMap.imageAlt || placeMap.alt || 'Season Seats pricing map and seating chart' }
+      : placeMap.image;
+  return `
+    <section class="section season-extras-section section-wash-lift">
+      <div class="container">
+        <article class="info-card season-place-card">
+          <p class="eyebrow">${esc(placeMap.eyebrow || 'Season Seats')}</p>
+          <h2>${esc(placeMap.title || 'Find Your Place at The Pavilion')}</h2>
+          ${placeMapImage ? `<div class="season-place-map">${image(placeMapImage, '', 'lazy')}</div>` : ''}
+        </article>
+      </div>
+    </section>
+  `;
+};
 
 const seasonSeatsLandingSection = () => `
   <section class="section season-conversion-section section-wash-deep">

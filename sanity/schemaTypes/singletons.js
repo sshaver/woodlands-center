@@ -97,8 +97,14 @@ export const seasonSeats = {
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'learnMoreCTA', title: 'Learn More CTA', type: 'cta' },
     { name: 'holderLoginCTA', title: 'Holder Login CTA', type: 'cta' },
-    { name: 'pricing', title: 'Pricing Block', type: 'mediaBlock' },
-    { name: 'seatingMap', title: 'Seating Map Block', type: 'mediaBlock' },
+    {
+      name: 'placeMap',
+      title: 'Find Your Place Map + Pricing Chart',
+      type: 'mediaBlock',
+      description: 'Controls the Find Your Place at The Pavilion section. Use the image field for the current seating map and pricing chart.'
+    },
+    { name: 'pricing', title: 'Legacy Pricing Block', type: 'mediaBlock', hidden: true },
+    { name: 'seatingMap', title: 'Legacy Seating Map Block', type: 'mediaBlock', hidden: true },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
     { name: 'tabs', title: 'Experience Tabs', type: 'array', of: [{ type: 'tab' }] }
   ],
