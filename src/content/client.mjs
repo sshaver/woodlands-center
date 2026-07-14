@@ -39,6 +39,36 @@ const normalizeExternalRoutes = (routes) => {
   return Object.fromEntries(routes.routes.filter((route) => route.path).map((route) => [route.path, route]));
 };
 
+const collectionRequirements = [
+  'events',
+  'planVisitTopics',
+  'grantPrograms',
+  'outreachPrograms',
+  'landingPages',
+  'stories',
+  'storyPillars',
+  'storyTopics'
+];
+
+const assertCmsCompleteness = (cms = {}) => {
+  if (process.env.SANITY_REQUIRE_CONTENT !== 'true') return;
+
+  const missingCollections = collectionRequirements
+    .map((key) => {
+      const fixtureCount = Array.isArray(fixtures[key]) ? fixtures[key].length : 0;
+      const cmsCount = Array.isArray(cms[key]) ? cms[key].length : 0;
+      return cmsCount < fixtureCount ? `${key}: ${cmsCount}/${fixtureCount}` : '';
+    })
+    .filter(Boolean);
+
+  if (missingCollections.length) {
+    throw new Error(
+      `Sanity content is incomplete for production build (${missingCollections.join(', ')}). ` +
+        'Check SANITY_READ_TOKEN and dataset read permissions.'
+    );
+  }
+};
+
 const mergeSource = (cms = {}) => ({
   settings: withFallback(cms.settings, fixtures.settings),
   navigation: withFallback(cms.navigation, fixtures.navigation),
@@ -83,6 +113,7 @@ export const loadContent = async () => {
 
   try {
     const cmsContent = await fetchSanityContent();
+    assertCmsCompleteness(cmsContent);
     return buildContent(cmsContent || fixtures);
   } catch (error) {
     if (process.env.SANITY_REQUIRE_CONTENT === 'true') throw error;

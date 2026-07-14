@@ -27,6 +27,7 @@ Set Cloudflare Pages environment variables:
 SANITY_PROJECT_ID=y8zl4q1a
 SANITY_DATASET=production
 SANITY_API_VERSION=2025-02-19
+SANITY_READ_TOKEN=
 SANITY_REQUIRE_CONTENT=true
 SANITY_PREVIEW_DRAFTS=false
 NEXT_PUBLIC_SITE_URL=https://preview.woodlandscenter.org
@@ -62,7 +63,8 @@ PROGRAM_VIDEO_URL=https://www.youtube.com/watch?v=al_R1CG-vlw
 
 Notes:
 
-- `SANITY_REQUIRE_CONTENT=true` makes production fail if Sanity cannot be reached.
+- `SANITY_READ_TOKEN` must be a Sanity API token with the Viewer role. This production dataset requires authenticated reads for several site collections, including grant pages, landing pages, plan-your-visit topics and stories.
+- `SANITY_REQUIRE_CONTENT=true` makes production fail if Sanity cannot be reached or if required CMS collections are missing.
 - Use `HUBSPOT_TRACKING_MODE=direct` only if HubSpot tracking is not installed through GTM.
 - Staging is protected by the Pages Function in `functions/_middleware.js` when `STAGING_BASIC_AUTH_PASSWORD` is set in Cloudflare. Use username `cwmp` and store the shared password only in Cloudflare, not in Git.
 - Build failure notifications should go to `sshaver@woodlandscenter.org`.
