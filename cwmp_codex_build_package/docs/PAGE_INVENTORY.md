@@ -26,7 +26,6 @@
 | `/mission/outreach/chamberfest-strings-camp` | Chamberfest Strings Camp | landing-page | outreachPrograms |  |
 | `/mission/outreach/scout-days` | Scout Days | landing-page | outreachPrograms |  |
 | `/mission/arts-educators` | Arts Educator Resources and Programs | landing-page | landingPages | visibility: hidden |
-| `/arts-shows/membership` | Arts Membership | external-or-redirect-page | landingPages |  |
 | `/arts-shows/free-shows` | Free Community Shows | landing-page-with-event-listing | landingPages |  |
 | `/story-hub` | Story Hub | story-hub | stories |  |
 | `/story-hub/topic/[topic]` | Stories by Topic | story-hub-topic | stories |  |

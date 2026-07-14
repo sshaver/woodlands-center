@@ -33,7 +33,6 @@
     {"path": "/mission/outreach/scout-days", "name": "Scout Days", "template": "landing-page", "cmsCollection": "outreachPrograms"},
     {"path": "/mission/arts-educators", "name": "Arts Educator Resources and Programs", "template": "landing-page", "cmsCollection": "landingPages", "visibility": "hidden"},
 
-    {"path": "/arts-shows/membership", "name": "Arts Membership", "template": "external-or-redirect-page", "cmsCollection": "landingPages"},
     {"path": "/arts-shows/free-shows", "name": "Free Community Shows", "template": "landing-page-with-event-listing", "cmsCollection": "landingPages"},
 
     {"path": "/story-hub", "name": "Story Hub", "template": "story-hub", "cmsCollection": "stories"},

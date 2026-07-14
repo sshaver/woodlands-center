@@ -938,13 +938,6 @@ export const landingPages = [
     ]
   },
   {
-    title: 'Arts Membership',
-    slug: 'arts-shows/membership',
-    subtitle: 'Support free performing arts and enjoy a closer connection to The Pavilion season.',
-    templatePreset: 'redirect',
-    primaryCTA: { label: 'Open Arts Membership', href: 'CONFIGURE_ACCOUNT_MANAGER_URL_IN_CMS', type: 'external', openInNewTab: true }
-  },
-  {
     title: 'Free Community Shows',
     slug: 'arts-shows/free-shows',
     subtitle: 'Entertaining shows in a laid back environment featuring music you love played by world-class musicians – all for free! Even better, these shows serve as the perfect introduction to the brilliant world of classical music and the performing arts.',

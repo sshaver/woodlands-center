@@ -1,1 +1,5 @@
 # Add launch redirects here after final URL inventory is approved.
+/arts-shows/membership /mission/performing-arts-membership 301
+/arts-shows/membership/ /mission/performing-arts-membership/ 301
+/arts-show/membership /mission/performing-arts-membership 301
+/arts-show/membership/ /mission/performing-arts-membership/ 301
