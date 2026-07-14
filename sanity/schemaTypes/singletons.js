@@ -120,7 +120,14 @@ export const blocks = {
     { name: 'video', title: 'Mission Video Block', type: 'mediaBlock' },
     { name: 'seasonSeats', title: 'Season Seats Home Block', type: 'mediaBlock' },
     { name: 'email', title: 'Email Signup Block', type: 'mediaBlock' },
-    { name: 'storyPrefooter', title: 'Story Prefooter Block', type: 'mediaBlock' }
+    { name: 'storyPrefooter', title: 'Story Prefooter Block', type: 'mediaBlock' },
+    {
+      name: 'sponsorGroups',
+      title: 'Bottom Sponsor Section',
+      type: 'array',
+      of: [{ type: 'sponsorGroup' }],
+      description: 'Controls the sponsor recognition section that appears near the bottom of the site.'
+    }
   ],
   preview: { prepare: () => ({ title: 'Reusable Page Blocks' }) }
 };

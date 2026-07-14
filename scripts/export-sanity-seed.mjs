@@ -40,6 +40,8 @@ const arrayItemTypes = {
   routes: 'routeItem',
   sections: 'policySection',
   showSchedule: 'scheduleRow',
+  sponsorGroups: 'sponsorGroup',
+  sponsors: 'sponsorItem',
   stats: 'stat',
   tabs: 'tab',
   utility: 'navItem'
@@ -51,6 +53,7 @@ const mediaFieldNames = new Set([
   'heroImage',
   'homeBackgroundImage',
   'image',
+  'logo',
   'logoBlue',
   'logoWhite',
   'poster',

@@ -159,6 +159,23 @@ document.querySelectorAll('[data-event-view]').forEach((button) => {
   });
 });
 
+const pastEventSearch = document.querySelector('[data-past-event-search]');
+if (pastEventSearch) {
+  const pastEventRows = [...document.querySelectorAll('[data-past-event]')];
+  const pastEventEmpty = document.querySelector('[data-past-event-empty]');
+  const filterPastEvents = () => {
+    const query = pastEventSearch.value.trim().toLowerCase();
+    let visibleCount = 0;
+    pastEventRows.forEach((row) => {
+      const visible = !query || row.dataset.searchText.toLowerCase().includes(query);
+      row.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    if (pastEventEmpty) pastEventEmpty.hidden = visibleCount !== 0;
+  };
+  pastEventSearch.addEventListener('input', filterPastEvents);
+}
+
 const menu = document.querySelector('[data-mobile-menu]');
 const openMenu = document.querySelector('[data-menu-open]');
 const closeMenu = document.querySelector('[data-menu-close]');

@@ -9,6 +9,8 @@ import {
   routeItem,
   scheduleRow,
   seo,
+  sponsorGroup,
+  sponsorItem,
   stat,
   tab,
   tabGroup
@@ -40,6 +42,8 @@ export const schemaTypes = [
   mediaBlock,
   mediaAsset,
   seo,
+  sponsorItem,
+  sponsorGroup,
   stat,
   scheduleRow,
   tab,

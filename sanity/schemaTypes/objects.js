@@ -160,6 +160,39 @@ export const mediaBlock = {
   ]
 };
 
+export const sponsorItem = {
+  name: 'sponsorItem',
+  title: 'Sponsor',
+  type: 'object',
+  fields: [
+    { name: 'name', title: 'Sponsor Name', type: 'string', validation: (Rule) => Rule.required() },
+    { name: 'subtitle', title: 'Optional Subtitle', type: 'string' },
+    { name: 'logo', title: 'Logo', type: 'mediaAsset' },
+    { name: 'href', title: 'Sponsor URL', type: 'string' }
+  ],
+  preview: {
+    select: { title: 'name', subtitle: 'subtitle', media: 'logo' }
+  }
+};
+
+export const sponsorGroup = {
+  name: 'sponsorGroup',
+  title: 'Sponsor Group',
+  type: 'object',
+  fields: [
+    { name: 'title', title: 'Group Title', type: 'string', validation: (Rule) => Rule.required() },
+    { name: 'subtitle', title: 'Group Subtitle', type: 'text', rows: 2 },
+    { name: 'sponsors', title: 'Sponsors', type: 'array', of: [{ type: 'sponsorItem' }] }
+  ],
+  preview: {
+    select: { title: 'title', sponsors: 'sponsors' },
+    prepare({ title, sponsors }) {
+      const count = Array.isArray(sponsors) ? sponsors.length : 0;
+      return { title, subtitle: `${count} sponsor${count === 1 ? '' : 's'}` };
+    }
+  }
+};
+
 export const navItem = {
   name: 'navItem',
   title: 'Navigation Item',

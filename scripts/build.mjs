@@ -129,6 +129,15 @@ const fmtDate = (date) =>
   }).format(new Date(date));
 
 const byEventDate = (a, b) => new Date(a.eventDate) - new Date(b.eventDate);
+const todayISO = process.env.BUILD_DATE || new Date().toISOString().slice(0, 10);
+const currentYear = Number(todayISO.slice(0, 4));
+const previousYear = currentYear - 1;
+const eventYear = (event) => Number(String(event.eventDate || '').slice(0, 4));
+const isPastEvent = (event) => String(event.eventDate || '') < todayISO;
+const isLinkablePastEvent = (event) => eventYear(event) >= previousYear;
+const visibleEvents = () => content.events.filter((event) => !['draft', 'hidden'].includes(event.listingStatus));
+const upcomingEvents = () => visibleEvents().filter((event) => !isPastEvent(event)).sort(byEventDate);
+const pastEvents = () => visibleEvents().filter(isPastEvent).sort((a, b) => byEventDate(b, a));
 
 const routeFile = (routePath) => {
   if (routePath === '/') return path.join(dist, 'index.html');
@@ -375,7 +384,7 @@ const eventRows = (events) => `
   </div>
 `;
 
-const showRail = (events = content.events, { eagerCount = 0 } = {}) => `
+const showRail = (events = upcomingEvents(), { eagerCount = 0 } = {}) => `
   <div class="home-show-rail" aria-label="Upcoming shows">
     ${events
       .slice()
@@ -398,7 +407,7 @@ const showRail = (events = content.events, { eagerCount = 0 } = {}) => `
 `;
 
 const eventListBlock = (heading = 'Upcoming Events', filterType = null) => {
-  const events = (filterType ? content.events.filter((event) => event.eventType === filterType) : content.events)
+  const events = (filterType ? upcomingEvents().filter((event) => event.eventType === filterType) : upcomingEvents())
     .slice()
     .sort(byEventDate);
   return `
@@ -572,6 +581,55 @@ const storyBlock = (tone = 'section-wash-deep') => `
   </section>
 `;
 
+const sponsorLogo = (sponsor = {}) => {
+  const logo = sponsor.logo;
+  const logoSrc = typeof logo === 'string' ? logo : logo?.src;
+  const sponsorInner = logoSrc
+    ? `<img src="${attr(logoSrc)}" alt="${attr(logo?.alt || sponsor.name)}" loading="lazy" decoding="async">`
+    : `<strong>${esc(sponsor.name)}</strong>`;
+  const sponsorMarkup = `
+    <span class="sponsor-card-inner">
+      ${sponsorInner}
+      ${sponsor.subtitle ? `<small>${esc(sponsor.subtitle)}</small>` : ''}
+    </span>
+  `;
+  return sponsor.href
+    ? `<a class="sponsor-card" href="${attr(sponsor.href)}" target="_blank" rel="noopener noreferrer">${sponsorMarkup}</a>`
+    : `<span class="sponsor-card">${sponsorMarkup}</span>`;
+};
+
+const sponsorSection = () => {
+  const groups = content.blocks.sponsorGroups || [];
+  if (!groups.length) return '';
+  return `
+    <section class="section sponsor-section section-wash-lift" aria-labelledby="site-sponsors-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Sponsors</p>
+          <h2 id="site-sponsors-title">Thanks to our season sponsors</h2>
+        </div>
+        <div class="sponsor-group-grid">
+          ${groups
+            .map(
+              (group) => `
+                <article class="sponsor-group-card">
+                  <div class="sponsor-group-heading">
+                    <h3>${esc(group.title)}</h3>
+                    ${group.subtitle ? `<p>${esc(group.subtitle)}</p>` : ''}
+                  </div>
+                  <div class="sponsor-logo-grid">
+                    ${(group.sponsors || []).map(sponsorLogo).join('') || '<p class="sponsor-empty">Sponsor logos can be added in Sanity.</p>'}
+                  </div>
+                </article>
+              `
+            )
+            .join('')}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
 const analyticsHead = () => {
   const snippets = [];
   if (gtmContainerId) {
@@ -610,6 +668,7 @@ const shell = ({ title, description, path: routePath, theme = 'dark', body, extr
     ${body}
   </main>
   ${storyFooter ? storyBlock(theme === 'light' ? 'story-prefooter-light' : 'section-wash-blue') : ''}
+  ${sponsorSection()}
   ${footer(theme)}
   ${mobileDock(routePath)}
   ${popoverMarkup()}
@@ -747,7 +806,7 @@ const homePage = (routePath = '/') => {
               ${cta({ label: 'Plan Your Visit', href: '/plan-your-visit' }, 'secondary')}
             </div>
           </div>
-          ${showRail(content.events, { eagerCount: 2 })}
+          ${showRail(upcomingEvents(), { eagerCount: 2 })}
         </div>
       </section>
       ${videoBlock(homeMissionBlock, 'section-wash-blue', 'left')}
@@ -758,7 +817,8 @@ const homePage = (routePath = '/') => {
 };
 
 const eventsPage = () => {
-  const events = content.events.slice().sort(byEventDate);
+  const events = upcomingEvents();
+  const archiveCount = pastEvents().length;
   return shell({
     title: 'Events',
     description: 'Find tickets, parking and lawn chair rentals for upcoming Pavilion shows.',
@@ -772,33 +832,95 @@ const eventsPage = () => {
       </section>
       <section class="section events-chart-section">
         <div class="container events-chart">
-          ${events
-            .map(
-              (event) => `
-                <article class="events-chart-row event-type-${attr(event.eventType)}">
-                  <a class="events-chart-image" href="/events/${attr(event.slug)}/" aria-label="${attr(event.title)} event details"${analyticsAttrs('event_card_click', { eventName: event.title, eventSlug: event.slug, eventType: event.eventType, context: 'events_chart' })}>
-                    <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="lazy" decoding="async">
-                  </a>
-                  <div class="events-chart-copy">
-                    <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</time>
-                    <h2><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h2>
-                    ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
-                  </div>
-                  <div class="events-chart-actions">
-                    ${cta({ label: event.ctaLabel || 'Get Tickets', href: event.ticketLink, openInNewTab: true, analyticsContext: 'events_chart' }, 'primary')}
-                    <a class="icon-action" href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer" aria-label="Buy parking for ${attr(event.title)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
-                      ${svgIcon('square-parking', { className: 'site-icon icon-blue' })}
-                      <span>Parking</span>
-                    </a>
-                    <a class="icon-action" href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs for ${attr(event.title)}"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
-                      ${svgIcon('chair', { className: 'site-icon icon-blue' })}
-                      <span>Lawn Chairs</span>
-                    </a>
-                  </div>
-                </article>
-              `
-            )
-            .join('')}
+          ${
+            events.length
+              ? events
+                  .map(
+                    (event) => `
+                      <article class="events-chart-row event-type-${attr(event.eventType)}">
+                        <a class="events-chart-image" href="/events/${attr(event.slug)}/" aria-label="${attr(event.title)} event details"${analyticsAttrs('event_card_click', { eventName: event.title, eventSlug: event.slug, eventType: event.eventType, context: 'events_chart' })}>
+                          <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="lazy" decoding="async">
+                        </a>
+                        <div class="events-chart-copy">
+                          <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</time>
+                          <h2><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h2>
+                          ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
+                        </div>
+                        <div class="events-chart-actions">
+                          ${cta({ label: event.ctaLabel || 'Get Tickets', href: event.ticketLink, openInNewTab: true, analyticsContext: 'events_chart' }, 'primary')}
+                          <a class="icon-action" href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer" aria-label="Buy parking for ${attr(event.title)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
+                            ${svgIcon('square-parking', { className: 'site-icon icon-blue' })}
+                            <span>Parking</span>
+                          </a>
+                          <a class="icon-action" href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs for ${attr(event.title)}"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
+                            ${svgIcon('chair', { className: 'site-icon icon-blue' })}
+                            <span>Lawn Chairs</span>
+                          </a>
+                        </div>
+                      </article>
+                    `
+                  )
+                  .join('')
+              : '<article class="html-card"><h2>No current events are listed yet.</h2><p>Check back soon for new announcements.</p></article>'
+          }
+        </div>
+      </section>
+      <section class="section events-archive-cta section-wash-lift">
+        <div class="container">
+          <article class="info-card archive-cta-card">
+            <div>
+              <p class="eyebrow">Past Events</p>
+              <h2>Looking for a past show?</h2>
+              <p>Browse ${archiveCount ? `${archiveCount} ` : ''}past Pavilion events, with links available for recent archive entries.</p>
+            </div>
+            ${cta({ label: 'View Past Events', href: '/events/past/' }, 'secondary')}
+          </article>
+        </div>
+      </section>
+    `
+  });
+};
+
+const pastEventRow = (event) => {
+  const linkable = isLinkablePastEvent(event);
+  const title = linkable
+    ? `<a href="/events/${attr(event.slug)}/">${esc(event.title)}</a>`
+    : `<span>${esc(event.title)}</span>`;
+  return `
+    <article class="past-event-row" data-past-event data-search-text="${attr(`${event.title} ${event.subheader || ''} ${fmtDate(event.eventDate)} ${event.eventDate}`)}">
+      <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))}</time>
+      <div>
+        <h2>${title}</h2>
+        ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
+      </div>
+      ${linkable ? `<a class="row-link-arrow" href="/events/${attr(event.slug)}/" aria-label="${attr(event.title)} event details">${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</a>` : '<span class="archive-label">Archive listing</span>'}
+    </article>
+  `;
+};
+
+const pastEventsPage = () => {
+  const events = pastEvents();
+  return shell({
+    title: 'Past Events',
+    description: 'Search and browse past events at The Cynthia Woods Mitchell Pavilion.',
+    path: '/events/past',
+    storyFooter: false,
+    body: `
+      <section class="section events-chart-hero">
+        <div class="container">
+          ${sectionHeading('Past Events', 'Past shows at The Pavilion', 'Search recent and historic Pavilion event listings. Recent archive items include links to their event pages.')}
+          <div class="past-event-search">
+            <label for="past-event-search">Search past events</label>
+            <input id="past-event-search" type="search" placeholder="Search artist, subtitle or date" data-past-event-search>
+          </div>
+        </div>
+      </section>
+      <section class="section past-events-section">
+        <div class="container">
+          <div class="past-event-list" data-past-event-list>
+            ${events.length ? events.map(pastEventRow).join('') : '<article class="html-card"><h2>No past events yet.</h2><p>Past event listings will appear here after their event date has passed.</p></article>'}
+          </div>
+          <p class="past-event-empty" data-past-event-empty hidden>No past events match your search.</p>
         </div>
       </section>
     `
@@ -1367,9 +1489,12 @@ copyRecursive('cloudflare/_redirects', path.join(dist, '_redirects'));
 
 writeRoute('/', homePage('/'));
 writeRoute('/events', eventsPage());
+writeRoute('/events/past', pastEventsPage());
 
 for (const event of content.events) {
-  writeRoute(`/events/${event.slug}`, eventDetailPage(event));
+  if (!isPastEvent(event) || isLinkablePastEvent(event)) {
+    writeRoute(`/events/${event.slug}`, eventDetailPage(event));
+  }
 }
 
 writeRoute('/season-seats', seasonSeatsPage());
