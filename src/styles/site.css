@@ -1451,7 +1451,7 @@ p {
 }
 
 .video-block {
-  align-items: stretch;
+  align-items: center;
 }
 
 .video-poster {
@@ -1460,16 +1460,9 @@ p {
 
 .video-poster img {
   display: block;
-  aspect-ratio: 16 / 9;
-}
-
-@media (min-width: 901px) {
-  .video-block .video-poster img {
-    position: absolute;
-    inset: 0;
-    height: 100%;
-    aspect-ratio: auto;
-  }
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 .play-button {
