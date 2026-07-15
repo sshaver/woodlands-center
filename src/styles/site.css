@@ -1028,7 +1028,7 @@ p {
 }
 
 .events-archive-cta {
-  padding-top: 0;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
 }
 
 .archive-cta-card {
@@ -1039,9 +1039,22 @@ p {
   padding: clamp(1.4rem, 3vw, 2.2rem);
 }
 
+.archive-cta-card > div {
+  display: grid;
+  gap: 0.55rem;
+}
+
 .archive-cta-card h2,
 .archive-cta-card p {
   margin: 0;
+}
+
+.archive-cta-card h2 {
+  line-height: 1.06;
+}
+
+.archive-cta-card p {
+  line-height: 1.42;
 }
 
 .past-event-search {
