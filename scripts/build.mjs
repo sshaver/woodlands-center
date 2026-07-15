@@ -931,6 +931,7 @@ const eventDetailPage = (event) => {
     ? event.showSchedule
     : [{ time: event.gateOpenTime || event.eventStartTime || 'Event day', label: 'Check event updates for final timing.' }];
   const heroImage = event.headerImage || event.cardImage || content.settings.fallbackImage;
+  const eventHasPassed = isPastEvent(event);
 
   return shell({
     title: event.title,
@@ -945,36 +946,44 @@ const eventDetailPage = (event) => {
               <p class="eyebrow">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</p>
               <h1>${esc(event.title)}</h1>
               <p>${esc(event.subheader || '')}</p>
-              <div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true, analyticsContext: 'event_hero' })}</div>
+              ${eventHasPassed ? '' : `<div class="cta-row">${cta({ label: event.ctaLabel, href: event.ticketLink, openInNewTab: true, analyticsContext: 'event_hero' })}</div>`}
             </div>
-            <nav class="event-action-icons" aria-label="Event add-ons">
-              ${
-                event.eventType === 'freeCommunity'
-                  ? ''
-                  : `<a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
-                      <span class="action-icon">${svgIcon('chair', { className: 'site-icon icon-blue' })}</span>
-                      <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short" aria-hidden="true">Chairs</span></strong>
-                      <small>Reserve seating</small>
-                    </a>`
-              }
-              <a href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer" aria-label="Buy parking"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
-                <span class="action-icon">${svgIcon('square-parking', { className: 'site-icon icon-blue' })}</span>
-                <strong><span class="action-label-full">Buy Parking</span><span class="action-label-short" aria-hidden="true">Parking</span></strong>
-                <small>Buy or view lots</small>
-              </a>
-              <a href="${attr(event.hotelLink || '#')}" target="_blank" rel="noopener noreferrer" aria-label="Book hotel"${analyticsAttrs('hotel_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
-                <span class="action-icon">${svgIcon('hotel', { className: 'site-icon icon-blue' })}</span>
-                <strong><span class="action-label-full">Book Hotel</span><span class="action-label-short" aria-hidden="true">Hotel</span></strong>
-                <small>Book nearby</small>
-              </a>
-            </nav>
+            ${
+              eventHasPassed
+                ? ''
+                : `<nav class="event-action-icons" aria-label="Event add-ons">
+                    ${
+                      event.eventType === 'freeCommunity'
+                        ? ''
+                        : `<a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
+                            <span class="action-icon">${svgIcon('chair', { className: 'site-icon icon-blue' })}</span>
+                            <strong><span class="action-label-full">Rent Lawn Chairs</span><span class="action-label-short" aria-hidden="true">Chairs</span></strong>
+                            <small>Reserve seating</small>
+                          </a>`
+                    }
+                    <a href="${attr(event.parkingPurchaseLink || event.parkingLink)}" target="_blank" rel="noopener noreferrer" aria-label="Buy parking"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
+                      <span class="action-icon">${svgIcon('square-parking', { className: 'site-icon icon-blue' })}</span>
+                      <strong><span class="action-label-full">Buy Parking</span><span class="action-label-short" aria-hidden="true">Parking</span></strong>
+                      <small>Buy or view lots</small>
+                    </a>
+                    <a href="${attr(event.hotelLink || '#')}" target="_blank" rel="noopener noreferrer" aria-label="Book hotel"${analyticsAttrs('hotel_click', { eventName: event.title, eventSlug: event.slug, context: 'event_hero' })}>
+                      <span class="action-icon">${svgIcon('hotel', { className: 'site-icon icon-blue' })}</span>
+                      <strong><span class="action-label-full">Book Hotel</span><span class="action-label-short" aria-hidden="true">Hotel</span></strong>
+                      <small>Book nearby</small>
+                    </a>
+                  </nav>`
+            }
           </div>
         </section>
-        <nav class="event-sticky-bar" data-event-sticky-bar aria-label="Quick event actions">
-          <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('ticket', { className: 'site-icon icon-blue' })}<span>${esc(event.ctaLabel || 'Get Tickets')}</span></a>
-          <a href="${attr(event.parkingLink)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('square-parking', { className: 'site-icon icon-blue' })}<span>Parking</span></a>
-          <a href="${attr(event.bagPolicyLink)}"${analyticsAttrs('bag_policy_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('bag-shopping', { className: 'site-icon icon-blue' })}<span>Bag Policy</span></a>
-        </nav>
+        ${
+          eventHasPassed
+            ? ''
+            : `<nav class="event-sticky-bar" data-event-sticky-bar aria-label="Quick event actions">
+                <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('ticket', { className: 'site-icon icon-blue' })}<span>${esc(event.ctaLabel || 'Get Tickets')}</span></a>
+                <a href="${attr(event.parkingLink)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('square-parking', { className: 'site-icon icon-blue' })}<span>Parking</span></a>
+                <a href="${attr(event.bagPolicyLink)}"${analyticsAttrs('bag_policy_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('bag-shopping', { className: 'site-icon icon-blue' })}<span>Bag Policy</span></a>
+              </nav>`
+        }
         <section class="section">
           <div class="container detail-grid">
             <div>
@@ -1019,7 +1028,7 @@ const eventDetailPage = (event) => {
                 <span class="info-icon">${svgIcon('ticket', { className: 'site-icon icon-blue' })}</span>
                 <h3>Ticket Information</h3>
                 <p>Have mobile tickets ready before you reach the gate. Event timing, entry policies and artist-specific notes may change, so review this page again before leaving.</p>
-                <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'know_before_you_go' })}>Open tickets</a>
+                ${eventHasPassed ? '' : `<a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'know_before_you_go' })}>Open tickets</a>`}
               </article>
             </div>
           </div>
