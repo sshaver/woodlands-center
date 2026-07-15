@@ -1187,6 +1187,12 @@ export const blocks = {
     image: asset('video-placeholders/Moorehead JHS-32.jpg'),
     cta: { label: 'Explore the mission', href: '/mission' }
   },
+  eventsSeasonCTA: {
+    eyebrow: 'Season Seats',
+    title: 'Make every show easier to say yes to.',
+    body: 'Reserve your place at The Pavilion with premium seating, club access and a team ready to help you make the most of every night.',
+    cta: { label: 'Explore Season Seats', href: '/season-seats', style: 'secondary' }
+  },
   email: {
     title: 'Sign up for emails',
     subtitle: 'Show announcements, arts access stories and venue updates in one clean feed.'

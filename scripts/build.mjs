@@ -819,6 +819,20 @@ const homePage = (routePath = '/') => {
 const eventsPage = () => {
   const events = upcomingEvents();
   const archiveCount = pastEvents().length;
+  const defaultSeasonCTA = {
+    eyebrow: 'Season Seats',
+    title: 'Make every show easier to say yes to.',
+    body: 'Reserve your place at The Pavilion with premium seating, club access and a team ready to help you make the most of every night.',
+    cta: { label: 'Explore Season Seats', href: '/season-seats', style: 'secondary' }
+  };
+  const seasonCTA = {
+    ...defaultSeasonCTA,
+    ...(content.blocks.eventsSeasonCTA || {}),
+    cta: {
+      ...defaultSeasonCTA.cta,
+      ...(content.blocks.eventsSeasonCTA?.cta || {})
+    }
+  };
   return shell({
     title: 'Events',
     description: 'Find tickets, parking and lawn chair rentals for upcoming Pavilion shows.',
@@ -830,11 +844,11 @@ const eventsPage = () => {
           ${sectionHeading('Events', 'Tickets, parking and lawn chairs', 'One simple place to get ready for every upcoming Pavilion show.')}
           <article class="info-card events-season-cta">
             <div>
-              <p class="eyebrow">Season Seats</p>
-              <h2>Make every show easier to say yes to.</h2>
-              <p>Reserve your place at The Pavilion with premium seating, club access and a team ready to help you make the most of every night.</p>
+              ${seasonCTA.eyebrow ? `<p class="eyebrow">${esc(seasonCTA.eyebrow)}</p>` : ''}
+              ${seasonCTA.title ? `<h2>${esc(seasonCTA.title)}</h2>` : ''}
+              ${seasonCTA.body ? `<p>${esc(seasonCTA.body)}</p>` : ''}
             </div>
-            ${cta({ label: 'Explore Season Seats', href: '/season-seats' }, 'secondary')}
+            ${cta(seasonCTA.cta, seasonCTA.cta?.style || 'secondary')}
           </article>
         </div>
       </section>

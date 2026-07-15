@@ -31,6 +31,7 @@ let keyIndex = 0;
 const ctaFieldNames = new Set(['cta', 'primaryCTA', 'secondaryCTA', 'donateCTA', 'programsCTA', 'holderLoginCTA', 'learnMoreCTA', 'applicationCTA', 'finalCTA']);
 const formFieldNames = new Set(['contact', 'getEmails', 'seasonSeats', 'missionSeekers', 'programReminder']);
 const mediaBlockFieldNames = new Set(['feature', 'video', 'email', 'storyPrefooter', 'impactHeading', 'humanProof', 'placeMap', 'pricing', 'seatingMap', 'conversionProof', 'supportIntro', 'supportProof']);
+const conversionBlockFieldNames = new Set(['conversion', 'eventsSeasonCTA']);
 const blockScopedMediaFields = new Set(['seasonSeats']);
 const arrayItemTypes = {
   desktopPrimary: 'navItem',
@@ -74,7 +75,7 @@ const objectTypeForField = (keyName, parentKey) => {
   if (parentKey === 'forms' && formFieldNames.has(keyName)) return 'formReference';
   if (mediaBlockFieldNames.has(keyName)) return 'mediaBlock';
   if (parentKey === 'blocks' && blockScopedMediaFields.has(keyName)) return 'mediaBlock';
-  if (keyName === 'conversion') return 'conversionBlock';
+  if (conversionBlockFieldNames.has(keyName)) return 'conversionBlock';
   return '';
 };
 

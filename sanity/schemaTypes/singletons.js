@@ -119,6 +119,12 @@ export const blocks = {
     { name: 'feature', title: 'Fan Essentials / Feature Block', type: 'mediaBlock' },
     { name: 'video', title: 'Mission Video Block', type: 'mediaBlock' },
     { name: 'seasonSeats', title: 'Season Seats Home Block', type: 'mediaBlock' },
+    {
+      name: 'eventsSeasonCTA',
+      title: 'Events Page Season Seats CTA',
+      type: 'conversionBlock',
+      description: 'Controls the Season Seats CTA box directly below the Events page intro.'
+    },
     { name: 'email', title: 'Email Signup Block', type: 'mediaBlock' },
     { name: 'storyPrefooter', title: 'Story Prefooter Block', type: 'mediaBlock' },
     {
