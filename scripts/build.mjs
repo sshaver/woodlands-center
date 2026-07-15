@@ -828,6 +828,14 @@ const eventsPage = () => {
       <section class="section events-chart-hero">
         <div class="container">
           ${sectionHeading('Events', 'Tickets, parking and lawn chairs', 'One simple place to get ready for every upcoming Pavilion show.')}
+          <article class="info-card events-season-cta">
+            <div>
+              <p class="eyebrow">Season Seats</p>
+              <h2>Make every show easier to say yes to.</h2>
+              <p>Reserve your place at The Pavilion with premium seating, club access and a team ready to help you make the most of every night.</p>
+            </div>
+            ${cta({ label: 'Explore Season Seats', href: '/season-seats' }, 'secondary')}
+          </article>
         </div>
       </section>
       <section class="section events-chart-section">

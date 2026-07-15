@@ -617,6 +617,35 @@ p {
   padding-top: clamp(2rem, 4vw, 3.25rem);
 }
 
+.events-season-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 4vw, 3rem);
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.events-season-cta > div {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.events-season-cta h2,
+.events-season-cta p {
+  margin: 0;
+}
+
+.events-season-cta h2 {
+  max-width: 18ch;
+  line-height: 1.06;
+}
+
+.events-season-cta p {
+  max-width: 58ch;
+  line-height: 1.42;
+}
+
 .events-chart {
   display: grid;
   gap: 0.9rem;
@@ -2453,7 +2482,8 @@ p {
     grid-template-columns: 1fr;
   }
 
-  .archive-cta-card {
+  .archive-cta-card,
+  .events-season-cta {
     align-items: flex-start;
     flex-direction: column;
   }
