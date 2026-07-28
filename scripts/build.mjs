@@ -1449,23 +1449,9 @@ const storyHubRecentSection = ({ topic = null, currentSlug = '' } = {}) => {
       <section class="section story-recent-section">
         <div class="container">
           ${sectionHeading('Recent Stories', 'Fresh from The Pavilion', 'Filter by topic or browse the latest stories.')}
-          <div class="topic-filter-row">
-            <a class="${topic ? '' : 'is-active'}" href="/story-hub/"${analyticsAttrs('story_filter', { topic: 'All' })}>All</a>
-            ${content.storyTopics.map((item) => `<a class="${topic === slugifyTopic(item) ? 'is-active' : ''}" href="/story-hub/topic/${slugifyTopic(item)}/"${analyticsAttrs('story_filter', { topic: item })}>${esc(item)}</a>`).join('')}
-          </div>
-          <div class="story-pillar-grid" aria-label="Story pillars">
-            ${content.storyPillars
-              .map(
-                (pillar) => `
-                  <a class="story-pillar-card" href="${attr(pillar.href)}">
-                    <span>Pillar</span>
-                    <strong>${esc(pillar.title)}</strong>
-                    <em>${esc(pillar.body)}</em>
-                    <b>${esc(pillar.ctaLabel || 'Read stories')}${svgIcon('arrow-right', { className: 'btn-icon icon-blue' })}</b>
-                  </a>
-                `
-              )
-              .join('')}
+          <div class="topic-filter-row" id="story-topics">
+            <a class="${topic ? '' : 'is-active'}" href="/story-hub/#story-topics"${analyticsAttrs('story_filter', { topic: 'All' })}>All</a>
+            ${content.storyTopics.map((item) => `<a class="${topic === slugifyTopic(item) ? 'is-active' : ''}" href="/story-hub/topic/${slugifyTopic(item)}/#story-topics"${analyticsAttrs('story_filter', { topic: item })}>${esc(item)}</a>`).join('')}
           </div>
           ${storyCards(stories)}
         </div>
