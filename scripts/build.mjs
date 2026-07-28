@@ -1510,7 +1510,7 @@ const storyHubPage = (topic = null) => {
       ${storyHubRecentSection({ topic })}
       <section class="section large-story-band">
         <div class="container landing-grid">
-          <div>${sectionHeading('Featured', large.title, large.dek, cta({ label: large.ctaLabel, href: `/story-hub/${large.slug}/` }, 'secondary'))}</div>
+          <div>${sectionHeading('Featured', large.title, large.dek, cta({ label: large.ctaLabel, href: `/story-hub/${large.slug}/` }, 'primary'))}</div>
           <div class="glow-media">${image({ src: large.heroImage, alt: large.title })}</div>
         </div>
       </section>
