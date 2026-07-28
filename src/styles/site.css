@@ -2062,7 +2062,9 @@ p {
 }
 
 .article-hero h1 {
-  max-width: min(100%, 1100px);
+  width: 100%;
+  max-width: none;
+  font-size: clamp(2.75rem, 5.6vw, 6.15rem);
 }
 
 .article-hero .container > p:not(.eyebrow) {

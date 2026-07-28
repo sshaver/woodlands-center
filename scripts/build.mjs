@@ -129,6 +129,8 @@ const fmtDate = (date) =>
   }).format(new Date(date));
 
 const byEventDate = (a, b) => new Date(a.eventDate) - new Date(b.eventDate);
+const byStoryPublishDate = (a, b) => new Date(b.publishDate) - new Date(a.publishDate);
+const recentStories = (stories = content.stories, limit = stories.length) => [...stories].sort(byStoryPublishDate).slice(0, limit);
 const todayISO = process.env.BUILD_DATE || new Date().toISOString().slice(0, 10);
 const currentYear = Number(todayISO.slice(0, 4));
 const previousYear = currentYear - 1;
@@ -247,6 +249,14 @@ const sectionHeading = (eyebrow, title, subtitle, extra = '') => `
     ${extra}
   </div>
 `;
+
+const paragraphsFromText = (value = '') =>
+  String(value)
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph) => `<p>${esc(paragraph).replace(/\n/g, '<br>')}</p>`)
+    .join('');
 
 const templateEyebrow = (page) => {
   const labels = {
@@ -552,9 +562,9 @@ const seasonSeatsBlock = (tone = 'section-wash-lift', imageSide = 'left') => `
   </section>
 `;
 
-const storyCards = (stories = content.stories.slice(0, 3)) => `
+const storyCards = (stories = recentStories(content.stories, 3)) => `
   <div class="story-grid">
-    ${stories
+    ${recentStories(stories)
       .map(
         (story) => `
           <article class="story-card">
@@ -1443,8 +1453,9 @@ const emailSignup = () => `
 `;
 
 const storyHubRecentSection = ({ topic = null, currentSlug = '' } = {}) => {
-  const stories = (topic ? content.stories.filter((story) => story.topics.map(slugifyTopic).includes(topic)) : content.stories)
-    .filter((story) => story.slug !== currentSlug);
+  const stories = recentStories(
+    (topic ? content.stories.filter((story) => story.topics.map(slugifyTopic).includes(topic)) : content.stories).filter((story) => story.slug !== currentSlug)
+  );
   return `
       <section class="section story-recent-section">
         <div class="container">
@@ -1517,7 +1528,7 @@ const storyDetailPage = (story) =>
         </header>
         <section class="section">
           <div class="container article-body">
-            <p>${esc(story.body)}</p>
+            ${paragraphsFromText(story.body)}
             <p class="article-date">Published ${esc(fmtDate(story.publishDate))}</p>
           </div>
         </section>
