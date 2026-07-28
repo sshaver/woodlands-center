@@ -573,7 +573,7 @@ const storyCards = (stories = recentStories(content.stories, 3)) => `
               <p class="eyebrow">${esc(story.topics.join(' / '))}</p>
               <h3><a href="/story-hub/${attr(story.slug)}/">${esc(story.title)}</a></h3>
               <p>${esc(story.dek)}</p>
-              ${cta({ label: story.ctaLabel, href: `/story-hub/${story.slug}/` }, 'secondary')}
+              ${cta({ label: story.ctaLabel, href: `/story-hub/${story.slug}/` }, 'primary')}
             </div>
           </article>
         `
@@ -581,6 +581,17 @@ const storyCards = (stories = recentStories(content.stories, 3)) => `
       .join('')}
   </div>
 `;
+
+const storyHeroMedia = (story) => {
+  const heroImage = `<img src="${attr(story.heroImage)}" alt="${attr(story.title)}" loading="eager" decoding="async">`;
+  if (!story.youtubeUrl) return heroImage;
+  return `
+          <a class="article-hero-media" href="${attr(story.youtubeUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${attr(story.title)} on YouTube">
+            ${heroImage}
+            <span class="play-button story-play-button" aria-hidden="true">${svgIcon('play', { className: 'play-icon icon-white' })}</span>
+          </a>
+  `;
+};
 
 const storyBlock = (tone = 'section-wash-deep') => `
   <section class="section story-prefooter ${attr(tone)}">
@@ -1524,7 +1535,7 @@ const storyDetailPage = (story) =>
             <h1>${esc(story.title)}</h1>
             <p>${esc(story.dek)}</p>
           </div>
-          <img src="${attr(story.heroImage)}" alt="${attr(story.title)}" loading="eager" decoding="async">
+          ${storyHeroMedia(story)}
         </header>
         <section class="section">
           <div class="container article-body">

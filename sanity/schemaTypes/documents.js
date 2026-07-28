@@ -184,6 +184,12 @@ export const story = {
     { name: 'thumbnail', title: 'Card Image', type: 'mediaAsset' },
     { name: 'cardImage', title: 'Legacy Card Image', type: 'mediaAsset', hidden: true },
     { name: 'heroImage', title: 'Hero Image', type: 'mediaAsset' },
+    {
+      name: 'youtubeUrl',
+      title: 'YouTube Link',
+      type: 'url',
+      description: 'Optional. When populated, the story hero image links to this video and shows a play overlay.'
+    },
     { name: 'dek', title: 'Dek', type: 'text', rows: 3 },
     { name: 'body', title: 'Body', type: 'text', rows: 10 },
     { name: 'featuredSlot', title: 'Featured Slot', type: 'string', options: { list: ['hero', 'largeFeature'] } },
