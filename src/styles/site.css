@@ -2060,9 +2060,24 @@ p {
   box-shadow: var(--shadow-blue-glow);
 }
 
+.article-hero h1 {
+  max-width: min(100%, 1100px);
+}
+
+.article-hero .container > p:not(.eyebrow) {
+  max-width: 860px;
+}
+
 .article-body {
   max-width: 780px;
   font-size: 1.22rem;
+}
+
+.article-date {
+  color: rgba(8, 32, 51, 0.7);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 800;
 }
 
 .sponsor-section {

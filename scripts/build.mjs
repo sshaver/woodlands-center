@@ -677,7 +677,7 @@ const gtmBody = () =>
     ? `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${attr(gtmContainerId)}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`
     : '';
 
-const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '', storyFooter = true }) => `<!doctype html>
+const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '', storyFooter = true, sponsorFooter = true }) => `<!doctype html>
 <html lang="en" data-theme="${attr(theme)}">
 <head>
   <meta charset="utf-8">
@@ -697,7 +697,7 @@ const shell = ({ title, description, path: routePath, theme = 'dark', body, extr
     ${body}
   </main>
   ${storyFooter ? storyBlock(theme === 'light' ? 'story-prefooter-light' : 'section-wash-blue') : ''}
-  ${sponsorSection()}
+  ${sponsorFooter ? sponsorSection() : ''}
   ${footer(theme)}
   ${mobileDock(routePath)}
   ${popoverMarkup()}
@@ -1442,32 +1442,11 @@ const emailSignup = () => `
   </section>
 `;
 
-const storyHubPage = (topic = null) => {
-  const stories = topic ? content.stories.filter((story) => story.topics.map(slugifyTopic).includes(topic)) : content.stories;
-  const hero = content.stories.find((story) => story.featuredSlot === 'hero') || content.stories[0];
-  const large = content.stories.find((story) => story.featuredSlot === 'largeFeature') || content.stories[1];
-  return shell({
-    title: topic ? `Stories: ${topic}` : 'Story Hub',
-    description: 'Stories from The Pavilion mission, fans, shows, scholarships, grants and backstage.',
-    path: topic ? `/story-hub/topic/${topic}` : '/story-hub',
-    theme: 'light',
-    body: `
-      <section class="story-hub-hero">
-        <div class="container">
-          <a class="back-link" href="/">← Back to Main Site</a>
-          <h1>Story Hub</h1>
-          <article class="story-feature">
-            <img src="${attr(hero.heroImage)}" alt="${attr(hero.title)}" loading="eager" decoding="async">
-            <div>
-              <p class="eyebrow">${esc(hero.topics.join(' / '))}</p>
-              <h2>${esc(hero.title)}</h2>
-              <p>${esc(hero.dek)}</p>
-              ${cta({ label: hero.ctaLabel, href: `/story-hub/${hero.slug}/` }, 'primary')}
-            </div>
-          </article>
-        </div>
-      </section>
-      <section class="section">
+const storyHubRecentSection = ({ topic = null, currentSlug = '' } = {}) => {
+  const stories = (topic ? content.stories.filter((story) => story.topics.map(slugifyTopic).includes(topic)) : content.stories)
+    .filter((story) => story.slug !== currentSlug);
+  return `
+      <section class="section story-recent-section">
         <div class="container">
           ${sectionHeading('Recent Stories', 'Fresh from The Pavilion', 'Filter by topic or browse the latest stories.')}
           <div class="topic-filter-row">
@@ -1491,6 +1470,36 @@ const storyHubPage = (topic = null) => {
           ${storyCards(stories)}
         </div>
       </section>
+  `;
+};
+
+const storyHubPage = (topic = null) => {
+  const hero = content.stories.find((story) => story.featuredSlot === 'hero') || content.stories[0];
+  const large = content.stories.find((story) => story.featuredSlot === 'largeFeature') || content.stories[1];
+  return shell({
+    title: topic ? `Stories: ${topic}` : 'Story Hub',
+    description: 'Stories from The Pavilion mission, fans, shows, scholarships, grants and backstage.',
+    path: topic ? `/story-hub/topic/${topic}` : '/story-hub',
+    theme: 'light',
+    storyFooter: false,
+    sponsorFooter: false,
+    body: `
+      <section class="story-hub-hero">
+        <div class="container">
+          <a class="back-link" href="/">← Back to Main Site</a>
+          <h1>Story Hub</h1>
+          <article class="story-feature">
+            <img src="${attr(hero.heroImage)}" alt="${attr(hero.title)}" loading="eager" decoding="async">
+            <div>
+              <p class="eyebrow">${esc(hero.topics.join(' / '))}</p>
+              <h2>${esc(hero.title)}</h2>
+              <p>${esc(hero.dek)}</p>
+              ${cta({ label: hero.ctaLabel, href: `/story-hub/${hero.slug}/` }, 'primary')}
+            </div>
+          </article>
+        </div>
+      </section>
+      ${storyHubRecentSection({ topic })}
       <section class="section large-story-band">
         <div class="container landing-grid">
           <div>${sectionHeading('Featured', large.title, large.dek, cta({ label: large.ctaLabel, href: `/story-hub/${large.slug}/` }, 'secondary'))}</div>
@@ -1507,6 +1516,8 @@ const storyDetailPage = (story) =>
     description: story.dek,
     path: `/story-hub/${story.slug}`,
     theme: 'light',
+    storyFooter: false,
+    sponsorFooter: false,
     body: `
       <article class="article-page">
         <header class="article-hero">
@@ -1521,10 +1532,11 @@ const storyDetailPage = (story) =>
         <section class="section">
           <div class="container article-body">
             <p>${esc(story.body)}</p>
-            <p>Published ${esc(fmtDate(story.publishDate))}. More voices, photos and related resources can be added as the story grows.</p>
+            <p class="article-date">Published ${esc(fmtDate(story.publishDate))}</p>
           </div>
         </section>
       </article>
+      ${storyHubRecentSection({ currentSlug: story.slug })}
     `
   });
 
