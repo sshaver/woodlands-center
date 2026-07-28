@@ -598,15 +598,17 @@ const sponsorLogo = (sponsor = {}) => {
     : `<span class="sponsor-card">${sponsorMarkup}</span>`;
 };
 
-const sponsorSection = () => {
-  const groups = content.blocks.sponsorGroups || [];
+const sponsorGroupsBlock = (groups = [], options = {}) => {
   if (!groups.length) return '';
+  const eyebrow = options.eyebrow || 'Sponsors';
+  const title = options.title || 'Thanks to our season sponsors';
+  const sectionId = options.sectionId || 'site-sponsors-title';
   return `
-    <section class="section sponsor-section section-wash-lift" aria-labelledby="site-sponsors-title">
+    <section class="section sponsor-section section-wash-lift" aria-labelledby="${attr(sectionId)}">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">Sponsors</p>
-          <h2 id="site-sponsors-title">Thanks to our season sponsors</h2>
+          <p class="eyebrow">${esc(eyebrow)}</p>
+          <h2 id="${attr(sectionId)}">${esc(title)}</h2>
         </div>
         <div class="sponsor-group-grid">
           ${groups
@@ -625,6 +627,33 @@ const sponsorSection = () => {
             )
             .join('')}
         </div>
+      </div>
+    </section>
+  `;
+};
+
+const sponsorSection = () => sponsorGroupsBlock(content.blocks.sponsorGroups || []);
+
+const mediaCalloutSection = (block = {}, options = {}) => {
+  if (!block || (!block.title && !block.body && !block.image)) return '';
+  const title = block.title || options.title || 'Featured Image';
+  const sectionId = options.sectionId || `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-title`;
+  return `
+    <section class="section landing-media-section section-wash-lift" aria-labelledby="${attr(sectionId)}">
+      <div class="container">
+        <article class="landing-media-card">
+          <div class="landing-media-copy">
+            ${block.eyebrow ? `<p class="eyebrow">${esc(block.eyebrow)}</p>` : ''}
+            <h2 id="${attr(sectionId)}">${esc(title)}</h2>
+            ${block.body ? `<p>${esc(block.body)}</p>` : ''}
+            ${block.cta ? cta(block.cta, 'secondary') : ''}
+          </div>
+          ${
+            block.image
+              ? `<div class="landing-media-art">${image(block.image, '', 'lazy')}</div>`
+              : '<div class="landing-media-art landing-media-placeholder"><span>Graphic can be added in Sanity.</span></div>'
+          }
+        </article>
       </div>
     </section>
   `;
@@ -1107,6 +1136,16 @@ const programDetailSection = (page) => `
       ${conversionCard(page)}
     </div>
   </section>
+  ${page.valuesGraphic ? mediaCalloutSection(page.valuesGraphic, { sectionId: `${page.slug.replaceAll('/', '-')}-values-title` }) : ''}
+  ${
+    page.sponsorGroups?.length
+      ? sponsorGroupsBlock(page.sponsorGroups, {
+          eyebrow: 'Corporate Partners',
+          title: 'Current Corporate Sponsors',
+          sectionId: `${page.slug.replaceAll('/', '-')}-sponsors-title`
+        })
+      : ''
+  }
   ${page.video ? videoBlock(page.video, 'section-wash-deep', 'left') : ''}
 `;
 

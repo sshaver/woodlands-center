@@ -37,7 +37,7 @@ export const navigation = {
   ],
   footer: [
     { label: 'Staff', href: '/staff' },
-    { label: 'Leadership', href: '/leadership' },
+    { label: 'Leadership', href: '/staff' },
     { label: 'History', href: '/history' },
     { label: 'Press', href: '/press' },
     { label: 'Work at CWMP', href: '/work-at-cwmp' },
@@ -48,6 +48,131 @@ export const navigation = {
     { label: 'Sponsors', href: '/sponsors' }
   ]
 };
+
+const partnersJoinCTA = { label: 'Join Partners', href: 'CONFIGURE_DONORPERFECT_URL_IN_CMS', type: 'external', openInNewTab: true };
+
+const corporateSponsorGroups = [
+  {
+    title: 'Live Nation Sponsors',
+    subtitle: 'Corporate partners supporting major concert experiences and Pavilion audiences.',
+    sponsors: [
+      { name: 'Live Nation', subtitle: 'Concert sponsorship partner', logo: asset('logos/sponsors/live-nation.png') },
+      { name: 'Ticketmaster', subtitle: 'Ticketing partner', logo: asset('logos/sponsors/ticketmaster.png') },
+      { name: 'Aramark', subtitle: 'Food and beverage partner', logo: asset('logos/sponsors/aramark.png') },
+      { name: 'Sewell', subtitle: 'Corporate sponsor', logo: asset('logos/sponsors/sewell.png') },
+      { name: 'Xfinity', subtitle: 'Corporate sponsor', logo: asset('logos/sponsors/xfinity.png') },
+      { name: 'ExxonMobil', subtitle: 'Corporate sponsor', logo: asset('logos/sponsors/exxonmobil.png') },
+      { name: 'Waste Connections', subtitle: 'Corporate sponsor', logo: asset('logos/sponsors/waste-connections.png') },
+      { name: 'Huntsman', subtitle: 'Corporate sponsor', logo: asset('logos/sponsors/huntsman.png') }
+    ]
+  },
+  {
+    title: 'Performing Arts Season Sponsors',
+    subtitle: 'Mission-focused partners helping keep performing arts accessible to the community.',
+    sponsors: [
+      { name: "The Republic Grille", subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/republic-grille.png') },
+      { name: "Texas Children's", subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/texas-childrens.png') },
+      { name: 'Houston Methodist', subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/houston-methodist.png') },
+      { name: 'Woodforest National Bank', subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/woodforest.png') },
+      { name: 'Aloha', subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/aloha.png') },
+      { name: 'The Wortham Foundation', subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/wortham-foundation.png') },
+      { name: 'The Woodlands Township', subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/woodlands-township.png') },
+      { name: 'Ovintiv', subtitle: 'Performing arts sponsor', logo: asset('logos/sponsors/ovintiv.png') },
+      { name: 'The Pavilion Partners', subtitle: 'Volunteer membership partner', logo: asset('logos/sponsors/pavilion-partners.png') }
+    ]
+  }
+];
+
+const staffDepartmentTabs = [
+  {
+    label: 'Admin',
+    slug: 'admin',
+    body: 'The administrative team guides organizational planning, people operations and executive support.',
+    items: [
+      'Jeff Young - President and CEO - jyoung@woodlandscenter.org',
+      'Mallory Marlowe - Executive Assistant to CEO - mmarlowe@woodlandscenter.org',
+      'Tabitha Harmeyer - Human Resources Manager - tharmeyer@woodlandscenter.org'
+    ]
+  },
+  {
+    label: 'Arts Outreach',
+    slug: 'arts-outreach',
+    body: 'Arts Outreach connects students, educators, families and community groups with mission programs.',
+    items: [
+      'Cameron Klepac - Director of Marketing & Arts Outreach - cklepac@woodlandscenter.org',
+      'Ashley Gravois - Assistant Director of Arts Outreach - agravois@woodlandscenter.org',
+      'Cheryl Worley - Grants Specialist - cworley@woodlandscenter.org',
+      'Erin Kelly - Volunteer Manager - ekelly@woodlandscenter.org'
+    ]
+  },
+  {
+    label: 'Development',
+    slug: 'development',
+    body: 'Development supports giving, sponsorship, membership and relationship-building that fund arts access.',
+    items: ['Joan Dieden - Assistant Director of Development - jdieden@woodlandscenter.org']
+  },
+  {
+    label: 'Finance',
+    slug: 'finance',
+    body: 'Finance stewards resources, reporting and operational support across the organization.',
+    items: [
+      'Craig A. Bourgeois - Chief Financial Officer - cbourgeois@woodlandscenter.org',
+      'Natalia Baker - Controller - nbaker@woodlandscenter.org',
+      'Jenny Lewis - Accounting Manager - jlewis@woodlandscenter.org',
+      'Loretha Warren - Staff Accountant - lwarren@woodlandscenter.org'
+    ]
+  },
+  {
+    label: 'Marketing',
+    slug: 'marketing',
+    body: 'Marketing shares show information, mission stories, campaigns and guest communications.',
+    items: [
+      'Cameron Klepac - Director of Marketing & Arts Outreach - cklepac@woodlandscenter.org',
+      'Scott Shaver - Marketing Manager - sshaver@woodlandscenter.org',
+      'Laine Harper - Communications Specialist - lharper@woodlandscenter.org',
+      'Brooke Huff - Digital Marketing Coordinator - bhuff@woodlandscenter.org'
+    ]
+  },
+  {
+    label: 'Operations - Events',
+    slug: 'operations-events',
+    body: 'Event Operations prepares the guest experience, event logistics and onsite coordination.',
+    items: [
+      'Kelly Rich - Director of Event Operations - krich@woodlandscenter.org',
+      'Shara Trevino - Event Coordinator - strevino@woodlandscenter.org'
+    ]
+  },
+  {
+    label: 'Operations - Facilities + Production',
+    slug: 'operations-facilities-production',
+    body: 'Facilities and Production supports the site, stage and technical details that make events possible.',
+    items: [
+      'Matt Meyer - Director of Operations - mmeyer@woodlandscenter.org',
+      'Kenny Oberhoff - Assistant Facilities Manager - koberhoff@woodlandscenter.org',
+      'David Schlauch - Maintenance Manager'
+    ]
+  },
+  {
+    label: 'Ticketing',
+    slug: 'ticketing',
+    body: 'Ticketing supports box office operations, ticket access and guest questions.',
+    items: [
+      'Josie Moore - Director of Ticketing - jmoore@woodlandscenter.org',
+      'JD Villaseñor - Director of Premium Seat Sales - jvillasenor@woodlandscenter.org',
+      'Bryanna Gayosso - Ticketing Coordinator - bgayosso@woodlandscenter.org'
+    ]
+  },
+  {
+    label: 'Leadership',
+    slug: 'leadership',
+    body: 'The Pavilion is governed by a volunteer Board of Directors.',
+    items: [
+      'Officers: Bob Abendschein - Chairman of the Board; Jeff Young - President and CEO; Bill Braun - Vice Chairman; Maryann T. Mannen - Secretary; Craig A. Bourgeois - Treasurer',
+      'Board of Directors: Eric Allum; Steve Campbell; Dr. Yong Choi; Mark Folkes; Jonathan Homeyer; Peter R. Huntsman; Troy Kirby; J. Colter Lewis; Robert E. Marling, Jr.; Roger A. Nicholson; Cole Pate; Adrienne Ropp; Aaron M. Rubin; Sondra Ruhman; Crystal Sled; Jeff Swift; Jena Taylor; Jeff E. Urban; Kenneth Warren',
+      'Director in Memoriam: Cynthia Woods Mitchell (1922-2009)'
+    ]
+  }
+];
 
 export const forms = {
   contact: {
@@ -1303,12 +1428,12 @@ export const landingPages = [
     heroImage: asset('content-images/partners-sponsors/HPP-68.jpg'),
     primaryCTA: { label: 'Become a Pavilion Partner', href: 'CONFIGURE_DONORPERFECT_URL_IN_CMS', type: 'external', openInNewTab: true },
     tabs: [
-      { label: 'Support Mission', slug: 'support-mission', body: 'Volunteers at The Pavilion participate the meaningful work of making the arts accessible to all by giving of their time, talents and leadership. > Join Partners' },
-      { label: 'Work Events', slug: 'work-events', body: 'Volunteers work with Pavilion Staff to park buses, provide directions to teachers and students (20,000+ each year) and assist with seating assignments. > Join Partners' },
-      { label: 'Operate Activities', slug: 'operate-activities', body: 'Our Performing Arts shows are all about removing barriers and free, welcoming, kid-friendly fun in the plazas before the show plays a key role in making that possible. > Join Partners' },
+      { label: 'Support Mission', slug: 'support-mission', body: 'Volunteers at The Pavilion participate the meaningful work of making the arts accessible to all by giving of their time, talents and leadership.', cta: partnersJoinCTA },
+      { label: 'Work Events', slug: 'work-events', body: 'Volunteers work with Pavilion Staff to park buses, provide directions to teachers and students (20,000+ each year) and assist with seating assignments.', cta: partnersJoinCTA },
+      { label: 'Operate Activities', slug: 'operate-activities', body: 'Our Performing Arts shows are all about removing barriers and free, welcoming, kid-friendly fun in the plazas before the show plays a key role in making that possible.', cta: partnersJoinCTA },
       { label: 'Usher', slug: 'usher', body: 'Help provide directions to seating, answer common questions clearly and courteously and know where to point guests for more detailed information.' },
-      { label: 'Info Booths', slug: 'info-booths', body: 'Our Information Booths are often the first point of contact for guests at Performing Arts shows. Info Booth volunteers also help field a wide variety of questions and connect guests with the resources they need. > Join Partners' },
-      { label: 'Committees', slug: 'committees', body: "The Pavilion Partners are crucial to supporting many of The Pavilion's fundraising, education and scholarship efforts - and that starts at the committee level. > Join Partners" }
+      { label: 'Info Booths', slug: 'info-booths', body: 'Our Information Booths are often the first point of contact for guests at Performing Arts shows. Info Booth volunteers also help field a wide variety of questions and connect guests with the resources they need.', cta: partnersJoinCTA },
+      { label: 'Committees', slug: 'committees', body: "The Pavilion Partners are crucial to supporting many of The Pavilion's fundraising, education and scholarship efforts - and that starts at the committee level.", cta: partnersJoinCTA }
     ]
   },
   {
@@ -1365,9 +1490,9 @@ export const landingPages = [
       { label: 'Event Sponsorship', slug: 'event-sponsorship', body: "By sponsoring an event at The Pavilion, you'll not only get your brand in front of thousands of eyes in a highly focused, energized environment, but also strengthen bonds in your community by creating spaces where everyone can belong.", cta: { label: 'Start a Conversation', type: 'popover', popoverId: 'contact' } },
       { label: 'Brand Exposure', slug: 'brand-exposure', body: 'Partner with The Pavilion team to drive brand exposure across digital and physical channels including social media, email, on-site signage and more.', cta: { label: 'Email for Info', type: 'popover', popoverId: 'contact' } },
       { label: 'Activations', slug: 'activations', body: "From hosting a private event in our Woodforest Bank Club to setting up a highly trafficked booth in The Pavilion's signature North Plaza, the possibilities for our corporate partners to create engaging on-site experiences are nearly limitless.", cta: { label: 'Get In Touch', type: 'popover', popoverId: 'contact' } },
-      { label: 'Program Sponsorship', slug: 'program-sponsorship', body: 'Sponsoring one of our outreach programs – like our one-of-a-kind arts field trips or educator grants - leaves a lasting impact by extending arts access to even more members of our community.', cta: { label: 'Get Involved', type: 'popover', popoverId: 'contact' } },
-      { label: 'Current Corporate Partners', slug: 'current-corporate-partners', body: 'Use this space to feature current corporate partners and recognize organizations supporting The Pavilion’s mission.' }
-    ]
+      { label: 'Program Sponsorship', slug: 'program-sponsorship', body: 'Sponsoring one of our outreach programs – like our one-of-a-kind arts field trips or educator grants - leaves a lasting impact by extending arts access to even more members of our community.', cta: { label: 'Get Involved', type: 'popover', popoverId: 'contact' } }
+    ],
+    sponsorGroups: corporateSponsorGroups
   },
   {
     title: 'Arts Educator Resources and Programs',
@@ -1405,33 +1530,23 @@ export const landingPages = [
     templatePreset: 'footerPage',
     heroImage: asset('content-images/partners-sponsors/Fan BB-26.jpg'),
     primaryCTA: { label: 'Join Our Team', href: '/work-at-cwmp' },
-    tabs: [
-      { label: 'Relentless', slug: 'relentless', body: 'We keep moving toward the mission with energy, preparation and follow-through.' },
-      { label: 'Collaborative', slug: 'collaborative', body: 'We work across teams, partners, artists, volunteers and community groups to create remarkable experiences.' },
-      { label: 'Compassionate', slug: 'compassionate', body: 'We care for guests, students, staff and volunteers with patience, clarity and respect.' },
-      { label: 'Adaptive', slug: 'adaptive', body: 'Live events require flexibility. The team adjusts quickly while keeping guests and mission first.' },
-      { label: 'Proactive', slug: 'proactive', body: 'We anticipate needs before they become barriers and help people feel ready for their Pavilion experience.' },
-      { label: 'Administration', slug: 'administration', body: 'Administration team content can list the staff members who guide organizational planning and daily operations.' },
-      { label: 'Finance', slug: 'finance', body: 'Finance team content can highlight the staff members who steward resources, reporting and operational support.' },
-      { label: 'Operations - Facilities and Production', slug: 'operations-facilities-production', body: 'Facilities and Production staff support the site, stage and technical details that make events possible.' },
-      { label: 'Arts Outreach', slug: 'arts-outreach', body: 'Arts Outreach staff connect students, educators, families and community groups with mission programs.' },
-      { label: 'Development', slug: 'development', body: 'Development staff support giving, sponsorship, membership and relationship-building that fund arts access.' },
-      { label: 'Marketing', slug: 'marketing', body: 'Marketing staff share show information, mission stories, campaigns and guest communications.' },
-      { label: 'Operations - Events', slug: 'operations-events', body: 'Events staff prepare the guest experience, event logistics and onsite coordination.' },
-      { label: 'Ticketing', slug: 'ticketing', body: 'Ticketing staff support box office operations, ticket access and guest questions.' }
-    ]
+    tabs: staffDepartmentTabs,
+    valuesGraphic: {
+      eyebrow: 'Core Values',
+      title: 'Our Values',
+      body: 'Add the current core values graphic here in Sanity so it appears below the staff department tabs.'
+    }
   },
   {
     title: 'Board of Directors',
     slug: 'leadership',
-    subtitle: 'The Pavilion is governed by a volunteer Board of Directors.',
+    subtitle: 'This page has moved into the Leadership tab on the Staff page.',
     templatePreset: 'footerPage',
     heroImage: asset('content-images/partners-sponsors/BostonPops-4.jpg'),
-    primaryCTA: { label: 'Support Our Mission', href: '/mission/support-the-arts' },
+    visibility: 'archived',
+    primaryCTA: { label: 'View Staff and Leadership', href: '/staff' },
     tabs: [
-      { label: 'Officers', slug: 'officers', body: 'Use this area for current board officers and leadership roles.' },
-      { label: 'Board', slug: 'board', body: 'Use this area for the full volunteer Board of Directors.' },
-      { label: 'Director in Memoriam', slug: 'director-in-memoriam', body: 'Honor directors whose service helped shape The Pavilion’s mission and community legacy.' }
+      { label: 'Leadership', slug: 'leadership', body: 'The Pavilion is governed by a volunteer Board of Directors. Current board information is maintained in the Leadership tab on the Staff page.', cta: { label: 'Open Staff and Leadership', href: '/staff' } }
     ]
   },
   {
@@ -1510,9 +1625,9 @@ export const landingPages = [
     primaryCTA: { label: 'Become a Sponsor', href: '/mission/corporate-partnership' },
     tabs: [
       { label: 'Live Nation Sponsorships', slug: 'live-nation-sponsorships', body: 'Support major concerts and reach large, diverse audiences through Live Nation sponsorship opportunities.', cta: { label: 'Explore sponsorships', href: '/mission/corporate-partnership' } },
-      { label: 'Performing Arts Sponsorships', slug: 'performing-arts-sponsorships', body: 'Support free shows, outreach, scholarships, grants and arts access through Performing Arts sponsorships.', cta: { label: 'Support the mission', href: '/mission/corporate-partnership' } },
-      { label: 'Current Corporate Partners', slug: 'current-corporate-partners', body: 'Use this area to recognize current partners and the organizations helping make Pavilion experiences possible.' }
-    ]
+      { label: 'Performing Arts Sponsorships', slug: 'performing-arts-sponsorships', body: 'Support free shows, outreach, scholarships, grants and arts access through Performing Arts sponsorships.', cta: { label: 'Support the mission', href: '/mission/corporate-partnership' } }
+    ],
+    sponsorGroups: corporateSponsorGroups
   }
 ];
 

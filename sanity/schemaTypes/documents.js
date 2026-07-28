@@ -137,6 +137,19 @@ export const landingPage = {
     { name: 'supportIntro', title: 'Support Landing Intro', type: 'mediaBlock' },
     { name: 'supportProof', title: 'Support Proof Panel', type: 'mediaBlock' },
     { name: 'tabs', title: 'Tabs', type: 'array', of: [{ type: 'tab' }] },
+    {
+      name: 'sponsorGroups',
+      title: 'Page Sponsor Groups',
+      type: 'array',
+      description: 'Optional sponsor/logo groups shown below this page’s tab content.',
+      of: [{ type: 'sponsorGroup' }]
+    },
+    {
+      name: 'valuesGraphic',
+      title: 'Values Graphic',
+      type: 'mediaBlock',
+      description: 'Optional graphic area shown below the Staff page department tabs.'
+    },
     { name: 'sections', title: 'Sections', type: 'array', of: [{ type: 'policySection' }] },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
     { name: 'video', title: 'Optional Video Block', type: 'mediaBlock' },
