@@ -1,6 +1,5 @@
 const asset = (path) => `/assets/${path.split('/').map(encodeURIComponent).join('/')}`;
 const eventImage = (filename) => asset(`content-images/events/${filename}`);
-const fallbackEventImage = asset('content-images/plan-your-visit/Fans-7.jpg');
 
 export const settings = {
   siteName: 'The Cynthia Woods Mitchell Pavilion',
@@ -337,8 +336,8 @@ export const events = [
     eventDate: '2026-08-30',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('8.30 - El Bueno.png'),
+    cardImage: eventImage('8.30 - El Bueno.png'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -361,8 +360,8 @@ export const events = [
     eventDate: '2026-09-05',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('9.5 - ZOE.jpg'),
+    cardImage: eventImage('9.5 - ZOE.jpg'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -402,8 +401,8 @@ export const events = [
     eventDate: '2026-09-13',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('9.13 - Kehlani.jpg'),
+    cardImage: eventImage('9.13 - Kehlani.jpg'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -438,8 +437,8 @@ export const events = [
     eventDate: '2026-09-26',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('9.26 - Roxette.jpg'),
+    cardImage: eventImage('9.26 - Roxette.jpg'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -500,8 +499,8 @@ export const events = [
     eventDate: '2026-10-03',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('10.3 - ZZ Top.jpg'),
+    cardImage: eventImage('10.3 - ZZ Top.jpg'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -560,8 +559,8 @@ export const events = [
     eventDate: '2026-10-15',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('10.15 - Bryson Tiller.jpg'),
+    cardImage: eventImage('10.15 - Bryson Tiller.jpg'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -572,8 +571,8 @@ export const events = [
     eventDate: '2026-10-16',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('10.16 - beabadoobee.jpg'),
+    cardImage: eventImage('10.16 - beabadoobee.jpg'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
@@ -622,8 +621,8 @@ export const events = [
     eventDate: '2026-10-31',
     eventStartTime: '7:00 PM',
     gateOpenTime: '5:30 PM',
-    headerImage: fallbackEventImage,
-    cardImage: fallbackEventImage,
+    headerImage: eventImage('10.31 - MercyMe.png'),
+    cardImage: eventImage('10.31 - MercyMe.png'),
     ticketLink: 'CONFIGURE_TICKET_LINK_IN_CMS',
     eventType: 'liveNation'
   },
