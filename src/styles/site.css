@@ -1170,6 +1170,8 @@ p {
   align-items: center;
   justify-content: center;
   gap: 0.58rem;
+  flex: 0 0 auto;
+  max-width: 100%;
   border: 1px solid rgba(64, 189, 244, 0.32);
   background: rgba(255, 255, 255, 0.06);
   color: inherit;
@@ -1178,6 +1180,9 @@ p {
   padding: 0.58rem 0.95rem;
   line-height: 1.12;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .topic-tab-icon {
@@ -1188,6 +1193,9 @@ p {
 .topic-tabs button span {
   display: inline-block;
   max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .feature-grid,
@@ -1671,7 +1679,16 @@ p {
 }
 
 .tab-list,
-.topic-tabs,
+.topic-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.85rem;
+  overflow: visible;
+  padding: 0;
+  margin: 0 0 clamp(1rem, 2vw, 1.35rem);
+}
+
 .topic-filter-row {
   display: flex;
   gap: 0.65rem;
@@ -1742,10 +1759,7 @@ p {
 }
 
 .mission-pathway-tabs .tab-list {
-  margin: 0;
-  padding: 0;
-  overflow: visible;
-  flex-wrap: wrap;
+  margin-bottom: 0;
 }
 
 .mission-pathway-descriptions,
@@ -2494,7 +2508,10 @@ p {
     min-height: 2.75rem;
     justify-content: center;
     text-align: center;
-    white-space: normal;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding: 0.58rem 0.9rem;
     line-height: 1.08;
   }
@@ -2507,6 +2524,9 @@ p {
 
   .topic-tabs button span {
     max-width: 9.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .link-grid,
