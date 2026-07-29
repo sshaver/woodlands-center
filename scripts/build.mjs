@@ -1170,11 +1170,19 @@ const conversionCard = (page) => {
 };
 
 const tabsIntro = (page) => {
-  const eyebrow = page.tabsEyebrow || page.eyebrow || templateEyebrow(page);
-  const title = page.tabsTitle || page.title;
-  const body = page.tabsBody || page.subtitle || 'Find the details, benefits and next steps for this Pavilion experience.';
-  const extra = page.tabsCTA ? cta(page.tabsCTA, 'primary') : '';
-  return sectionHeading(eyebrow, title, body, extra);
+  const eyebrow = page.tabsEyebrow || '';
+  const title = page.tabsTitle || '';
+  const body = page.tabsBody || '';
+  const extra = cta(page.tabsCTA, 'primary');
+  if (!eyebrow && !title && !body && !extra) return '';
+  return `
+    <div class="section-heading">
+      ${eyebrow ? `<p class="eyebrow">${esc(eyebrow)}</p>` : ''}
+      ${title ? `<h2>${esc(title)}</h2>` : ''}
+      ${body ? `<p>${esc(body)}</p>` : ''}
+      ${extra}
+    </div>
+  `;
 };
 
 const programDetailSection = (page) => `
