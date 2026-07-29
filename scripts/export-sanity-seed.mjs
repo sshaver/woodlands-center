@@ -28,7 +28,7 @@ const slugId = (prefix, slugOrTitle) =>
     .replace(/^-|-$/g, '')}`;
 
 let keyIndex = 0;
-const ctaFieldNames = new Set(['cta', 'primaryCTA', 'secondaryCTA', 'donateCTA', 'programsCTA', 'holderLoginCTA', 'learnMoreCTA', 'applicationCTA', 'finalCTA']);
+const ctaFieldNames = new Set(['cta', 'primaryCTA', 'secondaryCTA', 'donateCTA', 'programsCTA', 'holderLoginCTA', 'learnMoreCTA', 'applicationCTA', 'finalCTA', 'tabsCTA']);
 const formFieldNames = new Set(['contact', 'getEmails', 'seasonSeats', 'missionSeekers', 'programReminder']);
 const mediaBlockFieldNames = new Set(['feature', 'video', 'email', 'storyPrefooter', 'impactHeading', 'humanProof', 'placeMap', 'pricing', 'seatingMap', 'conversionProof', 'supportIntro', 'supportProof', 'valuesGraphic']);
 const conversionBlockFieldNames = new Set(['conversion', 'eventsSeasonCTA']);

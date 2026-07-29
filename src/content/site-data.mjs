@@ -1472,6 +1472,10 @@ export const landingPages = [
     eyebrow: 'Arts Access',
     heroImage: asset('content-images/partners-sponsors/Fans-13.jpg'),
     primaryCTA: { label: 'Become a Corporate Partner', type: 'popover', popoverId: 'contact' },
+    tabsEyebrow: 'Partnership paths',
+    tabsTitle: 'Find the right way to partner',
+    tabsBody: 'Explore sponsorship, volunteerism, activations and program support options that connect your organization with Pavilion audiences and mission impact.',
+    tabsCTA: { label: 'Start a Conversation', type: 'popover', popoverId: 'contact' },
     conversion: {
       eyebrow: 'Keep exploring',
       title: 'Stay close to the mission',

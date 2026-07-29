@@ -1139,11 +1139,19 @@ const conversionCard = (page) => {
   `;
 };
 
+const tabsIntro = (page) => {
+  const eyebrow = page.tabsEyebrow || page.eyebrow || templateEyebrow(page);
+  const title = page.tabsTitle || page.title;
+  const body = page.tabsBody || page.subtitle || 'Find the details, benefits and next steps for this Pavilion experience.';
+  const extra = page.tabsCTA ? cta(page.tabsCTA, 'primary') : '';
+  return sectionHeading(eyebrow, title, body, extra);
+};
+
 const programDetailSection = (page) => `
   <section class="section program-detail-section">
     <div class="container program-detail-grid">
       <div>
-        ${sectionHeading(page.eyebrow || templateEyebrow(page), page.title, page.subtitle || 'Find the details, benefits and next steps for this Pavilion experience.')}
+        ${tabsIntro(page)}
         ${tabs(page.tabs || [{ label: 'Overview', slug: 'overview', body: `${page.title} connects people with The Pavilion experience.` }], `tabs-${page.slug.replaceAll('/', '-')}`)}
         ${
           page.quoteHighlight || page.finalCTA
