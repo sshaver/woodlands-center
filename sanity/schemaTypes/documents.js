@@ -127,6 +127,12 @@ export const landingPage = {
     { name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() },
     { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title' }, validation: (Rule) => Rule.required() },
     { name: 'templatePreset', title: 'Template Preset', type: 'string' },
+    {
+      name: 'eyebrow',
+      title: 'Page Eyebrow',
+      type: 'string',
+      description: 'Small label shown above the main page title. If left blank, the template default is used.'
+    },
     { name: 'subtitle', title: 'Subtitle', type: 'text', rows: 4 },
     { name: 'heroImage', title: 'Hero Image', type: 'mediaAsset' },
     { name: 'visibility', title: 'Visibility', type: 'string', options: { list: ['public', 'hidden', 'seasonal', 'archived'] } },

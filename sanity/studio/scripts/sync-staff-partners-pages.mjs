@@ -74,6 +74,8 @@ await patchLanding('mission/volunteer-membership', {
 })
 
 await patchLanding('mission/corporate-partnership', {
+  eyebrow: pageBySlug.get('mission/corporate-partnership').eyebrow,
+  conversion: pageBySlug.get('mission/corporate-partnership').conversion,
   tabs: pageBySlug.get('mission/corporate-partnership').tabs,
   sponsorGroups: pageBySlug.get('mission/corporate-partnership').sponsorGroups,
 })

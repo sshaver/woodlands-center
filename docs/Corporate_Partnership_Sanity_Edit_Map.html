@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Corporate Partnership Sanity Edit Map</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #082033;
+      --muted: #52697a;
+      --blue: #21aeea;
+      --navy: #041522;
+      --paper: #f5f8fb;
+      --line: #c9d8e4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, Arial, sans-serif;
+      line-height: 1.45;
+    }
+
+    main {
+      width: min(100% - 48px, 1180px);
+      margin: 0 auto;
+      padding: 42px 0 64px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .lede {
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .page-link {
+      color: #086b99;
+      font-weight: 800;
+    }
+
+    .diagram {
+      display: grid;
+      gap: 18px;
+      margin: 34px 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 18px 46px rgba(8, 32, 51, 0.08);
+    }
+
+    .screen {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 28px;
+      min-height: 330px;
+      padding: 28px;
+      border-radius: 14px;
+      background: var(--navy);
+      color: white;
+    }
+
+    .screen-left,
+    .screen-right {
+      position: relative;
+      padding: 24px;
+      border: 2px solid transparent;
+      border-radius: 12px;
+    }
+
+    .screen-left {
+      border-color: rgba(33, 174, 234, 0.95);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .screen-right {
+      border-color: rgba(255, 204, 102, 0.95);
+      background: rgba(4, 21, 34, 0.95);
+      box-shadow: 0 0 32px rgba(33, 174, 234, 0.38);
+    }
+
+    .callout {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin-right: 8px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #00131f;
+      font-weight: 900;
+    }
+
+    .screen .eyebrow {
+      color: var(--blue);
+      font-size: 15px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .screen h2 {
+      max-width: 760px;
+      margin-bottom: 18px;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.92;
+    }
+
+    .screen p {
+      max-width: 760px;
+      font-size: clamp(17px, 2vw, 24px);
+      font-weight: 800;
+    }
+
+    .screen-right h2 {
+      max-width: 420px;
+      font-size: clamp(36px, 5.6vw, 68px);
+    }
+
+    .screen-right p {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 18px;
+    }
+
+    .button {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #45bdf4, #0b7fb4);
+      color: white;
+      font-weight: 900;
+    }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .map-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+      padding: 22px;
+    }
+
+    .map-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .path {
+      display: block;
+      margin: 10px 0;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #eef6fb;
+      color: #064d72;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    ul {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    li + li { margin-top: 8px; }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 860px) {
+      main { width: min(100% - 28px, 1180px); }
+      .screen,
+      .map-grid { grid-template-columns: 1fr; }
+      .screen { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Corporate Partnership Sanity Edit Map</h1>
+    <p class="lede">
+      Use this guide for <a class="page-link" href="https://woodlands-center.pages.dev/mission/corporate-partnership/">woodlands-center.pages.dev/mission/corporate-partnership/</a>.
+      In Sanity, open <strong>Support / General Page</strong>, then choose <strong>Corporate Partnership</strong>.
+    </p>
+
+    <section class="diagram" aria-label="Annotated page section">
+      <div class="screen">
+        <div class="screen-left">
+          <p class="eyebrow"><span class="callout">1</span>Arts Access</p>
+          <h2><span class="callout">2</span>Corporate Partnership</h2>
+          <p><span class="callout">3</span>Partner with The Cynthia Woods Mitchell Pavilion - consistently ranked as one of the top amphitheaters in the world and nestled among the picturesque pines of The Woodlands, Texas.</p>
+        </div>
+        <aside class="screen-right">
+          <p class="eyebrow"><span class="callout">4</span>Keep exploring</p>
+          <h2><span class="callout">5</span>Stay close to the mission</h2>
+          <p><span class="callout">6</span>Get stories, program opportunities and simple next steps for connecting with The Pavilion’s arts access work.</p>
+          <span class="button"><span class="callout">7</span>Join the email list</span>
+        </aside>
+      </div>
+    </section>
+
+    <section class="map-grid" aria-label="Sanity field map">
+      <article class="map-card">
+        <h3><span class="callout">1</span>Small Label</h3>
+        <span class="path">Corporate Partnership → Page Eyebrow</span>
+        <p>Edit this to change “Arts Access.” If it is blank, the page uses the template default.</p>
+      </article>
+
+      <article class="map-card">
+        <h3><span class="callout">2</span>Main Title</h3>
+        <span class="path">Corporate Partnership → Title</span>
+        <p>Edit this to change “Corporate Partnership.” The slug controls the URL and should usually stay unchanged.</p>
+      </article>
+
+      <article class="map-card">
+        <h3><span class="callout">3</span>Intro Text</h3>
+        <span class="path">Corporate Partnership → Subtitle</span>
+        <p>This is the paragraph under the page title in the screenshotted section.</p>
+      </article>
+
+      <article class="map-card">
+        <h3><span class="callout">4</span>Right Card Label</h3>
+        <span class="path">Corporate Partnership → Conversion Block → Eyebrow</span>
+        <p>Edit this to change “Keep exploring.”</p>
+      </article>
+
+      <article class="map-card">
+        <h3><span class="callout">5</span>Right Card Title</h3>
+        <span class="path">Corporate Partnership → Conversion Block → Title</span>
+        <p>Edit this to change “Stay close to the mission.”</p>
+      </article>
+
+      <article class="map-card">
+        <h3><span class="callout">6</span>Right Card Body</h3>
+        <span class="path">Corporate Partnership → Conversion Block → Body</span>
+        <p>Edit this to change the supporting paragraph inside the right-hand card.</p>
+      </article>
+
+      <article class="map-card">
+        <h3><span class="callout">7</span>Right Card Button</h3>
+        <span class="path">Corporate Partnership → Conversion Block → CTA</span>
+        <p>Edit the button label, link type, URL, or popover target here.</p>
+      </article>
+
+      <article class="map-card full">
+        <h3>Other Corporate Partnership Page Areas</h3>
+        <ul>
+          <li><strong>Hero image and top-page CTA:</strong> Corporate Partnership → Hero Image, Primary CTA, Secondary CTA.</li>
+          <li><strong>Tabbed content:</strong> Corporate Partnership → Tabs. Each tab has Label, Body, Items, and CTA fields.</li>
+          <li><strong>Corporate sponsor logo section:</strong> Corporate Partnership → Page Sponsor Groups. Each group has Title, Subtitle, Sponsors, Logo, and sponsor text.</li>
+          <li><strong>SEO/meta:</strong> Corporate Partnership → SEO.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

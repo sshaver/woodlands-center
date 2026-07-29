@@ -1111,7 +1111,7 @@ const eventDetailPage = (event) => {
   });
 };
 
-const landingHero = (page, eyebrow = templateEyebrow(page)) => `
+const landingHero = (page, eyebrow = page.eyebrow || templateEyebrow(page)) => `
   <section class="landing-hero" style="--hero-image:url('${attr(page.heroImage || content.settings.fallbackImage)}')">
     <div class="container landing-hero-copy">
       <p class="eyebrow">${esc(eyebrow)}</p>
@@ -1143,7 +1143,7 @@ const programDetailSection = (page) => `
   <section class="section program-detail-section">
     <div class="container program-detail-grid">
       <div>
-        ${sectionHeading(templateEyebrow(page), page.title, page.subtitle || 'Find the details, benefits and next steps for this Pavilion experience.')}
+        ${sectionHeading(page.eyebrow || templateEyebrow(page), page.title, page.subtitle || 'Find the details, benefits and next steps for this Pavilion experience.')}
         ${tabs(page.tabs || [{ label: 'Overview', slug: 'overview', body: `${page.title} connects people with The Pavilion experience.` }], `tabs-${page.slug.replaceAll('/', '-')}`)}
         ${
           page.quoteHighlight || page.finalCTA

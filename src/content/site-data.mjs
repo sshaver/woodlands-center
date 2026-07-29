@@ -1469,8 +1469,15 @@ export const landingPages = [
     slug: 'mission/corporate-partnership',
     subtitle: 'Partner with The Cynthia Woods Mitchell Pavilion - consistently ranked as one of the top amphitheaters in the world and nestled among the picturesque pines of The Woodlands, Texas.',
     templatePreset: 'supportArts',
+    eyebrow: 'Arts Access',
     heroImage: asset('content-images/partners-sponsors/Fans-13.jpg'),
     primaryCTA: { label: 'Become a Corporate Partner', type: 'popover', popoverId: 'contact' },
+    conversion: {
+      eyebrow: 'Keep exploring',
+      title: 'Stay close to the mission',
+      body: 'Get stories, program opportunities and simple next steps for connecting with The Pavilion’s arts access work.',
+      cta: { label: 'Join the email list', type: 'popover', popoverId: 'get-emails' }
+    },
     tabs: [
       {
         label: 'Live Nation Sponsorships',
