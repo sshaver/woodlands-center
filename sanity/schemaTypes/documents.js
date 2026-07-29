@@ -124,29 +124,116 @@ export const landingPage = {
   title: 'Support / General Page',
   type: 'document',
   fields: [
-    { name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() },
-    { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title' }, validation: (Rule) => Rule.required() },
-    { name: 'templatePreset', title: 'Template Preset', type: 'string' },
+    {
+      name: 'title',
+      title: 'Page Title',
+      type: 'string',
+      description: 'Main H1 at the top of the page, usually over the hero image.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'slug',
+      title: 'Page URL',
+      type: 'slug',
+      options: { source: 'title' },
+      description: 'Controls the public page address. Example: mission/corporate-partnership creates /mission/corporate-partnership/.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'templatePreset',
+      title: 'Template Preset',
+      type: 'string',
+      description: 'Controls which page layout is used. Change only when intentionally moving the page to a different design pattern.'
+    },
     {
       name: 'eyebrow',
       title: 'Page Eyebrow',
       type: 'string',
       description: 'Small label shown above the main page title. If left blank, the template default is used.'
     },
-    { name: 'subtitle', title: 'Subtitle', type: 'text', rows: 4 },
-    { name: 'heroImage', title: 'Hero Image', type: 'mediaAsset' },
-    { name: 'visibility', title: 'Visibility', type: 'string', options: { list: ['public', 'hidden', 'seasonal', 'archived'] } },
-    { name: 'orderRank', title: 'Order', type: 'number' },
+    {
+      name: 'subtitle',
+      title: 'Hero Body',
+      type: 'text',
+      rows: 4,
+      description: 'Intro paragraph shown with the main page title in the hero area.'
+    },
+    {
+      name: 'heroImage',
+      title: 'Hero Image',
+      type: 'mediaAsset',
+      description: 'Large background image used behind the hero title/body at the top of the page.'
+    },
+    {
+      name: 'visibility',
+      title: 'Visibility',
+      type: 'string',
+      description: 'Editorial status for whether this page should be treated as public, hidden, seasonal or archived.',
+      options: { list: ['public', 'hidden', 'seasonal', 'archived'] }
+    },
+    {
+      name: 'orderRank',
+      title: 'Order',
+      type: 'number',
+      description: 'Sort order used in editor lists and any ordered page groupings.'
+    },
     statusField,
-    { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
-    { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
-    { name: 'tabsEyebrow', title: 'Tabs Eyebrow', type: 'string' },
-    { name: 'tabsTitle', title: 'Tabs Title', type: 'string' },
-    { name: 'tabsBody', title: 'Tabs Body', type: 'text', rows: 4 },
-    { name: 'tabsCTA', title: 'Tabs CTA', type: 'cta' },
-    { name: 'supportIntro', title: 'Support Landing Intro', type: 'mediaBlock' },
-    { name: 'supportProof', title: 'Support Proof Panel', type: 'mediaBlock' },
-    { name: 'tabs', title: 'Tabs', type: 'array', of: [{ type: 'tab' }] },
+    {
+      name: 'primaryCTA',
+      title: 'Hero Primary CTA',
+      type: 'cta',
+      description: 'Main button shown in the hero area directly under the hero body.'
+    },
+    {
+      name: 'secondaryCTA',
+      title: 'Hero Secondary CTA',
+      type: 'cta',
+      description: 'Optional second button shown next to the hero primary button.'
+    },
+    {
+      name: 'tabsEyebrow',
+      title: 'Tabs Eyebrow',
+      type: 'string',
+      description: 'Small blue label in the intro section immediately above the tabs.'
+    },
+    {
+      name: 'tabsTitle',
+      title: 'Tabs Title',
+      type: 'string',
+      description: 'Large heading in the intro section immediately above the tabs. On Corporate Partnership, this is "Find the right way to partner."'
+    },
+    {
+      name: 'tabsBody',
+      title: 'Tabs Body',
+      type: 'text',
+      rows: 4,
+      description: 'Short paragraph under the Tabs Title and above the tab buttons.'
+    },
+    {
+      name: 'tabsCTA',
+      title: 'Tabs CTA',
+      type: 'cta',
+      description: 'Optional button shown in the tabs intro area. Leave blank to show no button.'
+    },
+    {
+      name: 'supportIntro',
+      title: 'Support Landing Intro',
+      type: 'mediaBlock',
+      description: 'Support The Arts only: intro copy above the support pathway cards.'
+    },
+    {
+      name: 'supportProof',
+      title: 'Support Proof Panel',
+      type: 'mediaBlock',
+      description: 'Support The Arts only: right-side proof panel with stats and an optional CTA.'
+    },
+    {
+      name: 'tabs',
+      title: 'Tabs',
+      type: 'array',
+      description: 'The tab buttons and tab-panel content shown below the Tabs intro section.',
+      of: [{ type: 'tab' }]
+    },
     {
       name: 'sponsorGroups',
       title: 'Page Sponsor Groups',
@@ -160,12 +247,44 @@ export const landingPage = {
       type: 'mediaBlock',
       description: 'Optional graphic area shown below the Staff page department tabs.'
     },
-    { name: 'sections', title: 'Sections', type: 'array', of: [{ type: 'policySection' }] },
-    { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
-    { name: 'video', title: 'Optional Video Block', type: 'mediaBlock' },
-    { name: 'quoteHighlight', title: 'Quote Highlight', type: 'text', rows: 3 },
-    { name: 'finalCTA', title: 'Final CTA', type: 'cta' },
-    { name: 'seo', title: 'SEO', type: 'seo' }
+    {
+      name: 'sections',
+      title: 'Sections',
+      type: 'array',
+      description: 'Flexible lower-page text sections used by simple resource pages.',
+      of: [{ type: 'policySection' }]
+    },
+    {
+      name: 'conversion',
+      title: 'Right-Side Conversion Card',
+      type: 'conversionBlock',
+      description: 'Callout card shown beside the tab content on most support/general pages.'
+    },
+    {
+      name: 'video',
+      title: 'Optional Video Block',
+      type: 'mediaBlock',
+      description: 'Optional video/image feature block for pages that include a media section.'
+    },
+    {
+      name: 'quoteHighlight',
+      title: 'Quote Highlight',
+      type: 'text',
+      rows: 3,
+      description: 'Optional quote or short callout displayed below the tabs.'
+    },
+    {
+      name: 'finalCTA',
+      title: 'Final CTA',
+      type: 'cta',
+      description: 'Optional button displayed with the quote/callout below the tabs.'
+    },
+    {
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      description: 'Optional browser/search/social metadata. If blank, the page title and hero body are used.'
+    }
   ],
   preview: {
     select: { title: 'title', slug: 'slug.current', subtitle: 'subtitle', media: 'heroImage' },
