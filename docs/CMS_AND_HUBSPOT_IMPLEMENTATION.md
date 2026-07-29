@@ -52,7 +52,7 @@ Collection documents:
 - `outreachProgram`: Arts outreach program pages.
 - `landingPage`: flexible pages such as support, staff, history and related routes.
 - `story`: Story Hub articles.
-- `storyPillar` and `storyTopic`: Story Hub grouping and filters.
+- `storyTopic`: Story Hub topic filters.
 
 ## Staff Workflows
 
@@ -75,10 +75,10 @@ Collection documents:
 ### Add a story
 
 1. Create a new `story`.
-2. Add title, slug, topic, pillar, publish date and card image.
+2. Add title, slug, topic, publish date and card image.
 3. Write the dek and story body.
 4. Set `listingStatus` to `published`.
-5. Add a CTA when the story should lead to a program, support page or related event.
+5. Add a YouTube link when the story hero image should link to a video.
 
 ### Edit forms and CTAs
 

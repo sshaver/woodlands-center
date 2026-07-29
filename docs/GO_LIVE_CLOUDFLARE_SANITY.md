@@ -135,7 +135,6 @@ _type in [
   "outreachProgram",
   "landingPage",
   "story",
-  "storyPillar",
   "storyTopic",
   "navigation",
   "alert",

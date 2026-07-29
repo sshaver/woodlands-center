@@ -15,7 +15,6 @@ import {
   seasonSeats,
   settings,
   stories,
-  storyPillars,
   storyTopics
 } from '../src/content/site-data.mjs';
 
@@ -126,7 +125,6 @@ const documents = [
   ...outreachPrograms.map((item) => doc('outreachProgram', slugId('outreachProgram', item.slug), item)),
   ...landingPages.map((item) => doc('landingPage', slugId('landingPage', item.slug), item)),
   ...stories.map((item) => doc('story', slugId('story', item.slug), item)),
-  ...storyPillars.map((item) => doc('storyPillar', slugId('storyPillar', item.slug || item.title), item)),
   ...storyTopics.map((title) => doc('storyTopic', slugId('storyTopic', title), { title }))
 ];
 

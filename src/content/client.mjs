@@ -46,7 +46,6 @@ const collectionRequirements = [
   'outreachPrograms',
   'landingPages',
   'stories',
-  'storyPillars',
   'storyTopics'
 ];
 
@@ -83,7 +82,6 @@ const mergeSource = (cms = {}) => ({
   outreachPrograms: mergeBySlug(cms.outreachPrograms, fixtures.outreachPrograms),
   landingPages: mergeBySlug(cms.landingPages, fixtures.landingPages),
   stories: mergeBySlug(cms.stories, fixtures.stories),
-  storyPillars: mergeBySlug(cms.storyPillars, fixtures.storyPillars),
   storyTopics: withFallback(normalizeStoryTopics(cms.storyTopics), fixtures.storyTopics),
   externalRoutes: withFallback(normalizeExternalRoutes(cms.externalRoutes), fixtures.externalRoutes)
 });

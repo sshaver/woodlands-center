@@ -193,9 +193,13 @@ const analyticsEventForCta = (item = {}) => {
   return 'cta_click';
 };
 
+const ctaHref = (item = {}) => item.href || (item.type === 'popover' && item.popoverId ? `#${item.popoverId}` : '');
+
+const hasUsableCta = (item = {}) => Boolean(item?.label && ctaHref(item));
+
 const cta = (item = {}, style = item.style || 'primary') => {
-  if (!item.label) return '';
-  const href = item.href || (item.type === 'popover' ? `#${item.popoverId}` : '#');
+  if (!hasUsableCta(item)) return '';
+  const href = ctaHref(item);
   const popoverAttrs = item.popoverId ? ` data-popover-open="${attr(item.popoverId)}"` : '';
   const externalAttrs = item.openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
   const trackingAttrs = analyticsAttrs(analyticsEventForCta(item), {
@@ -240,6 +244,19 @@ const navItem = (item = {}) => donationItem(item);
 
 const image = (media, className = '', loading = 'lazy') =>
   `<img class="${attr(className)}" src="${attr(media?.src || media || content.settings.fallbackImage)}" alt="${attr(media?.alt || '')}" loading="${loading}" decoding="async">`;
+
+const absoluteUrl = (value = '') => {
+  if (!value) return '';
+  if (/^https?:\/\//i.test(value)) return value;
+  const baseUrl = content.settings.siteUrl || process.env.SITE_URL || '';
+  if (!baseUrl) return value;
+  return new URL(value, baseUrl).toString();
+};
+
+const seoImage = (seo = {}) => {
+  const imageValue = seo.shareImage?.src || seo.shareImage || '';
+  return imageValue ? absoluteUrl(imageValue) : '';
+};
 
 const sectionHeading = (eyebrow, title, subtitle, extra = '') => `
   <div class="section-heading">
@@ -698,13 +715,24 @@ const gtmBody = () =>
     ? `<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${attr(gtmContainerId)}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`
     : '';
 
-const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '', storyFooter = true, sponsorFooter = true }) => `<!doctype html>
+const shell = ({ title, description, path: routePath, theme = 'dark', body, extraHead = '', storyFooter = true, sponsorFooter = true, seo = {} }) => {
+  const pageTitle = seo.metaTitle || title;
+  const pageDescription = seo.metaDescription || description || 'The redesigned Cynthia Woods Mitchell Pavilion website prototype.';
+  const pageImage = seoImage(seo);
+  const canonicalUrl = absoluteUrl(routePath === '/' ? '/' : `${routePath.replace(/\/?$/, '/')}`);
+  return `<!doctype html>
 <html lang="en" data-theme="${attr(theme)}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(title)} | ${esc(content.settings.siteName)}</title>
-  <meta name="description" content="${attr(description || 'The redesigned Cynthia Woods Mitchell Pavilion website prototype.')}">
+  <title>${esc(pageTitle)} | ${esc(content.settings.siteName)}</title>
+  <meta name="description" content="${attr(pageDescription)}">
+  ${canonicalUrl ? `<link rel="canonical" href="${attr(canonicalUrl)}">` : ''}
+  <meta property="og:title" content="${attr(pageTitle)}">
+  <meta property="og:description" content="${attr(pageDescription)}">
+  ${canonicalUrl ? `<meta property="og:url" content="${attr(canonicalUrl)}">` : ''}
+  <meta property="og:type" content="website">
+  ${pageImage ? `<meta property="og:image" content="${attr(pageImage)}">` : ''}
   ${analyticsHead()}
   <link rel="stylesheet" href="/styles/site.css">
   ${extraHead}
@@ -725,13 +753,14 @@ const shell = ({ title, description, path: routePath, theme = 'dark', body, extr
   <script type="module" src="/scripts/site.js"></script>
 </body>
 </html>`;
+};
 
 const alertBanner = () => `
   <aside class="alert-banner" data-alert role="status">
     <div class="container alert-inner">
       <strong>${esc(content.alert.title)}</strong>
       <span>${esc(content.alert.message)}</span>
-      ${content.alert.cta ? `<a href="${attr(content.alert.cta.href)}">${esc(content.alert.cta.label)}</a>` : ''}
+      ${hasUsableCta(content.alert.cta) ? `<a href="${attr(ctaHref(content.alert.cta))}">${esc(content.alert.cta.label)}</a>` : ''}
       ${content.alert.dismissible ? `<button type="button" data-alert-close aria-label="Dismiss alert">${svgIcon('xmark', { className: 'control-icon icon-white' })}</button>` : ''}
     </div>
   </aside>
@@ -1009,6 +1038,7 @@ const eventDetailPage = (event) => {
     title: event.title,
     description: event.eventDescription,
     path: `/events/${event.slug}`,
+    seo: event.seo,
     storyFooter: false,
     body: `
       <article>
@@ -1267,6 +1297,7 @@ const landingPage = (page, routePath = `/${page.slug}`) => {
     title: page.title,
     description: page.subtitle,
     path: routePath,
+    seo: page.seo,
     storyFooter: false,
     body: `
       ${landingHero(renderPage)}
@@ -1343,7 +1374,8 @@ const grantPage = (program) =>
     tabs: program.tabs,
     quoteHighlight: program.quoteHighlight,
     finalCTA: program.finalCTA,
-    slug: `mission/funding/${program.slug}`
+    slug: `mission/funding/${program.slug}`,
+    seo: program.seo
   });
 
 const outreachPage = (program) =>
@@ -1354,7 +1386,8 @@ const outreachPage = (program) =>
     templatePreset: 'Arts Outreach',
     primaryCTA: program.primaryCTA,
     tabs: program.tabs,
-    slug: `mission/outreach/${program.slug}`
+    slug: `mission/outreach/${program.slug}`,
+    seo: program.seo
   });
 
 const planVisitPage = () =>
@@ -1532,6 +1565,7 @@ const storyDetailPage = (story) =>
     description: story.dek,
     path: `/story-hub/${story.slug}`,
     theme: 'light',
+    seo: story.seo,
     storyFooter: false,
     sponsorFooter: false,
     body: `

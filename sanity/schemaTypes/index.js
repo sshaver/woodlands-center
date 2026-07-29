@@ -32,7 +32,6 @@ import {
   outreachProgram,
   planVisitTopic,
   story,
-  storyPillar,
   storyTopic
 } from './documents.js';
 
@@ -66,6 +65,5 @@ export const schemaTypes = [
   outreachProgram,
   landingPage,
   story,
-  storyPillar,
   storyTopic
 ];

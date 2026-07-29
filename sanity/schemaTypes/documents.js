@@ -188,7 +188,6 @@ export const story = {
     { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title' }, validation: (Rule) => Rule.required() },
     { name: 'topics', title: 'Topics', type: 'array', of: [{ type: 'string' }] },
     { name: 'topic', title: 'Legacy Topic', type: 'string', hidden: true },
-    { name: 'pillar', title: 'Pillar', type: 'string' },
     { name: 'publishDate', title: 'Publish Date', type: 'date', validation: (Rule) => Rule.required() },
     statusField,
     { name: 'thumbnail', title: 'Card Image', type: 'mediaAsset' },
@@ -204,28 +203,11 @@ export const story = {
     { name: 'body', title: 'Body', type: 'text', rows: 10 },
     { name: 'featuredSlot', title: 'Featured Slot', type: 'string', options: { list: ['hero', 'largeFeature'] } },
     { name: 'ctaLabel', title: 'CTA Label', type: 'string' },
-    { name: 'cta', title: 'CTA', type: 'cta' },
     { name: 'seo', title: 'SEO', type: 'seo' }
   ],
   preview: {
     select: { title: 'title', subtitle: 'dek', media: 'thumbnail' }
   }
-};
-
-export const storyPillar = {
-  name: 'storyPillar',
-  title: 'Story Pillar',
-  type: 'document',
-  fields: [
-    { name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() },
-    { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title' } },
-    { name: 'body', title: 'Description', type: 'text', rows: 3 },
-    { name: 'description', title: 'Legacy Description', type: 'text', rows: 3, hidden: true },
-    { name: 'href', title: 'Link', type: 'string' },
-    { name: 'ctaLabel', title: 'CTA Label', type: 'string' },
-    { name: 'cta', title: 'CTA', type: 'cta' },
-    { name: 'orderRank', title: 'Order', type: 'number' }
-  ]
 };
 
 export const storyTopic = {
@@ -234,7 +216,6 @@ export const storyTopic = {
   type: 'document',
   fields: [
     { name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() },
-    { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title' } },
     { name: 'orderRank', title: 'Order', type: 'number' }
   ]
 };

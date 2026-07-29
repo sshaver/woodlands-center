@@ -1710,56 +1710,6 @@ p {
   background: rgba(255, 255, 255, 0.44);
 }
 
-.story-pillar-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.35rem);
-  margin: clamp(1.4rem, 3vw, 2.25rem) 0 clamp(2rem, 4vw, 3rem);
-}
-
-.story-pillar-card {
-  display: grid;
-  gap: 0.7rem;
-  min-height: 100%;
-  padding: clamp(1.2rem, 2vw, 1.65rem);
-  border: 1px solid rgba(9, 90, 135, 0.24);
-  border-radius: var(--radius-card-sm);
-  background: rgba(255, 255, 255, 0.72);
-  color: #082033;
-  text-decoration: none;
-  box-shadow: 0 1.1rem 2.4rem rgba(9, 90, 135, 0.1);
-}
-
-.story-pillar-card span {
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: 900;
-  color: #0f8ec2;
-  text-transform: uppercase;
-}
-
-.story-pillar-card strong {
-  font-size: clamp(1.25rem, 2vw, 1.7rem);
-  line-height: 1.05;
-}
-
-.story-pillar-card em {
-  font-style: normal;
-  color: rgba(8, 32, 51, 0.78);
-}
-
-.story-pillar-card b {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-top: 0.35rem;
-  color: #095a87;
-  font-family: var(--font-ui);
-  font-size: 0.92rem;
-  font-weight: 900;
-  font-style: normal;
-}
-
 .tabs {
   overflow: visible;
 }
@@ -2563,7 +2513,6 @@ p {
   .answer-grid,
   .know-before-grid,
   .story-grid,
-  .story-pillar-grid,
   .impact-proof-grid,
   .stat-strip {
     grid-template-columns: 1fr;

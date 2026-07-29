@@ -82,8 +82,7 @@ export const structure: StructureResolver = (S) =>
             .title('Story Hub')
             .items([
               documentList(S, 'story', 'Stories'),
-              documentList(S, 'storyTopic', 'Story Topics'),
-              documentList(S, 'storyPillar', 'Story Pillars')
+              documentList(S, 'storyTopic', 'Story Topics')
             ])
         ),
       S.divider(),

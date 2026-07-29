@@ -7,7 +7,6 @@ const collectionKeys = [
   'outreachPrograms',
   'landingPages',
   'stories',
-  'storyPillars',
   'storyTopics'
 ];
 
@@ -28,7 +27,6 @@ const typeMap = {
   outreachPrograms: 'outreachProgram',
   landingPages: 'landingPage',
   stories: 'story',
-  storyPillars: 'storyPillar',
   storyTopics: 'storyTopic'
 };
 
@@ -81,7 +79,6 @@ const buildQuery = (previewDrafts) => {
     ${collectionProjection('outreachPrograms', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('landingPages', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('stories', '|order(publishDate desc)').replaceAll('{draftFilter}', draftFilter)},
-    ${collectionProjection('storyPillars', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('storyTopics', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)}
   }`;
 };

@@ -124,7 +124,6 @@ const titleSet = new Set([
     ...(page.tabs || []).flatMap((tab) => [tab.label, tab.body, ...(tab.items || [])])
   ]),
   ...content.stories.flatMap((story) => [story.title, story.dek, story.body, ...(story.topics || [])]),
-  ...content.storyPillars.flatMap((pillar) => [pillar.title, pillar.body]),
   ...content.storyTopics
 ].filter(Boolean).map(normalize));
 

@@ -1720,27 +1720,6 @@ export const externalRoutes = {
 
 export const storyTopics = ['Arts in Schools', 'Fans', 'Shows', 'Scholarships', 'Grants', 'Backstage', 'Supporters', 'Outreach'];
 
-export const storyPillars = [
-  {
-    title: 'Mission in Motion',
-    body: 'Stories that show how arts access reaches classrooms, community groups, families and first-time arts participants.',
-    href: '/story-hub/topic/outreach/',
-    ctaLabel: 'Read outreach stories'
-  },
-  {
-    title: 'People of The Pavilion',
-    body: 'Profiles of students, educators, volunteers, artists, fans and supporters who make the mission visible.',
-    href: '/story-hub/topic/supporters/',
-    ctaLabel: 'Meet supporters'
-  },
-  {
-    title: 'Behind the Experience',
-    body: 'A closer look at what happens backstage, before the gates open and after the encore fades.',
-    href: '/story-hub/topic/backstage/',
-    ctaLabel: 'Go backstage'
-  }
-];
-
 export const blocks = {
   feature: {
     title: 'Get ready before the gates open',
