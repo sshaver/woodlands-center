@@ -579,6 +579,67 @@ const seasonSeatsBlock = (tone = 'section-wash-lift', imageSide = 'left') => `
   </section>
 `;
 
+const homeExperienceBlock = () => {
+  const latestStory = recentStories(content.stories, 1)[0];
+  const supportPage = content.getLandingPage('mission/support-the-arts') || {};
+  const storyHref = latestStory ? `/story-hub/${latestStory.slug}/` : '/story-hub';
+  const storyImage = latestStory?.heroImage || latestStory?.thumbnail || content.blocks.video.image;
+  const mediaHref = latestStory?.youtubeUrl || storyHref;
+  const mediaAttrs = latestStory?.youtubeUrl ? ' target="_blank" rel="noopener noreferrer"' : '';
+  const mediaLabel = latestStory?.youtubeUrl
+    ? `Watch ${latestStory.title} on YouTube`
+    : `Read ${latestStory?.title || 'the latest Story Hub feature'}`;
+
+  return `
+    <section class="section home-experience-section section-wash-blue">
+      <div class="container">
+        <div class="home-experience-grid">
+          <article class="home-latest-story-card">
+            <a class="home-latest-story-media" href="${attr(mediaHref)}"${mediaAttrs} aria-label="${attr(mediaLabel)}">
+              <img src="${attr(storyImage)}" alt="${attr(latestStory?.title || 'Pavilion mission story')}" loading="lazy" decoding="async">
+              ${latestStory?.youtubeUrl ? `<span class="play-button story-play-button" aria-hidden="true">${svgIcon('play', { className: 'play-icon icon-white' })}</span>` : ''}
+            </a>
+            <div class="home-latest-story-content">
+              <p class="eyebrow">Latest Story</p>
+              <h3>${esc(latestStory?.title || content.blocks.video.title)}</h3>
+              ${cta({ label: latestStory?.ctaLabel || 'Read the latest story', href: storyHref }, 'primary')}
+            </div>
+          </article>
+
+          <article class="home-experience-card home-season-card">
+            <img src="${attr(content.seasonSeats.image)}" alt="Pavilion audience enjoying a concert." loading="lazy" decoding="async">
+            <div>
+              <p class="eyebrow">Season Seats</p>
+              <h3>${esc(content.seasonSeats.title)}</h3>
+              ${cta(content.seasonSeats.learnMoreCTA || { label: 'Explore Season Seats', href: '/season-seats' }, 'primary')}
+            </div>
+          </article>
+
+          <div class="home-supporting-card-grid">
+            <article class="home-experience-card home-small-card">
+              <img src="${attr(content.blocks.feature.image)}" alt="Fans arriving at The Pavilion." loading="lazy" decoding="async">
+              <div>
+                <p class="eyebrow">Plan Your Visit</p>
+                <h3>${esc(content.blocks.feature.title)}</h3>
+                ${cta(content.blocks.feature.cta, 'secondary')}
+              </div>
+            </article>
+
+            <article class="home-experience-card home-small-card">
+              <img src="${attr(supportPage.heroImage || content.mission.heroImage)}" alt="Pavilion arts access program." loading="lazy" decoding="async">
+              <div>
+                <p class="eyebrow">Support the Arts</p>
+                <h3>${esc(supportPage.title || 'Keep arts access open')}</h3>
+                ${cta({ label: 'Support the Arts', href: '/mission/support-the-arts' }, 'secondary')}
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+};
+
 const storyCards = (stories = recentStories(content.stories, 3)) => `
   <div class="story-grid">
     ${recentStories(stories)
@@ -863,14 +924,8 @@ const popoverMarkup = () => `
   </div>
 `;
 
-const homePage = (routePath = '/') => {
-  const homeMissionBlock = {
-    ...content.blocks.video,
-    title: content.mission.title,
-    subtitle: content.mission.subtitle,
-    cta: { label: 'Explore the mission', href: '/mission' }
-  };
-  return shell({
+const homePage = (routePath = '/') =>
+  shell({
     title: routePath === '/' ? 'Home / Events' : 'Events',
     description: 'Upcoming events at The Cynthia Woods Mitchell Pavilion.',
     path: routePath,
@@ -888,12 +943,9 @@ const homePage = (routePath = '/') => {
           ${showRail(upcomingEvents(), { eagerCount: 2 })}
         </div>
       </section>
-      ${videoBlock(homeMissionBlock, 'section-wash-blue', 'left')}
-      ${seasonSeatsBlock('section-wash-lift', 'left')}
-      ${featureBlock('section-wash-deep', 'left')}
+      ${homeExperienceBlock()}
     `
   });
-};
 
 const eventsPage = () => {
   const events = upcomingEvents();

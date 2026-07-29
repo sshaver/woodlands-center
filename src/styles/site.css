@@ -1621,6 +1621,148 @@ p {
   object-fit: contain;
 }
 
+.home-experience-section .section-heading {
+  max-width: 820px;
+}
+
+.home-experience-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.16fr) minmax(340px, 0.84fr);
+  grid-template-areas:
+    "story season"
+    "story supporting";
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(1rem, 2vw, 1.45rem);
+  align-items: stretch;
+}
+
+.home-latest-story-card,
+.home-experience-card {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(64, 189, 244, 0.48);
+  border-radius: var(--radius-card-sm);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: var(--shadow-blue-glow-soft);
+}
+
+.home-latest-story-card {
+  grid-area: story;
+  min-height: clamp(28rem, 37vw, 35rem);
+}
+
+.home-latest-story-media,
+.home-latest-story-content,
+.home-experience-card img,
+.home-experience-card > div,
+.home-experience-card::after {
+  grid-area: 1 / 1;
+}
+
+.home-latest-story-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-latest-story-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.04) 28%, rgba(1, 10, 17, 0.88) 100%),
+    linear-gradient(90deg, rgba(1, 10, 17, 0.42), rgba(1, 10, 17, 0.05));
+  pointer-events: none;
+}
+
+.home-latest-story-media img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+}
+
+.home-experience-card::after {
+  content: '';
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.03) 30%, rgba(1, 10, 17, 0.88) 100%),
+    linear-gradient(90deg, rgba(1, 10, 17, 0.44), rgba(1, 10, 17, 0.08));
+  pointer-events: none;
+}
+
+.home-latest-story-content {
+  position: relative;
+  z-index: 2;
+  align-self: end;
+  max-width: 620px;
+  padding: clamp(1.35rem, 3vw, 2.35rem);
+}
+
+.home-latest-story-content h3,
+.home-experience-card h3 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 2.1vw, 2rem);
+  line-height: 0.95;
+}
+
+.home-latest-story-content h3 {
+  font-size: clamp(2rem, 4vw, 3.7rem);
+}
+
+.home-experience-card img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+}
+
+.home-experience-card > div {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  align-self: end;
+  padding: clamp(1.1rem, 2.2vw, 1.7rem);
+}
+
+.home-season-card {
+  grid-area: season;
+  min-height: clamp(16rem, 19vw, 21rem);
+}
+
+.home-season-card h3 {
+  font-size: clamp(1.7rem, 2.5vw, 2.55rem);
+}
+
+.home-supporting-card-grid {
+  grid-area: supporting;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.45rem);
+}
+
+.home-small-card {
+  min-height: clamp(13rem, 16vw, 16.5rem);
+}
+
+.home-small-card h3 {
+  font-size: clamp(1.35rem, 1.75vw, 1.75rem);
+  line-height: 1.02;
+}
+
+.home-experience-card .btn,
+.home-latest-story-content .btn {
+  margin-top: 0.9rem;
+}
+
 .impact-proof-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(340px, 0.62fr);
@@ -2465,6 +2607,23 @@ p {
     justify-content: flex-start;
   }
 
+  .home-experience-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "story"
+      "season"
+      "supporting";
+    grid-template-rows: auto;
+  }
+
+  .home-latest-story-card {
+    min-height: clamp(30rem, 78vw, 38rem);
+  }
+
+  .home-supporting-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .alert-banner {
     display: none;
   }
@@ -2679,6 +2838,26 @@ p {
   .events-chart-actions .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .home-latest-story-card {
+    min-height: auto;
+  }
+
+  .home-latest-story-media {
+    min-height: 24rem;
+  }
+
+  .home-latest-story-content {
+    align-self: end;
+  }
+
+  .home-latest-story-content h3 {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .home-supporting-card-grid {
+    grid-template-columns: 1fr;
   }
 
   .icon-action {
