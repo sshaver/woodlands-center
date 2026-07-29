@@ -44,8 +44,7 @@ export const navigation = {
     { label: 'Staff Log In', href: '/staff-login' },
     { label: 'Rent The Pavilion', href: '/rent' },
     { label: 'Volunteers', href: '/volunteer' },
-    { label: 'Donate', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS' },
-    { label: 'Sponsors', href: '/sponsors' }
+    { label: 'Donate', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS' }
   ]
 };
 
@@ -1626,19 +1625,6 @@ export const landingPages = [
       { label: 'Pavilion Partners', slug: 'pavilion-partners', body: 'Partners are a volunteer membership community supporting fundraising, education, guest service and hands-on event needs.', cta: { label: 'Learn about Partners', href: '/mission/volunteer-membership' } },
       { label: 'Member Resources', slug: 'member-resources', body: 'Current Partners can find event lists, weather guidance, parking, Paycom reminders and renewal paths.', cta: { label: 'Open resources', href: '/mission/volunteer-membership/resources' } }
     ]
-  },
-  {
-    title: 'Sponsorships at The Pavilion',
-    slug: 'sponsors',
-    subtitle: 'Explore sponsorships, corporate partnership opportunities, current corporate partners and the organizations supporting The Pavilion.',
-    templatePreset: 'footerPage',
-    heroImage: asset('content-images/partners-sponsors/DiscoNight-19.jpg'),
-    primaryCTA: { label: 'Become a Sponsor', href: '/mission/corporate-partnership' },
-    tabs: [
-      { label: 'Live Nation Sponsorships', slug: 'live-nation-sponsorships', body: 'Support major concerts and reach large, diverse audiences through Live Nation sponsorship opportunities.', cta: { label: 'Explore sponsorships', href: '/mission/corporate-partnership' } },
-      { label: 'Performing Arts Sponsorships', slug: 'performing-arts-sponsorships', body: 'Support free shows, outreach, scholarships, grants and arts access through Performing Arts sponsorships.', cta: { label: 'Support the mission', href: '/mission/corporate-partnership' } }
-    ],
-    sponsorGroups: corporateSponsorGroups
   }
 ];
 

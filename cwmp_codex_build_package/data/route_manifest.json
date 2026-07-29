@@ -46,7 +46,6 @@
     {"path": "/work-at-cwmp", "name": "Work at The Pavilion", "template": "landing-page", "cmsCollection": "landingPages"},
     {"path": "/rent", "name": "Rent The Pavilion", "template": "landing-page", "cmsCollection": "landingPages"},
     {"path": "/volunteer", "name": "Volunteer Landing Page", "template": "landing-page", "cmsCollection": "landingPages"},
-    {"path": "/sponsors", "name": "Sponsors Landing Page", "template": "landing-page", "cmsCollection": "landingPages"},
     {"path": "/donate", "name": "Donate", "template": "external-link", "cmsCollection": "navigation"},
     {"path": "/staff-login", "name": "Staff Login", "template": "external-link", "cmsCollection": "navigation"}
   ],

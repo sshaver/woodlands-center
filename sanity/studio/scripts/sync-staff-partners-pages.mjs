@@ -89,11 +89,6 @@ await patchLanding('staff', {
   valuesGraphic: pageBySlug.get('staff').valuesGraphic,
 })
 
-await patchLanding('sponsors', {
-  tabs: pageBySlug.get('sponsors').tabs,
-  sponsorGroups: pageBySlug.get('sponsors').sponsorGroups,
-})
-
 const leadershipId = await getLandingId('leadership')
 if (leadershipId) {
   await client
