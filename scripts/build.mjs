@@ -262,7 +262,7 @@ const sectionHeading = (eyebrow, title, subtitle, extra = '') => `
   <div class="section-heading">
     ${eyebrow ? `<p class="eyebrow">${esc(eyebrow)}</p>` : ''}
     <h2>${esc(title)}</h2>
-    ${subtitle ? `<p>${esc(subtitle)}</p>` : ''}
+    ${subtitle ? paragraphsFromText(subtitle) : ''}
     ${extra}
   </div>
 `;
@@ -301,7 +301,7 @@ const tabs = (items, idPrefix) => {
         <div class="tab-panel" id="${idPrefix}-panel-${index}" role="tabpanel" aria-labelledby="${idPrefix}-tab-${index}" ${index === 0 ? '' : 'hidden'}>
           ${tab.image ? image(tab.image, 'tab-panel-image') : ''}
           <h3>${esc(tab.label)}</h3>
-          ${tab.body || tab.summary ? `<p>${esc(tab.body || tab.summary || '')}</p>` : ''}
+          ${paragraphsFromText(tab.body || tab.summary)}
           ${tab.items?.length ? `<ul>${tab.items.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>` : ''}
           ${tab.cta ? cta(tab.cta, 'secondary') : ''}
         </div>
@@ -346,7 +346,7 @@ const pathwayCards = (items = [], className = 'pathway-card-grid') => {
               <div class="pathway-card-copy">
                 <p class="eyebrow">${esc(item.summary || item.slug || 'Option')}</p>
                 <h3>${esc(item.label)}</h3>
-                <p>${esc(item.body || '')}</p>
+                ${paragraphsFromText(item.body)}
                 ${item.cta ? cta(item.cta, 'secondary') : ''}
               </div>
             </article>
@@ -371,7 +371,7 @@ const missionPathwayTabs = () => `
       ${content.mission.tabs
         .map(
           (tab, index) =>
-            `<div class="mission-pathway-description" id="mission-pathways-description-${index}" role="tabpanel" aria-labelledby="mission-pathways-tab-${index}" ${index === 0 ? '' : 'hidden'}><p>${esc(tab.body)}</p></div>`
+            `<div class="mission-pathway-description" id="mission-pathways-description-${index}" role="tabpanel" aria-labelledby="mission-pathways-tab-${index}" ${index === 0 ? '' : 'hidden'}>${paragraphsFromText(tab.body)}</div>`
         )
         .join('')}
     </div>
@@ -558,7 +558,7 @@ const statsBlock = (stats, tone = 'section-wash-blue', heading = null, proof = n
               <div>
                 <p class="eyebrow">${esc(proof.eyebrow || 'Mission Story')}</p>
                 <h3>${esc(proof.title)}</h3>
-                <p>${esc(proof.body)}</p>
+                ${paragraphsFromText(proof.body)}
                 ${proof.cta ? cta(proof.cta, 'secondary') : ''}
               </div>
             </article>`
@@ -655,7 +655,7 @@ const sponsorGroupsBlock = (groups = [], options = {}) => {
                 <article class="sponsor-group-card">
                   <div class="sponsor-group-heading">
                     <h3>${esc(group.title)}</h3>
-                    ${group.subtitle ? `<p>${esc(group.subtitle)}</p>` : ''}
+                    ${paragraphsFromText(group.subtitle)}
                   </div>
                   <div class="sponsor-logo-grid">
                     ${(group.sponsors || []).map(sponsorLogo).join('') || '<p class="sponsor-empty">Sponsor logos can be added in Sanity.</p>'}
@@ -683,7 +683,7 @@ const mediaCalloutSection = (block = {}, options = {}) => {
           <div class="landing-media-copy">
             ${block.eyebrow ? `<p class="eyebrow">${esc(block.eyebrow)}</p>` : ''}
             <h2 id="${attr(sectionId)}">${esc(title)}</h2>
-            ${block.body ? `<p>${esc(block.body)}</p>` : ''}
+            ${paragraphsFromText(block.body)}
             ${block.cta ? cta(block.cta, 'secondary') : ''}
           </div>
           ${
@@ -925,7 +925,7 @@ const eventsPage = () => {
             <div>
               ${seasonCTA.eyebrow ? `<p class="eyebrow">${esc(seasonCTA.eyebrow)}</p>` : ''}
               ${seasonCTA.title ? `<h2>${esc(seasonCTA.title)}</h2>` : ''}
-              ${seasonCTA.body ? `<p>${esc(seasonCTA.body)}</p>` : ''}
+              ${paragraphsFromText(seasonCTA.body)}
             </div>
             ${cta(seasonCTA.cta, seasonCTA.cta?.style || 'secondary')}
           </article>
@@ -1091,8 +1091,8 @@ const eventDetailPage = (event) => {
             <div>
               <div class="rich-text">
                 <h2>Event Description</h2>
-                <p>${esc(event.eventDescription)}</p>
-                ${event.policyOverrides ? `<p><strong>Event note:</strong> ${esc(event.policyOverrides)}</p>` : ''}
+                ${paragraphsFromText(event.eventDescription)}
+                ${event.policyOverrides ? `<p><strong>Event note:</strong></p>${paragraphsFromText(event.policyOverrides)}` : ''}
               </div>
             </div>
             <aside class="event-side-card">
@@ -1105,7 +1105,7 @@ const eventDetailPage = (event) => {
               <div class="text-code-card">
                 <p class="eyebrow">Text Updates</p>
                 <h2>${esc(event.textUpdatesCode || 'Text CWMP for updates')}</h2>
-                <p>${esc(event.textUpdatesBody || 'Receive important event updates by text.')}</p>
+                ${paragraphsFromText(event.textUpdatesBody || 'Receive important event updates by text.')}
               </div>
             </aside>
           </div>
@@ -1146,7 +1146,7 @@ const landingHero = (page, eyebrow = page.eyebrow || templateEyebrow(page)) => `
     <div class="container landing-hero-copy">
       <p class="eyebrow">${esc(eyebrow)}</p>
       <h1>${esc(page.title)}</h1>
-      <p>${esc(page.subtitle || '')}</p>
+      ${paragraphsFromText(page.subtitle)}
       <div class="cta-row">${cta(page.primaryCTA)}${page.secondaryCTA ? cta(page.secondaryCTA, 'secondary') : ''}</div>
     </div>
   </section>
@@ -1163,7 +1163,7 @@ const conversionCard = (page) => {
     <aside class="conversion-card">
       <p class="eyebrow">${esc(conversion.eyebrow || 'Next Step')}</p>
       <h2>${esc(conversion.title)}</h2>
-      <p>${esc(conversion.body)}</p>
+      ${paragraphsFromText(conversion.body)}
       ${conversion.cta ? cta(conversion.cta, 'primary') : ''}
     </aside>
   `;
@@ -1179,7 +1179,7 @@ const tabsIntro = (page) => {
     <div class="section-heading">
       ${eyebrow ? `<p class="eyebrow">${esc(eyebrow)}</p>` : ''}
       ${title ? `<h2>${esc(title)}</h2>` : ''}
-      ${body ? `<p>${esc(body)}</p>` : ''}
+      ${paragraphsFromText(body)}
       ${extra}
     </div>
   `;
@@ -1194,7 +1194,7 @@ const programDetailSection = (page) => `
         ${
           page.quoteHighlight || page.finalCTA
             ? `<div class="outline-callout">
-                ${page.quoteHighlight ? `<p>${esc(page.quoteHighlight)}</p>` : ''}
+                ${paragraphsFromText(page.quoteHighlight)}
                 ${page.finalCTA ? cta(page.finalCTA, 'primary') : ''}
               </div>`
             : ''
@@ -1275,7 +1275,7 @@ const supportArtsLandingSection = (page) => {
         <aside class="support-proof-panel">
           <p class="eyebrow">${esc(supportProof.eyebrow)}</p>
           <h2>${esc(supportProof.title)}</h2>
-          <p>${esc(supportProof.body || supportProof.subtitle || '')}</p>
+          ${paragraphsFromText(supportProof.body || supportProof.subtitle)}
           ${statCards(content.mission.impactStats || [], 'support-stat-grid')}
           ${supportProof.cta ? cta(supportProof.cta, 'primary') : ''}
         </aside>
@@ -1286,7 +1286,7 @@ const supportArtsLandingSection = (page) => {
         <div>
           <p class="eyebrow">${esc(page.conversion?.eyebrow || 'Next step')}</p>
           <h2>${esc(page.conversion?.title || 'Find your way into the mission')}</h2>
-          <p>${esc(page.conversion?.body || '')}</p>
+          ${paragraphsFromText(page.conversion?.body)}
         </div>
         <div class="cta-row">
           ${page.primaryCTA ? cta(page.primaryCTA, 'primary') : ''}
@@ -1343,7 +1343,7 @@ const missionPage = () =>
         <div class="container mission-copy">
           <p class="eyebrow">Arts Access Mission</p>
           <h1>${esc(content.mission.title)}</h1>
-          <p>${esc(content.mission.subtitle)}</p>
+          ${paragraphsFromText(content.mission.subtitle)}
           <div class="cta-row mission-hero-actions">
             ${cta(content.mission.donateCTA)}
             ${cta(content.mission.programsCTA, 'secondary')}
@@ -1445,13 +1445,13 @@ const planVisitPage = () =>
               (topic, index) => `
                 <section class="policy-topic" id="${attr(topic.slug)}" data-topic-panel="${attr(topic.slug)}" ${index === 0 ? '' : 'hidden'}>
                   <h2>${esc(topic.title)}</h2>
-                  <p>${esc(topic.summary)}</p>
+                  ${paragraphsFromText(topic.summary)}
                   ${topic.sections
                     .map(
                       (section) => `
                         <article id="${attr(section.slug)}" class="policy-section">
                           <h3>${esc(section.heading)}</h3>
-                          <p>${esc(section.body)}</p>
+                          ${paragraphsFromText(section.body)}
                           ${section.items?.length ? `<ul>${section.items.map((item) => `<li>${esc(item)}</li>`).join('')}</ul>` : ''}
                           ${section.cta ? cta(section.cta, 'secondary') : ''}
                         </article>
@@ -1516,7 +1516,7 @@ const emailSignup = () => `
       <div>
         <p class="eyebrow">Emails</p>
         <h2>${esc(content.blocks.email.title)}</h2>
-        <p>${esc(content.blocks.email.subtitle)}</p>
+        ${paragraphsFromText(content.blocks.email.subtitle)}
       </div>
       <div class="email-actions">
         ${cta({ label: 'Join the email list', type: 'popover', popoverId: 'get-emails' }, 'primary')}
