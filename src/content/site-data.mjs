@@ -1743,16 +1743,5 @@ export const blocks = {
     title: 'Sign up for emails',
     subtitle: 'Show announcements, arts access stories and venue updates in one clean feed.'
   },
-  sponsorGroups: [
-    {
-      title: 'Live Nation',
-      subtitle: 'Concert season support',
-      sponsors: [{ name: 'Live Nation' }]
-    },
-    {
-      title: 'Performing Arts Season Sponsors',
-      subtitle: 'Organizations helping keep performing arts accessible',
-      sponsors: []
-    }
-  ]
+  sponsorGroups: corporateSponsorGroups
 };
