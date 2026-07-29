@@ -6,6 +6,34 @@ const statusField = {
   options: { list: ['draft', 'published', 'hidden', 'seasonal', 'archived'] }
 };
 
+const tabsIntroFields = [
+  {
+    name: 'tabsEyebrow',
+    title: 'Tabs Eyebrow',
+    type: 'string',
+    description: 'Small blue label in the intro section immediately above the tabs.'
+  },
+  {
+    name: 'tabsTitle',
+    title: 'Tabs Title',
+    type: 'string',
+    description: 'Large heading in the intro section immediately above the tabs.'
+  },
+  {
+    name: 'tabsBody',
+    title: 'Tabs Body',
+    type: 'text',
+    rows: 4,
+    description: 'Short paragraph under the Tabs Title and above the tab buttons.'
+  },
+  {
+    name: 'tabsCTA',
+    title: 'Tabs CTA',
+    type: 'cta',
+    description: 'Optional button shown in the tabs intro area. Leave blank to show no button.'
+  }
+];
+
 export const event = {
   name: 'event',
   title: 'Event',
@@ -80,6 +108,7 @@ export const grantProgram = {
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
     { name: 'applicationCTA', title: 'Application CTA', type: 'cta' },
+    ...tabsIntroFields,
     { name: 'tabs', title: 'Informational Tabs', type: 'array', of: [{ type: 'tab' }] },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
     { name: 'video', title: 'Optional Video Block', type: 'mediaBlock' },
@@ -107,6 +136,7 @@ export const outreachProgram = {
     { name: 'seasonalVisibility', title: 'Seasonal Visibility', type: 'object', fields: [{ name: 'visibility', title: 'Visibility', type: 'string' }] },
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
+    ...tabsIntroFields,
     { name: 'tabs', title: 'Informational Tabs', type: 'array', of: [{ type: 'tab' }] },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
     { name: 'video', title: 'Optional Video Block', type: 'mediaBlock' },
@@ -190,31 +220,7 @@ export const landingPage = {
       type: 'cta',
       description: 'Optional second button shown next to the hero primary button.'
     },
-    {
-      name: 'tabsEyebrow',
-      title: 'Tabs Eyebrow',
-      type: 'string',
-      description: 'Small blue label in the intro section immediately above the tabs.'
-    },
-    {
-      name: 'tabsTitle',
-      title: 'Tabs Title',
-      type: 'string',
-      description: 'Large heading in the intro section immediately above the tabs. On Corporate Partnership, this is "Find the right way to partner."'
-    },
-    {
-      name: 'tabsBody',
-      title: 'Tabs Body',
-      type: 'text',
-      rows: 4,
-      description: 'Short paragraph under the Tabs Title and above the tab buttons.'
-    },
-    {
-      name: 'tabsCTA',
-      title: 'Tabs CTA',
-      type: 'cta',
-      description: 'Optional button shown in the tabs intro area. Leave blank to show no button.'
-    },
+    ...tabsIntroFields,
     {
       name: 'supportIntro',
       title: 'Support Landing Intro',

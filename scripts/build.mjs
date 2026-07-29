@@ -1365,6 +1365,10 @@ const grantPage = (program) =>
     heroImage: program.image,
     templatePreset: 'Funding the Arts',
     primaryCTA: program.applicationCTA,
+    tabsEyebrow: program.tabsEyebrow,
+    tabsTitle: program.tabsTitle,
+    tabsBody: program.tabsBody,
+    tabsCTA: program.tabsCTA,
     conversion: {
       eyebrow: 'Mission seekers',
       title: program.slug === 'scholarships' ? 'Get scholarship and mission updates' : 'Get grant and outreach updates',
@@ -1385,7 +1389,16 @@ const outreachPage = (program) =>
     heroImage: program.image,
     templatePreset: 'Arts Outreach',
     primaryCTA: program.primaryCTA,
+    secondaryCTA: program.secondaryCTA,
+    tabsEyebrow: program.tabsEyebrow,
+    tabsTitle: program.tabsTitle,
+    tabsBody: program.tabsBody,
+    tabsCTA: program.tabsCTA,
+    conversion: program.conversion,
+    video: program.video,
     tabs: program.tabs,
+    quoteHighlight: program.quoteHighlight,
+    finalCTA: program.finalCTA,
     slug: `mission/outreach/${program.slug}`,
     seo: program.seo
   });
