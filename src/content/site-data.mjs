@@ -20,9 +20,9 @@ export const settings = {
 
 export const navigation = {
   desktopPrimary: [
-    { label: 'Plan your visit', href: '/plan-your-visit', icon: 'location-dot' },
+    { label: 'Non-Profit Mission', href: '/mission', icon: 'violin' },
     { label: 'Events', href: '/events', icon: 'ticket' },
-    { label: 'Arts Access Mission', href: '/mission', icon: 'violin' }
+    { label: 'Plan your visit', href: '/plan-your-visit', icon: 'location-dot' }
   ],
   utility: [
     { label: 'Contact', href: '#contact', popoverId: 'contact' },

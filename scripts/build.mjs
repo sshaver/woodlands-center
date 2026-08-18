@@ -931,15 +931,20 @@ const homePage = (routePath = '/') =>
     path: routePath,
     body: `
       <section class="home-hero home-events-hero" style="--hero-image:url('${attr(content.settings.homeBackgroundImage)}')">
-        <div class="container home-hero-layout">
+        <div class="container home-hero-layout home-mission-hero-layout">
           <div class="hero-copy">
-            <p class="eyebrow">Home / Events</p>
-            <h1>Shows at The Pavilion</h1>
+            <h1>Every show helps make the arts more accessible.</h1>
+            <p>Free performances, arts education and your next show are all part of our non-profit mission for arts access.</p>
             <div class="cta-row">
-              ${cta({ label: 'Get Tickets', href: '/events' }, 'primary')}
-              ${cta({ label: 'Plan Your Visit', href: '/plan-your-visit' }, 'secondary')}
+              ${cta({ label: 'Explore the Mission', href: '/mission' }, 'primary')}
+              ${cta({ label: 'See Free Arts Shows', href: '/arts-shows/free-shows' }, 'secondary')}
             </div>
           </div>
+          <a class="scroll-prompt" href="#upcoming-shows">Scroll for Shows</a>
+        </div>
+      </section>
+      <section class="section home-fold-shows-section" id="upcoming-shows" aria-label="Upcoming shows">
+        <div class="container">
           ${showRail(upcomingEvents(), { eagerCount: 2 })}
         </div>
       </section>

@@ -426,12 +426,12 @@ p {
 }
 
 .home-events-hero {
-  min-height: clamp(600px, 78vh, 760px);
-  align-items: center;
-  padding: 6.25rem 0 3.25rem;
+  min-height: clamp(540px, 72vh, 680px);
+  align-items: end;
+  padding: 6.5rem 0 1.8rem;
   background:
-    linear-gradient(180deg, rgba(3, 16, 26, 0.1), rgba(3, 16, 26, 0.9)),
-    radial-gradient(circle at 48% 48%, rgba(64, 189, 244, 0.2), transparent 34rem),
+    linear-gradient(180deg, rgba(3, 16, 26, 0.1), rgba(3, 16, 26, 0.94)),
+    radial-gradient(circle at 34% 48%, rgba(64, 189, 244, 0.24), transparent 34rem),
     var(--hero-image) center / cover no-repeat;
 }
 
@@ -452,6 +452,11 @@ p {
 .home-hero-layout {
   display: grid;
   gap: clamp(1.4rem, 3.2vw, 2.5rem);
+}
+
+.home-mission-hero-layout {
+  min-height: calc(clamp(540px, 72vh, 680px) - 8.3rem);
+  align-content: end;
 }
 
 .event-hero-grid {
@@ -480,11 +485,59 @@ p {
 }
 
 .home-hero-layout .hero-copy {
-  max-width: 900px;
+  max-width: 980px;
 }
 
 .home-hero-layout h1 {
-  max-width: 12ch;
+  max-width: 17ch;
+  font-size: clamp(2.55rem, 5.6vw, 5rem);
+}
+
+.scroll-prompt {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--color-blue-400);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  animation: scroll-prompt-bounce 1.8s ease-in-out infinite;
+}
+
+.scroll-prompt::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+@keyframes scroll-prompt-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(0.35rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-prompt {
+    animation: none;
+  }
+}
+
+.home-fold-shows-section {
+  padding-top: clamp(1rem, 2.4vw, 1.8rem);
+  background:
+    linear-gradient(180deg, rgba(3, 16, 26, 0.98), rgba(5, 9, 13, 1)),
+    radial-gradient(circle at 50% 0%, rgba(64, 189, 244, 0.18), transparent 28rem);
 }
 
 .landing-hero-copy,
@@ -2838,6 +2891,10 @@ p {
   .events-chart-actions .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .home-events-hero {
+    min-height: 620px;
   }
 
   .home-latest-story-card {
