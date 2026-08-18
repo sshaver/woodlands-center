@@ -39,6 +39,18 @@ const normalizeExternalRoutes = (routes) => {
   return Object.fromEntries(routes.routes.filter((route) => route.path).map((route) => [route.path, route]));
 };
 
+const normalizeNavigation = (navigation) => {
+  if (!navigation) return navigation;
+  const cmsPrimaryByHref = new Map((navigation.desktopPrimary || []).map((item) => [item.href, item]));
+  return {
+    ...navigation,
+    desktopPrimary: fixtures.navigation.desktopPrimary.map((item) => ({
+      ...(cmsPrimaryByHref.get(item.href) || {}),
+      ...item
+    }))
+  };
+};
+
 const collectionRequirements = [
   'events',
   'planVisitTopics',
@@ -70,7 +82,7 @@ const assertCmsCompleteness = (cms = {}) => {
 
 const mergeSource = (cms = {}) => ({
   settings: withFallback(cms.settings, fixtures.settings),
-  navigation: withFallback(cms.navigation, fixtures.navigation),
+  navigation: normalizeNavigation(withFallback(cms.navigation, fixtures.navigation)),
   forms: withFallback(normalizeForms(cms.forms), fixtures.forms),
   alert: withFallback(cms.alert, fixtures.alert),
   blocks: withFallback(cms.blocks, fixtures.blocks),
