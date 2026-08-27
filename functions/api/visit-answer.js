@@ -1,0 +1,272 @@
+const MAX_QUESTION_LENGTH = 280;
+const DEFAULT_MAX_CONTEXT_CHUNKS = 5;
+const DEFAULT_TIMEOUT_MS = 10000;
+const DEFAULT_RATE_LIMIT = 20;
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const STOP_WORDS = new Set([
+  'a',
+  'an',
+  'and',
+  'are',
+  'can',
+  'do',
+  'does',
+  'for',
+  'i',
+  'is',
+  'it',
+  'my',
+  'of',
+  'the',
+  'to',
+  'we',
+  'what',
+  'where',
+  'with'
+]);
+
+const buckets = new Map();
+
+const json = (body, status = 200) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store'
+    }
+  });
+
+const normalizeText = (value = '') => String(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+const sanitizeQuestion = (value = '') =>
+  String(value)
+    .replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '[email]')
+    .replace(/\b(?:\+?1[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)\d{3}[-.\s]?\d{4}\b/g, '[phone]')
+    .trim()
+    .slice(0, MAX_QUESTION_LENGTH);
+
+const scoreChunk = (chunk, terms) => {
+  const specificTitle = String(chunk.title || '').includes(':')
+    ? String(chunk.title || '').split(':').slice(1).join(':')
+    : chunk.title;
+  const title = normalizeText(specificTitle);
+  const body = normalizeText(chunk.body);
+  const keywords = normalizeText((chunk.keywords || []).join(' '));
+  return terms.reduce((score, term) => {
+    const titleMatch = title.includes(term) ? 8 : 0;
+    const keywordMatch = keywords.includes(term) ? 5 : 0;
+    const bodyMatch = body.includes(term) ? 2 : 0;
+    return score + titleMatch + keywordMatch + bodyMatch;
+  }, chunk.priority || 0);
+};
+
+const relevantChunks = (knowledge, question, maxChunks) => {
+  const terms = normalizeText(question)
+    .split(' ')
+    .filter((term) => term && !STOP_WORDS.has(term));
+  if (!terms.length) return [];
+  return knowledge
+    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
+    .filter((match) => match.score > (match.chunk.priority || 0))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, maxChunks)
+    .map(({ chunk }) => chunk);
+};
+
+const quoteForMatch = (chunk, question) => {
+  const terms = normalizeText(question)
+    .split(' ')
+    .filter((term) => term && !STOP_WORDS.has(term));
+  const sentences = String(chunk.body || '')
+    .split(/(?<=[.!?])\s+|\n+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+  return sentences.find((sentence) => terms.some((term) => normalizeText(sentence).includes(term))) || sentences[0] || '';
+};
+
+const sourceList = (chunks) =>
+  chunks.map((chunk) => ({
+    title: chunk.title,
+    url: chunk.url,
+    topicSlug: chunk.topicSlug || '',
+    sectionSlug: chunk.sectionSlug || '',
+    sourceType: chunk.sourceType || ''
+  }));
+
+const clientIp = (request) =>
+  request.headers.get('CF-Connecting-IP') ||
+  request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ||
+  'anonymous';
+
+const allowedByRateLimit = (request, env) => {
+  const limit = Number(env.AI_RATE_LIMIT || DEFAULT_RATE_LIMIT);
+  if (!Number.isFinite(limit) || limit <= 0) return true;
+
+  const key = clientIp(request);
+  const now = Date.now();
+  const bucket = buckets.get(key);
+  if (!bucket || now > bucket.resetAt) {
+    buckets.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+
+  bucket.count += 1;
+  return bucket.count <= limit;
+};
+
+const loadKnowledge = async (request, env) => {
+  const url = new URL('/data/visit-knowledge.json', request.url);
+  const response = env.ASSETS
+    ? await env.ASSETS.fetch(new Request(url.toString(), { method: 'GET' }))
+    : await fetch(url.toString());
+
+  if (!response.ok) throw new Error(`Knowledge file unavailable: ${response.status}`);
+  return response.json();
+};
+
+const extractOutputText = (payload) => {
+  if (typeof payload.output_text === 'string') return payload.output_text;
+  const content = payload.output
+    ?.flatMap((item) => item.content || [])
+    ?.map((part) => part.text || part.output_text || '')
+    ?.filter(Boolean)
+    ?.join('\n');
+  return content || '';
+};
+
+const parseModelAnswer = (text, fallbackSources) => {
+  try {
+    const parsed = JSON.parse(text);
+    return {
+      answer: String(parsed.answer || '').trim(),
+      sources: fallbackSources,
+      matchedTopics: Array.isArray(parsed.matchedTopics) ? parsed.matchedTopics : []
+    };
+  } catch {
+    return {
+      answer: text.trim(),
+      sources: fallbackSources,
+      matchedTopics: []
+    };
+  }
+};
+
+const fallbackAnswer = (chunks, question) => {
+  if (!chunks.length) {
+    return {
+      answer:
+        'I do not have a reliable answer in the current Pavilion content. Please use Contact or call the Box Office so staff can help.',
+      sources: [],
+      matchedTopics: [],
+      fallbackUsed: true
+    };
+  }
+
+  const best = chunks[0];
+  const quote = quoteForMatch(best, question);
+  return {
+    answer: `The closest Pavilion information I found is under ${best.title}.${quote ? ` ${quote}` : ''}`,
+    sources: sourceList(chunks),
+    matchedTopics: chunks.map((chunk) => chunk.topicSlug || chunk.sourceType).filter(Boolean),
+    fallbackUsed: true,
+    question
+  };
+};
+
+const askOpenAI = async ({ env, question, chunks }) => {
+  const controller = new AbortController();
+  const timeoutMs = Number(env.AI_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), Number.isFinite(timeoutMs) ? timeoutMs : DEFAULT_TIMEOUT_MS);
+
+  const contextText = chunks
+    .map(
+      (chunk, index) =>
+        `[${index + 1}] ${chunk.title}\nURL: ${chunk.url}\nTYPE: ${chunk.sourceType || 'site'}\nCONTENT: ${chunk.body}`
+    )
+    .join('\n\n');
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        Authorization: `Bearer ${env.AI_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: env.AI_MODEL || 'gpt-5-mini',
+        store: false,
+        max_output_tokens: 350,
+        instructions:
+          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer only from the provided Pavilion context. Be concise, friendly and practical. Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only valid JSON matching this shape: {"answer":"...","sources":[{"title":"...","url":"..."}],"matchedTopics":["..."]}.',
+        input: `Guest question: ${question}\n\nApproved Pavilion context:\n${contextText}`
+      })
+    });
+
+    if (!response.ok) {
+      const detail = await response.text();
+      throw new Error(`OpenAI request failed: ${response.status} ${detail.slice(0, 160)}`);
+    }
+
+    return response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+
+export const onRequestPost = async ({ request, env }) => {
+  if (env.AI_PROVIDER && env.AI_PROVIDER !== 'openai') {
+    return json({ error: 'AI provider is not configured for OpenAI.' }, 503);
+  }
+
+  if (!allowedByRateLimit(request, env)) {
+    return json({ error: 'Please wait a moment before asking another question.' }, 429);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: 'Invalid request body.' }, 400);
+  }
+
+  const question = sanitizeQuestion(body?.question || body?.query || '');
+  if (!question) return json({ error: 'Ask a question first.' }, 400);
+  if (String(body?.question || body?.query || '').length > MAX_QUESTION_LENGTH * 2) {
+    return json({ error: 'Please shorten the question and try again.' }, 400);
+  }
+
+  let chunks = [];
+  try {
+    const knowledge = await loadKnowledge(request, env);
+    const maxChunks = Number(env.AI_MAX_CONTEXT_CHUNKS || DEFAULT_MAX_CONTEXT_CHUNKS);
+    chunks = relevantChunks(knowledge, question, Number.isFinite(maxChunks) ? maxChunks : DEFAULT_MAX_CONTEXT_CHUNKS);
+  } catch {
+    return json({
+      answer:
+        'I cannot reach the Pavilion visit content right now. Please use Contact or call the Box Office so staff can help.',
+      sources: [],
+      matchedTopics: [],
+      fallbackUsed: true
+    });
+  }
+
+  if (!env.AI_API_KEY || !chunks.length) return json(fallbackAnswer(chunks, question));
+
+  try {
+    const payload = await askOpenAI({ env, question, chunks });
+    const modelAnswer = parseModelAnswer(extractOutputText(payload), sourceList(chunks));
+    return json({
+      answer: modelAnswer.answer || fallbackAnswer(chunks, question).answer,
+      sources: modelAnswer.sources,
+      matchedTopics: modelAnswer.matchedTopics,
+      fallbackUsed: false
+    });
+  } catch {
+    return json(fallbackAnswer(chunks, question));
+  }
+};
+
+export const onRequestOptions = async () => json({});
+
+export const onRequestGet = async () => json({ error: 'Method not allowed.' }, 405);

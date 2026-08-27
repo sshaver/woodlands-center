@@ -359,6 +359,13 @@ const searchSynonyms = {
 };
 
 const normalizeText = (value = '') => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const escapeHtml = (value = '') =>
+  String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 const sanitizeSearchTerm = (value = '') =>
   normalizeText(
     value
@@ -384,10 +391,72 @@ const scoreChunk = (chunk, terms) => {
 
 const quoteForMatch = (chunk, terms) => {
   const sentences = chunk.body
-    .split(/(?<=[.!?])\s+/)
+    .split(/(?<=[.!?])\s+|\n+/)
     .map((sentence) => sentence.trim())
     .filter(Boolean);
   return sentences.find((sentence) => terms.some((term) => normalizeText(sentence).includes(term))) || sentences[0] || chunk.body;
+};
+
+const localVisitMatches = (query) => {
+  const terms = expandTerms(query.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean));
+  if (!terms.length) return { empty: true, matches: [] };
+  const matches = knowledge
+    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
+    .filter((match) => match.score > (match.chunk.priority || 0))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+  return { terms, matches };
+};
+
+const renderVisitSources = (sources = []) =>
+  sources.length
+    ? `<div class="source-links">${sources
+        .map((source) => {
+          const topicAttrs = source.topicSlug
+            ? ` data-topic-source="${escapeHtml(source.topicSlug)}" data-section-source="${escapeHtml(source.sectionSlug || source.topicSlug)}"`
+            : '';
+          return `<a href="${escapeHtml(source.url || '#')}"${topicAttrs}>${escapeHtml(source.title || 'Source')}</a>`;
+        })
+        .join('')}</div>`
+    : '';
+
+const renderVisitAnswer = ({ title = '', answer = '', sources = [], fallbackUsed = false }) => {
+  resultBox.hidden = false;
+  resultBox.innerHTML = `
+    ${title ? `<strong>${escapeHtml(title)}</strong>` : ''}
+    <p>${escapeHtml(answer)}</p>
+    ${fallbackUsed ? '<small>Using the site content fallback.</small>' : ''}
+    ${renderVisitSources(sources)}
+  `;
+};
+
+const renderLocalVisitAnswer = (query) => {
+  const { empty, terms, matches } = localVisitMatches(query);
+  resultBox.hidden = false;
+  if (empty) {
+    resultBox.innerHTML = '<strong>Ask a question first.</strong><p>Try “Can I bring an umbrella?” or “Is Sting playing?”</p>';
+    return;
+  }
+  if (!matches.length) {
+    resultBox.innerHTML = '<strong>I do not have a reliable answer in the current Pavilion content.</strong><p>Please use Contact or call the Box Office so staff can help.</p><a class="btn btn-secondary" href="#contact" data-popover-open="contact">Contact</a>';
+    resultBox.querySelector('[data-popover-open]')?.addEventListener('click', (openEvent) => {
+      openEvent.preventDefault();
+      openPopover('contact');
+    });
+    return;
+  }
+  const best = matches[0].chunk;
+  renderVisitAnswer({
+    title: best.title,
+    answer: `“${quoteForMatch(best, terms)}”`,
+    sources: matches.map(({ chunk }) => ({
+      title: chunk.title,
+      url: chunk.url,
+      topicSlug: chunk.topicSlug,
+      sectionSlug: chunk.sectionSlug || chunk.topicSlug
+    })),
+    fallbackUsed: true
+  });
 };
 
 const activateVisitTopic = (chunk) => {
@@ -403,44 +472,36 @@ const activateVisitTopic = (chunk) => {
   source?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
-searchForm?.addEventListener('submit', (event) => {
+searchForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   const query = new FormData(searchForm).get('query')?.toString().trim() || '';
   pushAnalyticsEvent('plan_visit_search', {
     search_term: sanitizeSearchTerm(query)
   });
-  const terms = expandTerms(query.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean));
   resultBox.hidden = false;
-  if (!terms.length) {
-    resultBox.innerHTML = '<strong>Ask a question first.</strong><p>Try “Can I bring an umbrella?” or “Is Sting playing?”</p>';
+  if (!query) {
+    renderLocalVisitAnswer(query);
     return;
   }
-  const matches = knowledge
-    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
-    .filter((match) => match.score > (match.chunk.priority || 0))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
-  if (!matches.length) {
-    resultBox.innerHTML = '<strong>I do not have a reliable answer in the current Pavilion content.</strong><p>Please use Contact or call the Box Office so staff can help.</p><a class="btn btn-secondary" href="#contact" data-popover-open="contact">Contact</a>';
-    resultBox.querySelector('[data-popover-open]')?.addEventListener('click', (openEvent) => {
-      openEvent.preventDefault();
-      openPopover('contact');
+
+  resultBox.innerHTML = '<strong>Thinking...</strong><p>Checking the latest Pavilion visit information.</p>';
+  try {
+    const response = await fetch('/api/visit-answer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: query })
     });
-    return;
+    if (!response.ok) throw new Error(`Visit answer request failed with ${response.status}`);
+    const payload = await response.json();
+    if (payload.error) throw new Error(payload.error);
+    renderVisitAnswer({
+      answer: payload.answer,
+      sources: payload.sources || [],
+      fallbackUsed: Boolean(payload.fallbackUsed)
+    });
+  } catch {
+    renderLocalVisitAnswer(query);
   }
-  const best = matches[0].chunk;
-  resultBox.innerHTML = `
-    <strong>${best.title}</strong>
-    <p>“${quoteForMatch(best, terms)}”</p>
-    <div class="source-links">
-      ${matches
-        .map(({ chunk }) => {
-          const topicAttrs = chunk.topicSlug ? ` data-topic-source="${chunk.topicSlug}" data-section-source="${chunk.sectionSlug || chunk.topicSlug}"` : '';
-          return `<a href="${chunk.url}"${topicAttrs}>${chunk.title}</a>`;
-        })
-        .join('')}
-    </div>
-  `;
 });
 
 resultBox?.addEventListener('click', (event) => {

@@ -152,6 +152,12 @@ const writeRoute = (routePath, html) => {
   fs.writeFileSync(file, html);
 };
 
+const writeJson = (filePath, value) => {
+  const file = path.join(dist, filePath);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+};
+
 const copyRecursive = (source, target) => {
   if (!fs.existsSync(source)) return;
   const stat = fs.statSync(source);
@@ -1533,7 +1539,7 @@ const knowledgeChunks = () => {
       chunks.push({
         id: `plan-${topic.slug}-${section.slug}`,
         title: `${topic.title}: ${section.heading}`,
-        body: [topic.summary, section.body, ...(section.items || [])].join(' '),
+        body: [section.body, ...(section.items || []), topic.summary].filter(Boolean).join('\n'),
         sourceType: 'planVisit',
         topicSlug: topic.slug,
         sectionSlug: section.slug,
@@ -1695,6 +1701,7 @@ copyRecursive('src/styles', path.join(dist, 'styles'));
 copyRecursive('src/scripts', path.join(dist, 'scripts'));
 copyRecursive('cloudflare/_headers', path.join(dist, '_headers'));
 copyRecursive('cloudflare/_redirects', path.join(dist, '_redirects'));
+writeJson('data/visit-knowledge.json', knowledgeChunks());
 
 writeRoute('/', homePage('/'));
 writeRoute('/events', eventsPage());
