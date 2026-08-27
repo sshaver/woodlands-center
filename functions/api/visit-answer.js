@@ -217,6 +217,12 @@ const parseModelAnswer = (text, fallbackSources) => {
   }
 };
 
+const cleanAnswer = (answer = '') =>
+  String(answer)
+    .trim()
+    .replace(/^The closest Pavilion information I found is under [^.]+\.?\s*/i, '')
+    .trim();
+
 const fallbackAnswer = (chunks, question) => {
   if (!chunks.length) {
     return {
@@ -231,7 +237,7 @@ const fallbackAnswer = (chunks, question) => {
   const best = chunks[0];
   const quote = quoteForMatch(best, question);
   return {
-    answer: `The closest Pavilion information I found is under ${best.title}.${quote ? ` ${quote}` : ''}`,
+    answer: cleanAnswer(quote) || `Please see ${best.title} for the most relevant Pavilion information.`,
     sources: sourceList(chunks),
     matchedTopics: chunks.map((chunk) => chunk.topicSlug || chunk.sourceType).filter(Boolean),
     fallbackUsed: true,
@@ -325,7 +331,7 @@ export const onRequestPost = async ({ request, env }) => {
     const payload = await askOpenAI({ env, question, chunks });
     const modelAnswer = parseModelAnswer(extractOutputText(payload), sourceList(chunks));
     return json({
-      answer: modelAnswer.answer || fallbackAnswer(chunks, question).answer,
+      answer: cleanAnswer(modelAnswer.answer) || fallbackAnswer(chunks, question).answer,
       sources: modelAnswer.sources,
       matchedTopics: modelAnswer.matchedTopics,
       fallbackUsed: false
