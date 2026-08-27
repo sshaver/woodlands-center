@@ -9,14 +9,20 @@ const STOP_WORDS = new Set([
   'and',
   'are',
   'can',
+  'bring',
   'do',
   'does',
   'for',
+  'how',
   'i',
   'is',
   'it',
+  'me',
   'my',
   'of',
+  'please',
+  'should',
+  'tell',
   'the',
   'to',
   'we',
@@ -24,6 +30,31 @@ const STOP_WORDS = new Set([
   'where',
   'with'
 ]);
+
+const SEARCH_SYNONYMS = {
+  alcohol: ['beverages', 'liquids', 'drinks'],
+  arrive: ['arrival', 'parking', 'gate'],
+  bag: ['bags', 'clear', 'clutch', 'purse'],
+  bags: ['bag', 'clear', 'clutch', 'purse'],
+  bottle: ['bottles', 'cups', 'drink', 'liquids'],
+  chair: ['chairs', 'lawn'],
+  chairs: ['chair', 'lawn'],
+  drink: ['drinks', 'beverages', 'liquids'],
+  drinks: ['drink', 'beverages', 'liquids'],
+  gate: ['gates', 'arrival', 'opens'],
+  gates: ['gate', 'arrival', 'opens'],
+  park: ['parking', 'lot', 'address'],
+  parking: ['park', 'lot', 'address'],
+  purse: ['bag', 'bags', 'clear', 'clutch'],
+  start: ['begins', 'show'],
+  starts: ['begins', 'show'],
+  ticket: ['tickets', 'ticketmaster', 'mobile'],
+  tickets: ['ticket', 'ticketmaster', 'mobile'],
+  umbrella: ['umbrellas', 'rain'],
+  umbrellas: ['umbrella', 'rain']
+};
+
+const POLICY_EVASION_PATTERN = /\b(bypass|evade|get around|hide|sneak|smuggle)\b/i;
 
 const buckets = new Map();
 
@@ -37,6 +68,16 @@ const json = (body, status = 200) =>
   });
 
 const normalizeText = (value = '') => String(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+const searchTerms = (question) =>
+  [
+    ...new Set(
+      normalizeText(question)
+        .split(' ')
+        .flatMap((term) => [term, ...(SEARCH_SYNONYMS[term] || [])])
+        .filter((term) => term.length > 2 && !STOP_WORDS.has(term))
+    )
+  ];
 
 const sanitizeQuestion = (value = '') =>
   String(value)
@@ -61,9 +102,7 @@ const scoreChunk = (chunk, terms) => {
 };
 
 const relevantChunks = (knowledge, question, maxChunks) => {
-  const terms = normalizeText(question)
-    .split(' ')
-    .filter((term) => term && !STOP_WORDS.has(term));
+  const terms = searchTerms(question);
   if (!terms.length) return [];
   return knowledge
     .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
@@ -74,14 +113,41 @@ const relevantChunks = (knowledge, question, maxChunks) => {
 };
 
 const quoteForMatch = (chunk, question) => {
-  const terms = normalizeText(question)
-    .split(' ')
-    .filter((term) => term && !STOP_WORDS.has(term));
+  const terms = searchTerms(question);
   const sentences = String(chunk.body || '')
     .split(/(?<=[.!?])\s+|\n+/)
     .map((sentence) => sentence.trim())
     .filter(Boolean);
-  return sentences.find((sentence) => terms.some((term) => normalizeText(sentence).includes(term))) || sentences[0] || '';
+  const scored = sentences
+    .map((sentence) => {
+      const normalized = normalizeText(sentence);
+      const words = new Set(normalized.split(' ').filter(Boolean));
+      const score = terms.reduce((total, term) => {
+        if (words.has(term)) return total + 3;
+        if (normalized.includes(term)) return total + 1;
+        return total;
+      }, 0);
+      return { sentence, score };
+    })
+    .sort((a, b) => b.score - a.score);
+  return scored.find((item) => item.score > 0)?.sentence || sentences[0] || '';
+};
+
+const policyGuardAnswer = (knowledge, chunks) => {
+  const preferredIds = new Set([
+    'plan-what-to-bring-dont-bring',
+    'plan-what-to-bring-food-drink',
+    'plan-rules-venue-rules'
+  ]);
+  const preferred = knowledge.filter((chunk) => preferredIds.has(chunk.id));
+  const sources = [...preferred, ...chunks.filter((chunk) => !preferredIds.has(chunk.id))].slice(0, DEFAULT_MAX_CONTEXT_CHUNKS);
+  return {
+    answer:
+      'I cannot help with bypassing Pavilion policies. Please follow the published venue rules for your event; outside beverages, outside liquids and prohibited items should be left at home or in your vehicle before entry.',
+    sources: sourceList(sources),
+    matchedTopics: sources.map((chunk) => chunk.topicSlug || chunk.sourceType).filter(Boolean),
+    fallbackUsed: false
+  };
 };
 
 const sourceList = (chunks) =>
@@ -198,7 +264,7 @@ const askOpenAI = async ({ env, question, chunks }) => {
         store: false,
         max_output_tokens: 350,
         instructions:
-          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer only from the provided Pavilion context. Be concise, friendly and practical. Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only valid JSON matching this shape: {"answer":"...","sources":[{"title":"...","url":"..."}],"matchedTopics":["..."]}.',
+          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Be concise, friendly and practical. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only valid JSON matching this shape: {"answer":"...","sources":[{"title":"...","url":"..."}],"matchedTopics":["..."]}.',
         input: `Guest question: ${question}\n\nApproved Pavilion context:\n${contextText}`
       })
     });
@@ -236,9 +302,10 @@ export const onRequestPost = async ({ request, env }) => {
     return json({ error: 'Please shorten the question and try again.' }, 400);
   }
 
+  let knowledge = [];
   let chunks = [];
   try {
-    const knowledge = await loadKnowledge(request, env);
+    knowledge = await loadKnowledge(request, env);
     const maxChunks = Number(env.AI_MAX_CONTEXT_CHUNKS || DEFAULT_MAX_CONTEXT_CHUNKS);
     chunks = relevantChunks(knowledge, question, Number.isFinite(maxChunks) ? maxChunks : DEFAULT_MAX_CONTEXT_CHUNKS);
   } catch {
@@ -251,6 +318,7 @@ export const onRequestPost = async ({ request, env }) => {
     });
   }
 
+  if (POLICY_EVASION_PATTERN.test(question)) return json(policyGuardAnswer(knowledge, chunks));
   if (!env.AI_API_KEY || !chunks.length) return json(fallbackAnswer(chunks, question));
 
   try {

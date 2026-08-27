@@ -1553,7 +1553,14 @@ const knowledgeChunks = () => {
     chunks.push({
       id: `event-${event.slug}`,
       title: event.title,
-      body: `${event.title} ${event.subheader || ''} plays ${fmtDate(event.eventDate)}. Gates open ${event.gateOpenTime}; show begins ${event.eventStartTime}. ${event.policyOverrides || ''}`,
+      body: [
+        `${event.title} ${event.subheader || ''} plays ${fmtDate(event.eventDate)}.`,
+        event.gateOpenTime ? `Gates open ${event.gateOpenTime}.` : '',
+        event.eventStartTime ? `Show begins ${event.eventStartTime}.` : '',
+        event.policyOverrides || ''
+      ]
+        .filter(Boolean)
+        .join('\n'),
       sourceType: 'event',
       url: `/events/${event.slug}/`,
       keywords: [event.title, event.subheader || '', event.eventType],
