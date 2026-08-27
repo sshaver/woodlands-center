@@ -246,9 +246,19 @@ const parseModelAnswer = (text, fallbackSources) => {
   }
 };
 
+const cleanJsonAnswerText = (answer = '') => {
+  const text = String(answer).trim();
+  const answerMatch = text.match(/^\{?\s*"answer"\s*:\s*"((?:\\.|[^"\\])*)/);
+  if (!answerMatch) return text;
+  try {
+    return JSON.parse(`"${answerMatch[1]}"`).trim();
+  } catch {
+    return answerMatch[1].replace(/\\"/g, '"').trim();
+  }
+};
+
 const cleanAnswer = (answer = '') =>
-  String(answer)
-    .trim()
+  cleanJsonAnswerText(answer)
     .replace(/^The closest Pavilion information I found is under [^.]+\.?\s*/i, '')
     .trim();
 
@@ -299,7 +309,7 @@ const askOpenAI = async ({ env, question, chunks }) => {
         store: false,
         max_output_tokens: 500,
         instructions:
-          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Use a warm, helpful, welcoming tone, like a calm venue staff member helping a guest plan their night. Prefer 2 short sentences when the context supports it, and include one practical next step when useful. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only valid JSON matching this shape: {"answer":"...","sources":[{"title":"...","url":"..."}],"matchedTopics":["..."]}.',
+          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Use a warm, helpful, welcoming tone, like a calm venue staff member helping a guest plan their night. Prefer 2 short sentences when the context supports it, and include one practical next step when useful. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only the guest-facing answer text, not JSON, Markdown, bullets or source links.',
         input: `Guest question: ${question}\n\nApproved Pavilion context:\n${contextText}`
       })
     });
