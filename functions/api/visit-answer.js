@@ -93,10 +93,14 @@ const scoreChunk = (chunk, terms) => {
   const title = normalizeText(specificTitle);
   const body = normalizeText(chunk.body);
   const keywords = normalizeText((chunk.keywords || []).join(' '));
+  const titleWords = new Set(title.split(' ').filter(Boolean));
+  const bodyWords = new Set(body.split(' ').filter(Boolean));
+  const keywordWords = new Set(keywords.split(' ').filter(Boolean));
+  const hasTerm = (text, words, term) => (term.includes(' ') ? text.includes(term) : words.has(term));
   return terms.reduce((score, term) => {
-    const titleMatch = title.includes(term) ? 8 : 0;
-    const keywordMatch = keywords.includes(term) ? 5 : 0;
-    const bodyMatch = body.includes(term) ? 2 : 0;
+    const titleMatch = hasTerm(title, titleWords, term) ? 8 : 0;
+    const keywordMatch = hasTerm(keywords, keywordWords, term) ? 5 : 0;
+    const bodyMatch = hasTerm(body, bodyWords, term) ? 2 : 0;
     return score + titleMatch + keywordMatch + bodyMatch;
   }, chunk.priority || 0);
 };
@@ -140,7 +144,7 @@ const policyGuardAnswer = (knowledge, chunks) => {
     'plan-rules-venue-rules'
   ]);
   const preferred = knowledge.filter((chunk) => preferredIds.has(chunk.id));
-  const sources = [...preferred, ...chunks.filter((chunk) => !preferredIds.has(chunk.id))].slice(0, DEFAULT_MAX_CONTEXT_CHUNKS);
+  const sources = preferred.slice(0, 3);
   return {
     answer:
       'I cannot help with bypassing Pavilion policies. Please follow the published venue rules for your event; outside beverages, outside liquids and prohibited items should be left at home or in your vehicle before entry.',
@@ -158,6 +162,31 @@ const sourceList = (chunks) =>
     sectionSlug: chunk.sectionSlug || '',
     sourceType: chunk.sourceType || ''
   }));
+
+const displaySourceChunks = (chunks, question) => {
+  if (!chunks.length) return [];
+  if (chunks[0].sourceType === 'event') return [chunks[0]];
+
+  const terms = searchTerms(question);
+  if (!terms.length) return chunks.slice(0, 1);
+  if (terms.some((term) => ['rain', 'umbrella', 'umbrellas'].includes(term))) {
+    const umbrellaSources = ['plan-what-to-bring-do-bring', 'plan-what-to-bring-dont-bring']
+      .map((id) => chunks.find((chunk) => chunk.id === id))
+      .filter(Boolean);
+    if (umbrellaSources.length) return umbrellaSources;
+  }
+
+  const scored = chunks
+    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
+    .sort((a, b) => b.score - a.score);
+  const topScore = scored[0]?.score || 0;
+  const sourceCap = terms.some((term) => ['park', 'parking', 'rain', 'umbrella', 'umbrellas'].includes(term)) ? 2 : 1;
+
+  return scored
+    .filter((match, index) => index === 0 || match.score >= topScore - 6)
+    .slice(0, sourceCap)
+    .map((match) => match.chunk);
+};
 
 const clientIp = (request) =>
   request.headers.get('CF-Connecting-IP') ||
@@ -238,7 +267,7 @@ const fallbackAnswer = (chunks, question) => {
   const quote = quoteForMatch(best, question);
   return {
     answer: cleanAnswer(quote) || `Please see ${best.title} for the most relevant Pavilion information.`,
-    sources: sourceList(chunks),
+    sources: sourceList(displaySourceChunks(chunks, question)),
     matchedTopics: chunks.map((chunk) => chunk.topicSlug || chunk.sourceType).filter(Boolean),
     fallbackUsed: true,
     question
@@ -268,9 +297,9 @@ const askOpenAI = async ({ env, question, chunks }) => {
       body: JSON.stringify({
         model: env.AI_MODEL || 'gpt-5-mini',
         store: false,
-        max_output_tokens: 350,
+        max_output_tokens: 500,
         instructions:
-          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Be concise, friendly and practical. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only valid JSON matching this shape: {"answer":"...","sources":[{"title":"...","url":"..."}],"matchedTopics":["..."]}.',
+          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Use a warm, helpful, welcoming tone, like a calm venue staff member helping a guest plan their night. Prefer 2 short sentences when the context supports it, and include one practical next step when useful. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only valid JSON matching this shape: {"answer":"...","sources":[{"title":"...","url":"..."}],"matchedTopics":["..."]}.',
         input: `Guest question: ${question}\n\nApproved Pavilion context:\n${contextText}`
       })
     });
@@ -329,7 +358,7 @@ export const onRequestPost = async ({ request, env }) => {
 
   try {
     const payload = await askOpenAI({ env, question, chunks });
-    const modelAnswer = parseModelAnswer(extractOutputText(payload), sourceList(chunks));
+    const modelAnswer = parseModelAnswer(extractOutputText(payload), sourceList(displaySourceChunks(chunks, question)));
     return json({
       answer: cleanAnswer(modelAnswer.answer) || fallbackAnswer(chunks, question).answer,
       sources: modelAnswer.sources,

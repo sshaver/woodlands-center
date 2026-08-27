@@ -484,7 +484,14 @@ searchForm?.addEventListener('submit', async (event) => {
     return;
   }
 
-  resultBox.innerHTML = '<strong>Thinking...</strong><p>Checking the latest Pavilion visit information.</p>';
+  resultBox.innerHTML = `
+    <div class="ai-loading" role="status">
+      <span class="sr-only">Checking the latest Pavilion visit information.</span>
+      <span class="ai-loading-dot"></span>
+      <span class="ai-loading-dot"></span>
+      <span class="ai-loading-dot"></span>
+    </div>
+  `;
   try {
     const response = await fetch('/api/visit-answer', {
       method: 'POST',
