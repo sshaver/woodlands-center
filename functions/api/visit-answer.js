@@ -1,5 +1,5 @@
 const MAX_QUESTION_LENGTH = 280;
-const DEFAULT_MAX_CONTEXT_CHUNKS = 5;
+const DEFAULT_MAX_CONTEXT_CHUNKS = 7;
 const DEFAULT_TIMEOUT_MS = 10000;
 const DEFAULT_RATE_LIMIT = 20;
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
@@ -39,13 +39,23 @@ const SEARCH_SYNONYMS = {
   bottle: ['bottles', 'cups', 'drink', 'liquids'],
   chair: ['chairs', 'lawn'],
   chairs: ['chair', 'lawn'],
+  donate: ['donation', 'gift', 'support', 'donor'],
+  donation: ['donate', 'gift', 'support', 'donor'],
   drink: ['drinks', 'beverages', 'liquids'],
   drinks: ['drink', 'beverages', 'liquids'],
+  education: ['educator', 'school', 'students', 'outreach'],
   gate: ['gates', 'arrival', 'opens'],
   gates: ['gate', 'arrival', 'opens'],
+  membership: ['member', 'stage lighters', 'partners', 'volunteer'],
+  mission: ['arts access', 'nonprofit', 'non profit', 'outreach', 'education'],
   park: ['parking', 'lot', 'address'],
   parking: ['park', 'lot', 'address'],
   purse: ['bag', 'bags', 'clear', 'clutch'],
+  scholarship: ['scholarships', 'fine arts', 'funding'],
+  scholarships: ['scholarship', 'fine arts', 'funding'],
+  seats: ['season seats', 'premium seats', 'reserved seats'],
+  sponsor: ['sponsors', 'partnership', 'corporate'],
+  sponsors: ['sponsor', 'partnership', 'corporate'],
   start: ['begins', 'show'],
   starts: ['begins', 'show'],
   ticket: ['tickets', 'ticketmaster', 'mobile'],
@@ -276,7 +286,8 @@ const fallbackAnswer = (chunks, question) => {
   const best = chunks[0];
   const quote = quoteForMatch(best, question);
   return {
-    answer: cleanAnswer(quote) || `Please see ${best.title} for the most relevant Pavilion information.`,
+    answer:
+      `${cleanAnswer(quote) || `Please see ${best.title} for the most relevant Pavilion information.`} The link below has the full Pavilion context if you want to keep checking details.`,
     sources: sourceList(displaySourceChunks(chunks, question)),
     matchedTopics: chunks.map((chunk) => chunk.topicSlug || chunk.sourceType).filter(Boolean),
     fallbackUsed: true,
@@ -307,9 +318,9 @@ const askOpenAI = async ({ env, question, chunks }) => {
       body: JSON.stringify({
         model: env.AI_MODEL || 'gpt-5-mini',
         store: false,
-        max_output_tokens: 500,
+        max_output_tokens: 650,
         instructions:
-          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Use a warm, helpful, welcoming tone, like a calm venue staff member helping a guest plan their night. Prefer 2 short sentences when the context supports it, and include one practical next step when useful. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Return only the guest-facing answer text, not JSON, Markdown, bullets or source links.',
+          'You are The Cynthia Woods Mitchell Pavilion guest-services assistant. Answer the guest question directly using only the provided Pavilion context. Use a warm, helpful, welcoming tone, like a calm venue staff member helping a guest plan their night. Prefer 2 to 3 concise sentences when the context supports it, and include one practical next step when useful. If the answer spans several Pavilion programs or pages, briefly connect the dots in plain language. If asked about an event time, include the show-begins time when it is present. If asked whether an item is allowed, say what is allowed and what is not allowed when both appear in context. If asked how to bypass, sneak, hide or evade a rule, refuse to help bypass policy and state the relevant Pavilion rule instead. Do not use the phrase "closest Pavilion information." Do not invent policies, dates, prices, exceptions or artist-specific details. If the context does not contain a reliable answer, say that and direct the guest to contact The Pavilion or the Box Office. Do not include raw URLs, Markdown, bullets or source links in the answer text; source links are rendered separately by the website. Return only the guest-facing answer text, not JSON.',
         input: `Guest question: ${question}\n\nApproved Pavilion context:\n${contextText}`
       })
     });

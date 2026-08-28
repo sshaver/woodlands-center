@@ -339,6 +339,7 @@ const searchForm = document.querySelector('[data-ai-search]');
 const resultBox = document.querySelector('[data-ai-result]');
 const knowledgeNode = document.querySelector('#knowledge-data');
 const knowledge = knowledgeNode ? JSON.parse(knowledgeNode.textContent) : [];
+let visitAnswerRenderId = 0;
 
 const searchSynonyms = {
   bags: ['bag', 'clear', 'clutch'],
@@ -420,14 +421,46 @@ const renderVisitSources = (sources = []) =>
         .join('')}</div>`
     : '';
 
+const typeVisitAnswer = (answerNode, answer, renderId, done) => {
+  if (!answerNode) return;
+  const text = String(answer || '');
+  const charactersPerFrame = Math.max(3, Math.ceil(text.length / 90));
+  let index = 0;
+  answerNode.textContent = '';
+  answerNode.classList.add('is-typing');
+
+  const step = () => {
+    if (!answerNode.isConnected || renderId !== visitAnswerRenderId) return;
+    index = Math.min(text.length, index + charactersPerFrame);
+    answerNode.textContent = text.slice(0, index);
+    if (index < text.length) {
+      requestAnimationFrame(step);
+      return;
+    }
+    answerNode.classList.remove('is-typing');
+    done?.();
+  };
+
+  requestAnimationFrame(step);
+};
+
 const renderVisitAnswer = ({ title = '', answer = '', sources = [], fallbackUsed = false }) => {
+  const renderId = (visitAnswerRenderId += 1);
   resultBox.hidden = false;
   resultBox.innerHTML = `
     ${title ? `<strong>${escapeHtml(title)}</strong>` : ''}
-    <p>${escapeHtml(answer)}</p>
-    ${fallbackUsed ? '<small>Using the site content fallback.</small>' : ''}
-    ${renderVisitSources(sources)}
+    <p class="ai-answer-text" data-ai-answer-text></p>
+    <div data-ai-answer-meta></div>
   `;
+  const answerNode = resultBox.querySelector('[data-ai-answer-text]');
+  const metaNode = resultBox.querySelector('[data-ai-answer-meta]');
+  typeVisitAnswer(answerNode, answer, renderId, () => {
+    if (!metaNode || renderId !== visitAnswerRenderId) return;
+    metaNode.innerHTML = `
+      ${fallbackUsed ? '<small>Using the site content fallback.</small>' : ''}
+      ${renderVisitSources(sources)}
+    `;
+  });
 };
 
 const renderLocalVisitAnswer = (query) => {
@@ -446,9 +479,10 @@ const renderLocalVisitAnswer = (query) => {
     return;
   }
   const best = matches[0].chunk;
+  const fallbackQuote = quoteForMatch(best, terms);
   renderVisitAnswer({
     title: best.title,
-    answer: `“${quoteForMatch(best, terms)}”`,
+    answer: `${fallbackQuote} The link below has the full Pavilion context if you want to keep checking details.`,
     sources: matches.map(({ chunk }) => ({
       title: chunk.title,
       url: chunk.url,

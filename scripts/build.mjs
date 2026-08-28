@@ -1532,11 +1532,88 @@ const planVisitPage = () =>
     extraHead: `<script type="application/json" id="knowledge-data">${JSON.stringify(knowledgeChunks()).replaceAll('<', '\\u003c')}</script>`
   });
 
+const knowledgeSkipKeys = new Set([
+  '_id',
+  '_key',
+  '_rev',
+  '_type',
+  'asset',
+  'cardImage',
+  'featuredSlot',
+  'headerImage',
+  'heroImage',
+  'href',
+  'icon',
+  'image',
+  'listingStatus',
+  'logo',
+  'logos',
+  'openInNewTab',
+  'orderRank',
+  'poster',
+  'popoverId',
+  'seasonalVisibility',
+  'seo',
+  'src',
+  'style',
+  'thumbnail',
+  'type'
+]);
+
+const knowledgeText = (value) => {
+  if (value === null || value === undefined || value === false) return '';
+  if (typeof value === 'string' || typeof value === 'number') {
+    const text = String(value).replace(/https?:\/\/\S+/g, '').trim();
+    if (/^text here\.?$/i.test(text)) return '';
+    return text;
+  }
+  if (Array.isArray(value)) return value.map(knowledgeText).filter(Boolean).join('\n');
+  if (typeof value === 'object') {
+    return Object.entries(value)
+      .filter(([key]) => !knowledgeSkipKeys.has(key))
+      .map(([, item]) => knowledgeText(item))
+      .filter(Boolean)
+      .join('\n');
+  }
+  return '';
+};
+
+const compactKnowledgeText = (...values) =>
+  values
+    .map(knowledgeText)
+    .filter(Boolean)
+    .join('\n')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+const knowledgeSlug = (value, fallback = 'section') => slugifyTopic(String(value || fallback));
+
+const knowledgeKeywords = (...values) =>
+  [
+    ...new Set(
+      compactKnowledgeText(...values)
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((word) => word.length > 3)
+    )
+  ].slice(0, 28);
+
 const knowledgeChunks = () => {
   const chunks = [];
+  const addChunk = (chunk) => {
+    const body = compactKnowledgeText(chunk.body);
+    if (!chunk.title || !body) return;
+    chunks.push({
+      ...chunk,
+      body: body.slice(0, 3200),
+      keywords: [...new Set((chunk.keywords || []).filter(Boolean))]
+    });
+  };
+
   for (const topic of content.planVisitTopics) {
     for (const section of topic.sections) {
-      chunks.push({
+      addChunk({
         id: `plan-${topic.slug}-${section.slug}`,
         title: `${topic.title}: ${section.heading}`,
         body: [section.body, ...(section.items || []), topic.summary].filter(Boolean).join('\n'),
@@ -1549,26 +1626,232 @@ const knowledgeChunks = () => {
       });
     }
   }
+
   for (const event of content.events) {
-    chunks.push({
+    addChunk({
       id: `event-${event.slug}`,
       title: event.title,
       body: [
         `${event.title} ${event.subheader || ''} plays ${fmtDate(event.eventDate)}.`,
         event.gateOpenTime ? `Gates open ${event.gateOpenTime}.` : '',
         event.eventStartTime ? `Show begins ${event.eventStartTime}.` : '',
-        event.policyOverrides || ''
+        event.policyOverrides || '',
+        event.description || '',
+        event.ticketNote || '',
+        event.eventType ? `Event type: ${event.eventType}.` : ''
       ]
         .filter(Boolean)
         .join('\n'),
       sourceType: 'event',
       url: `/events/${event.slug}/`,
-      keywords: [event.title, event.subheader || '', event.eventType],
+      keywords: knowledgeKeywords(event.title, event.subheader, event.eventType),
       priority: event.isFeatured ? 9 : 6,
       eventDate: event.eventDate
     });
   }
-  chunks.push({
+
+  addChunk({
+    id: 'mission-overview',
+    title: content.mission.title || 'Non-Profit Mission',
+    body: [
+      content.mission.title,
+      content.mission.subtitle,
+      content.mission.impactHeading,
+      content.mission.humanProof,
+      content.mission.impactStats,
+      content.mission.video
+    ],
+    sourceType: 'mission',
+    url: '/mission/',
+    keywords: [
+      'mission',
+      'non profit',
+      'arts access',
+      'free performances',
+      'arts education',
+      'scholarships',
+      'grants',
+      'outreach'
+    ],
+    priority: 9
+  });
+
+  for (const tab of content.mission.tabs || []) {
+    addChunk({
+      id: `mission-${tab.slug}`,
+      title: `Mission: ${tab.label}`,
+      body: [tab.label, tab.body],
+      sourceType: 'mission',
+      url: '/mission/#mission-pathways',
+      keywords: knowledgeKeywords('mission', tab.label, tab.body),
+      priority: 8
+    });
+  }
+
+  addChunk({
+    id: 'season-seats-overview',
+    title: 'Season Seats',
+    body: [
+      content.seasonSeats.title,
+      content.seasonSeats.subtitle,
+      content.seasonSeats.placeMap?.title,
+      content.seasonSeats.pricing,
+      content.seasonSeats.seatingMap,
+      content.seasonSeats.conversion
+    ],
+    sourceType: 'seasonSeats',
+    url: '/season-seats/',
+    keywords: ['season seats', 'premium seats', 'reserved seats', 'club access', 'concert hosting'],
+    priority: 8
+  });
+
+  for (const tab of content.seasonSeats.tabs || []) {
+    const tabSlug = tab.slug || knowledgeSlug(tab.label);
+    addChunk({
+      id: `season-seats-${tabSlug}`,
+      title: `Season Seats: ${tab.label}`,
+      body: [tab.label, tab.summary, tab.body, tab.items, tab.cta],
+      sourceType: 'seasonSeats',
+      url: '/season-seats/',
+      keywords: knowledgeKeywords('season seats', tab.label, tab.body),
+      priority: 7
+    });
+  }
+
+  for (const page of content.landingPages) {
+    addChunk({
+      id: `page-${page.slug.replaceAll('/', '-')}`,
+      title: page.title,
+      body: [
+        page.eyebrow,
+        page.subtitle,
+        page.primaryCTA,
+        page.secondaryCTA,
+        page.supportIntro,
+        page.supportProof,
+        page.tabsEyebrow,
+        page.tabsTitle,
+        page.tabsBody,
+        page.tabsCTA,
+        page.conversion,
+        page.valuesGraphic,
+        page.sponsorGroups
+      ],
+      sourceType: 'page',
+      url: `/${page.slug}/`,
+      keywords: knowledgeKeywords(page.title, page.slug, page.subtitle, page.templatePreset),
+      priority: page.visibility === 'archived' ? 2 : 7
+    });
+
+    for (const tab of page.tabs || []) {
+      const tabSlug = tab.slug || knowledgeSlug(tab.label);
+      addChunk({
+        id: `page-${page.slug.replaceAll('/', '-')}-${tabSlug}`,
+        title: `${page.title}: ${tab.label}`,
+        body: [tab.label, tab.summary, tab.body, tab.items, tab.cta],
+        sourceType: 'page',
+        url: `/${page.slug}/#${tabSlug}`,
+        keywords: knowledgeKeywords(page.title, page.slug, tab.label, tab.body, tab.items),
+        priority: page.visibility === 'archived' ? 2 : 8
+      });
+    }
+  }
+
+  for (const program of content.grantPrograms) {
+    addChunk({
+      id: `grant-${program.slug}`,
+      title: program.title,
+      body: [program.title, program.subtitle, program.quoteHighlight, program.applicationCTA, program.finalCTA],
+      sourceType: 'funding',
+      url: `/mission/funding/${program.slug}/`,
+      keywords: knowledgeKeywords(program.title, program.slug, program.subtitle, 'scholarship grant funding arts educators'),
+      priority: 8
+    });
+
+    for (const tab of program.tabs || []) {
+      const tabSlug = tab.slug || knowledgeSlug(tab.label);
+      addChunk({
+        id: `grant-${program.slug}-${tabSlug}`,
+        title: `${program.title}: ${tab.label}`,
+        body: [tab.label, tab.body, tab.items, tab.cta],
+        sourceType: 'funding',
+        url: `/mission/funding/${program.slug}/#${tabSlug}`,
+        keywords: knowledgeKeywords(program.title, program.slug, tab.label, tab.body, tab.items),
+        priority: 9
+      });
+    }
+  }
+
+  for (const program of content.outreachPrograms) {
+    addChunk({
+      id: `outreach-${program.slug}`,
+      title: program.title,
+      body: [
+        program.title,
+        program.subtitle,
+        program.primaryCTA,
+        program.secondaryCTA,
+        program.tabsEyebrow,
+        program.tabsTitle,
+        program.tabsBody,
+        program.tabsCTA,
+        program.conversion,
+        program.video,
+        program.quoteHighlight,
+        program.finalCTA
+      ],
+      sourceType: 'outreach',
+      url: `/mission/outreach/${program.slug}/`,
+      keywords: knowledgeKeywords(program.title, program.slug, program.subtitle, 'arts outreach education students families'),
+      priority: 8
+    });
+
+    for (const tab of program.tabs || []) {
+      const tabSlug = tab.slug || knowledgeSlug(tab.label);
+      addChunk({
+        id: `outreach-${program.slug}-${tabSlug}`,
+        title: `${program.title}: ${tab.label}`,
+        body: [tab.label, tab.summary, tab.body, tab.items, tab.cta],
+        sourceType: 'outreach',
+        url: `/mission/outreach/${program.slug}/#${tabSlug}`,
+        keywords: knowledgeKeywords(program.title, program.slug, tab.label, tab.body, tab.items),
+        priority: 9
+      });
+    }
+  }
+
+  for (const story of content.stories) {
+    addChunk({
+      id: `story-${story.slug}`,
+      title: story.title,
+      body: [
+        story.title,
+        story.dek,
+        story.body,
+        story.topics?.length ? `Topics: ${story.topics.join(', ')}` : '',
+        story.publishDate ? `Published ${fmtDate(story.publishDate)}.` : ''
+      ],
+      sourceType: 'story',
+      url: `/story-hub/${story.slug}/`,
+      keywords: knowledgeKeywords(story.title, story.dek, story.body, story.topics),
+      priority: 6
+    });
+  }
+
+  addChunk({
+    id: 'story-hub-overview',
+    title: 'Story Hub',
+    body: [
+      'Stories from The Pavilion mission, fans, shows, scholarships, grants and backstage.',
+      content.storyTopics?.length ? `Story topics include ${content.storyTopics.join(', ')}.` : ''
+    ],
+    sourceType: 'story',
+    url: '/story-hub/',
+    keywords: knowledgeKeywords('story hub', content.storyTopics),
+    priority: 6
+  });
+
+  addChunk({
     id: 'active-alert',
     title: content.alert.title,
     body: content.alert.message,

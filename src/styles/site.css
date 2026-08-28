@@ -2141,6 +2141,21 @@ p {
   font-style: italic;
 }
 
+.ai-answer-text {
+  font-style: normal;
+}
+
+.ai-answer-text.is-typing::after {
+  content: '';
+  display: inline-block;
+  width: 0.45ch;
+  height: 1em;
+  margin-left: 0.12rem;
+  border-right: 2px solid var(--color-blue-400);
+  vertical-align: -0.12em;
+  animation: ai-caret-blink 0.75s steps(1) infinite;
+}
+
 .ai-result small {
   display: block;
   margin-top: 0.45rem;
@@ -2186,10 +2201,26 @@ p {
   }
 }
 
+@keyframes ai-caret-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ai-loading-dot {
     animation: none;
     opacity: 0.8;
+  }
+
+  .ai-answer-text.is-typing::after {
+    animation: none;
   }
 }
 
