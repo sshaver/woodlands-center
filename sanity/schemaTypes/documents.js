@@ -92,6 +92,88 @@ export const planVisitTopic = {
   }
 };
 
+export const aiKnowledge = {
+  name: 'aiKnowledge',
+  title: 'AI Knowledge Entry',
+  type: 'document',
+  fields: [
+    {
+      name: 'question',
+      title: 'Guest Question',
+      type: 'string',
+      description: 'The main public question this entry answers. Each question and answer should be its own entry.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'alternateQuestions',
+      title: 'Alternate Ways Guests May Ask',
+      type: 'array',
+      description: 'Optional variations, shorthand or related phrases that should return this answer.',
+      of: [{ type: 'string' }]
+    },
+    {
+      name: 'answer',
+      title: 'Approved Answer',
+      type: 'text',
+      rows: 7,
+      description: 'Public facts the assistant may use. Keep event-specific exceptions and uncertainty explicit.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      description: 'Editorial grouping shown in Sanity.',
+      options: {
+        list: ['Guest Services', 'Tickets', 'Accessibility', 'Parking', 'Events', 'Mission', 'Giving', 'Membership', 'Venue', 'Other']
+      },
+      validation: (Rule) => Rule.required()
+    },
+    statusField,
+    {
+      name: 'sourceTitle',
+      title: 'Source Link Label',
+      type: 'string',
+      description: 'Short label shown beneath the answer, such as Plan Your Visit or Season Seats.'
+    },
+    {
+      name: 'sourceUrl',
+      title: 'Source Page URL',
+      type: 'string',
+      description: 'The single most relevant public page or section for this answer. Site paths may begin with /.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'keywords',
+      title: 'Search Keywords',
+      type: 'array',
+      description: 'Optional extra terms guests may use that are not already present in the question or answer.',
+      of: [{ type: 'string' }]
+    },
+    {
+      name: 'priority',
+      title: 'Answer Priority',
+      type: 'number',
+      description: 'Higher values make this answer more likely to be selected. The imported entries use 12.'
+    },
+    {
+      name: 'lastReviewed',
+      title: 'Last Reviewed',
+      type: 'date',
+      description: 'Date a Pavilion editor last confirmed the answer.'
+    },
+    {
+      name: 'orderRank',
+      title: 'Display Order',
+      type: 'number',
+      description: 'Controls the order of entries in Sanity.'
+    }
+  ],
+  preview: {
+    select: { title: 'question', subtitle: 'category' }
+  }
+};
+
 export const grantProgram = {
   name: 'grantProgram',
   title: 'Funding and Scholarship Page',

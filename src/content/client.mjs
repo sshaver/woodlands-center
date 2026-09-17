@@ -54,6 +54,7 @@ const normalizeNavigation = (navigation) => {
 const collectionRequirements = [
   'events',
   'planVisitTopics',
+  'aiKnowledge',
   'grantPrograms',
   'outreachPrograms',
   'landingPages',
@@ -88,6 +89,7 @@ const mergeSource = (cms = {}) => ({
   blocks: withFallback(cms.blocks, fixtures.blocks),
   events: mergeBySlug(cms.events, fixtures.events),
   planVisitTopics: mergeBySlug(cms.planVisitTopics, fixtures.planVisitTopics),
+  aiKnowledge: Array.isArray(cms.aiKnowledge) ? cms.aiKnowledge : fixtures.aiKnowledge,
   mission: withFallback(cms.mission, fixtures.mission),
   seasonSeats: withFallback(cms.seasonSeats, fixtures.seasonSeats),
   grantPrograms: mergeBySlug(cms.grantPrograms, fixtures.grantPrograms),

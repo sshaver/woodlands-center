@@ -17,6 +17,7 @@ const STOP_WORDS = new Set([
   'i',
   'is',
   'it',
+  'into',
   'me',
   'my',
   'of',
@@ -25,6 +26,7 @@ const STOP_WORDS = new Set([
   'tell',
   'the',
   'to',
+  'venue',
   'we',
   'what',
   'where',
@@ -37,6 +39,8 @@ const SEARCH_SYNONYMS = {
   bag: ['bags', 'clear', 'clutch', 'purse'],
   bags: ['bag', 'clear', 'clutch', 'purse'],
   bottle: ['bottles', 'cups', 'drink', 'liquids'],
+  buy: ['purchase', 'pricing', 'inquiry'],
+  cash: ['card', 'payment', 'concessions'],
   chair: ['chairs', 'lawn'],
   chairs: ['chair', 'lawn'],
   donate: ['donation', 'gift', 'support', 'donor'],
@@ -96,7 +100,7 @@ const sanitizeQuestion = (value = '') =>
     .trim()
     .slice(0, MAX_QUESTION_LENGTH);
 
-const scoreChunk = (chunk, terms) => {
+const scoreChunk = (chunk, terms, normalizedQuestion = '') => {
   const specificTitle = String(chunk.title || '').includes(':')
     ? String(chunk.title || '').split(':').slice(1).join(':')
     : chunk.title;
@@ -107,19 +111,22 @@ const scoreChunk = (chunk, terms) => {
   const bodyWords = new Set(body.split(' ').filter(Boolean));
   const keywordWords = new Set(keywords.split(' ').filter(Boolean));
   const hasTerm = (text, words, term) => (term.includes(' ') ? text.includes(term) : words.has(term));
+  const exactQuestionMatch =
+    chunk.sourceType === 'aiKnowledge' && normalizedQuestion && normalizeText(chunk.title) === normalizedQuestion ? 40 : 0;
   return terms.reduce((score, term) => {
-    const titleMatch = hasTerm(title, titleWords, term) ? 8 : 0;
-    const keywordMatch = hasTerm(keywords, keywordWords, term) ? 5 : 0;
+    const titleMatch = hasTerm(title, titleWords, term) ? (chunk.sourceType === 'aiKnowledge' ? 11 : 8) : 0;
+    const keywordMatch = hasTerm(keywords, keywordWords, term) ? (chunk.sourceType === 'aiKnowledge' ? 6 : 5) : 0;
     const bodyMatch = hasTerm(body, bodyWords, term) ? 2 : 0;
     return score + titleMatch + keywordMatch + bodyMatch;
-  }, chunk.priority || 0);
+  }, (chunk.priority || 0) + exactQuestionMatch);
 };
 
 const relevantChunks = (knowledge, question, maxChunks) => {
   const terms = searchTerms(question);
+  const normalizedQuestion = normalizeText(question);
   if (!terms.length) return [];
   return knowledge
-    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
+    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms, normalizedQuestion) }))
     .filter((match) => match.score > (match.chunk.priority || 0))
     .sort((a, b) => b.score - a.score)
     .slice(0, maxChunks)
@@ -166,7 +173,7 @@ const policyGuardAnswer = (knowledge, chunks) => {
 
 const sourceList = (chunks) =>
   chunks.map((chunk) => ({
-    title: chunk.title,
+    title: chunk.sourceTitle || chunk.title,
     url: chunk.url,
     topicSlug: chunk.topicSlug || '',
     sectionSlug: chunk.sectionSlug || '',
@@ -175,7 +182,7 @@ const sourceList = (chunks) =>
 
 const displaySourceChunks = (chunks, question) => {
   if (!chunks.length) return [];
-  if (chunks[0].sourceType === 'event') return [chunks[0]];
+  if (['aiKnowledge', 'event'].includes(chunks[0].sourceType)) return [chunks[0]];
 
   const terms = searchTerms(question);
   if (!terms.length) return chunks.slice(0, 1);
@@ -187,10 +194,10 @@ const displaySourceChunks = (chunks, question) => {
   }
 
   const scored = chunks
-    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms) }))
+    .map((chunk) => ({ chunk, score: scoreChunk(chunk, terms, normalizeText(question)) }))
     .sort((a, b) => b.score - a.score);
   const topScore = scored[0]?.score || 0;
-  const sourceCap = terms.some((term) => ['park', 'parking', 'rain', 'umbrella', 'umbrellas'].includes(term)) ? 2 : 1;
+  const sourceCap = terms.some((term) => ['rain', 'umbrella', 'umbrellas'].includes(term)) ? 2 : 1;
 
   return scored
     .filter((match, index) => index === 0 || match.score >= topScore - 6)

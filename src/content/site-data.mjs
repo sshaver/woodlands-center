@@ -858,7 +858,7 @@ export const planVisitTopics = [
           'Audio and video recording equipment.',
           'Beverages of any kind.',
           'Detachable lens cameras.',
-          'E-liquid or vape juice.',
+          'E-liquid or vape juice. Vaping devices may be used only on the lawn and in plaza areas, subject to event and security restrictions.',
           'Glass of any kind, to include perfume bottles.',
           'Grills.',
           'Fireworks.',
@@ -867,7 +867,9 @@ export const planVisitTopics = [
           'Laser pointers.',
           'Medication in unmarked containers.',
           'Non-medical masks.',
-          'Outside lawn chairs. Specially designed lawn chairs are available for rent at most Live Nation shows for $10. Lawn chairs are free at all performing arts events.',
+          'Outside lawn chairs. Specially designed lawn chairs are typically available at most Live Nation shows for $8 in advance or $10 upon arrival, while supplies last. Lawn chairs are free at performing arts events.',
+          'Pepper spray is not permitted inside the venue. Guests may ask an Information Booth about holding it during the show.',
+          'CBD products are not permitted inside the venue.',
           'Play pens.',
           'Pocket knives.',
           'Selfie sticks.',
@@ -883,7 +885,7 @@ export const planVisitTopics = [
         slug: 'food-drink',
         body: 'Outside liquids of any kind are not allowed at any Pavilion events.',
         items: [
-          'Personal food is allowed at Live Nation (rock, country, pop, etc.) shows in the amount of one, one-gallon ziploc bag per person. This amount restriction does not apply to Performing Arts (symphony, ballet, opera, etc.) shows.',
+          'Personal food is allowed at Live Nation (rock, country, pop, etc.) shows in the amount of one, one-gallon ziploc bag per person. At Performing Arts shows, the amount restriction does not apply, but food must fit within the bag-size policy or remain in its original packaging, such as a takeout container, pizza box or sealed snack package.',
           'Empty, reusable bottles/cups are allowed at most shows. Chilled water fountains/bottle fillers are available at The Pavilion. Some artists may have more specific policies, such as the removal of lids or only allowing crushable, disposable bottles. We will do our best to communicate these policies as soon as we are made aware of them, but if you bring a reusable bottle or cup we ask that you please remain flexible and are prepared not to bring it in if the artist requires.'
         ]
       }
@@ -899,7 +901,7 @@ export const planVisitTopics = [
       {
         heading: 'Venue Rules',
         slug: 'venue-rules',
-        body: 'Guests are always subject to a search upon entering the facility. Guests who refuse the search will be denied entrance. No re-entry is permitted once leaving the gates. No smoking is allowed in the reserved seating areas. This includes e-cigarettes/vapes.',
+        body: 'Guests are always subject to a search upon entering the facility. Guests who refuse the search will be denied entrance. No re-entry is permitted once leaving the gates. No smoking is allowed in the reserved seating areas. This includes e-cigarettes/vapes. Vaping devices may be used only on the lawn and in plaza areas, subject to event and security restrictions.',
         items: [
           'Soliciting or vending is not permitted on Pavilion grounds unless previously authorized by Pavilion management.',
           'Small blankets are allowed at most shows. Blankets that wrap into a carrying case must be permanently attached to the case and will be subject to review upon entry.',
@@ -981,13 +983,13 @@ export const planVisitTopics = [
     title: 'Concessions',
     slug: 'concessions',
     icon: 'utensils',
-    summary: 'Food, drinks, cashless transactions, plaza locations and roaming concessions support.',
+    summary: 'Food, drinks, payment options, plaza locations and roaming concessions support.',
     aiKeywords: ['concessions', 'food', 'drinks', 'cash', 'cashless', 'beer', 'cocktail'],
     sections: [
       {
         heading: 'What’s on the Menu',
         slug: 'menu',
-        body: 'Awesome eats and cold drinks amplify the experience of an epic show. Stay fueled up with a variety of concessions options located in the North, South and Lawn plazas. All transactions are now cashless.',
+        body: 'Awesome eats and cold drinks amplify the experience of an epic show. Stay fueled up with a variety of concessions options located in the North, South and Lawn plazas. Card payment is preferred at concession stands, though some vendors may still accept cash.',
         items: [
           "Alongside our concessions partner, Aramark, we're excited to offer you a wide range of concessions options. Whether you're looking for a quick bite to eat or grabbing a whole meal to enjoy on the lawn, we've got you covered. There's traditional concert fare like hamburgers and nachos right alongside special eats you're sure to love. With cold drinks ranging from Pepsi products to an ever-changing variety of St. Arnold's brews, craft beers, wines and speciality cocktails, there's always a thirst-quenching option right around the corner. Keep an eye (and an ear) out for concessions team members ready to bring drinks and bites to you, too."
         ]
@@ -1703,6 +1705,8 @@ export const externalRoutes = {
     cta: { label: 'Open Staff Login', href: 'CONFIGURE_STAFF_LOGIN_URL_IN_CMS', type: 'external', openInNewTab: true }
   }
 };
+
+export { aiKnowledge } from './ai-knowledge.mjs';
 
 export const storyTopics = ['Arts in Schools', 'Fans', 'Shows', 'Scholarships', 'Grants', 'Backstage', 'Supporters', 'Outreach'];
 

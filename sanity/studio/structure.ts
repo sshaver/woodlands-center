@@ -75,6 +75,7 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       documentList(S, 'event', 'All Events'),
       documentList(S, 'planVisitTopic', 'Plan Your Visit'),
+      documentList(S, 'aiKnowledge', 'AI Knowledge'),
       S.listItem()
         .title('Story Hub')
         .child(

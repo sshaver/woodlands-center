@@ -3,6 +3,7 @@ const DEFAULT_API_VERSION = '2025-02-19';
 const collectionKeys = [
   'events',
   'planVisitTopics',
+  'aiKnowledge',
   'grantPrograms',
   'outreachPrograms',
   'landingPages',
@@ -23,6 +24,7 @@ const typeMap = {
   externalRoutes: 'externalRoutes',
   events: 'event',
   planVisitTopics: 'planVisitTopic',
+  aiKnowledge: 'aiKnowledge',
   grantPrograms: 'grantProgram',
   outreachPrograms: 'outreachProgram',
   landingPages: 'landingPage',
@@ -75,6 +77,7 @@ const buildQuery = (previewDrafts) => {
     ${singletonKeys.map((key) => singletonProjection(key).replaceAll('{draftFilter}', draftFilter)).join(',\n    ')},
     ${collectionProjection('events', '|order(eventDate asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('planVisitTopics', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},
+    ${collectionProjection('aiKnowledge', '|order(orderRank asc, question asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('grantPrograms', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('outreachPrograms', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},
     ${collectionProjection('landingPages', '|order(orderRank asc, title asc)').replaceAll('{draftFilter}', draftFilter)},

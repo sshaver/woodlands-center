@@ -26,6 +26,7 @@ import {
   settings
 } from './singletons.js';
 import {
+  aiKnowledge,
   event,
   grantProgram,
   landingPage,
@@ -60,6 +61,7 @@ export const schemaTypes = [
   blocks,
   externalRoutes,
   event,
+  aiKnowledge,
   planVisitTopic,
   grantProgram,
   outreachProgram,

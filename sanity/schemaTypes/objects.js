@@ -169,13 +169,44 @@ export const policySection = {
   title: 'Policy Section',
   type: 'object',
   fields: [
-    { name: 'title', title: 'Title', type: 'string', validation: (Rule) => Rule.required() },
-    { name: 'body', title: 'Body', type: 'text', rows: 5 },
-    { name: 'items', title: 'Items', type: 'array', of: [{ type: 'string' }] },
-    { name: 'cta', title: 'CTA', type: 'cta' }
+    {
+      name: 'heading',
+      title: 'Section Heading',
+      type: 'string',
+      description: 'Heading shown at the top of this Plan Your Visit detail section.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'slug',
+      title: 'Section Anchor',
+      type: 'slug',
+      description: 'Used for direct links to this section, such as /plan-your-visit#bag-policy.',
+      options: { source: 'heading' },
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'body',
+      title: 'Introductory Text',
+      type: 'text',
+      rows: 5,
+      description: 'Paragraph shown immediately beneath the section heading.'
+    },
+    {
+      name: 'items',
+      title: 'Policy Details',
+      type: 'array',
+      description: 'Supporting rules or details shown as a list below the introductory text.',
+      of: [{ type: 'string' }]
+    },
+    {
+      name: 'cta',
+      title: 'Optional Button',
+      type: 'cta',
+      description: 'Optional action button shown at the end of this section.'
+    }
   ],
   preview: {
-    select: { title: 'title', subtitle: 'body' }
+    select: { title: 'heading', subtitle: 'body' }
   }
 };
 

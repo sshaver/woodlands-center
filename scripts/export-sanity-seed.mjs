@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {
   alert,
+  aiKnowledge,
   blocks,
   events,
   externalRoutes,
@@ -121,6 +122,7 @@ const documents = [
   doc('externalRoutes', 'externalRoutes', sanityExternalRoutes(externalRoutes)),
   ...events.map((item) => doc('event', slugId('event', item.slug), item)),
   ...planVisitTopics.map((item) => doc('planVisitTopic', slugId('planVisitTopic', item.slug), item)),
+  ...aiKnowledge.map((item) => doc('aiKnowledge', slugId('aiKnowledge', item.question), item)),
   ...grantPrograms.map((item) => doc('grantProgram', slugId('grantProgram', item.slug), item)),
   ...outreachPrograms.map((item) => doc('outreachProgram', slugId('outreachProgram', item.slug), item)),
   ...landingPages.map((item) => doc('landingPage', slugId('landingPage', item.slug), item)),

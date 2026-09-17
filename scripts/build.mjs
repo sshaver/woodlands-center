@@ -1491,11 +1491,11 @@ const planVisitPage = () =>
             <button type="submit" aria-label="Search">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
           </form>
           <div class="ai-result" data-ai-result hidden></div>
+          <a class="scroll-prompt visit-topic-scroll" href="#visit-topic-search">Scroll to Search by Topic</a>
         </div>
       </section>
-      <section class="section topic-picker-section">
+      <section class="section topic-picker-section" id="visit-topic-search" aria-label="Search visit information by topic">
         <div class="container">
-          ${sectionHeading('Or find answers by topic', 'Venue policies and visit essentials', 'Choose a topic to see the full set of related policies, tips and arrival details.')}
           <div class="topic-tabs" data-topic-tabs>
             ${content.planVisitTopics.map((topic, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-topic-target="${attr(topic.slug)}">${svgIcon(topic.icon, { className: 'topic-tab-icon icon-blue' })}<span>${esc(topic.title)}</span></button>`).join('')}
           </div>
@@ -1595,7 +1595,7 @@ const knowledgeKeywords = (...values) =>
       compactKnowledgeText(...values)
         .toLowerCase()
         .split(/[^a-z0-9]+/)
-        .filter((word) => word.length > 3)
+        .filter((word) => word.length > 2)
     )
   ].slice(0, 28);
 
@@ -1647,6 +1647,20 @@ const knowledgeChunks = () => {
       keywords: knowledgeKeywords(event.title, event.subheader, event.eventType),
       priority: event.isFeatured ? 9 : 6,
       eventDate: event.eventDate
+    });
+  }
+
+  for (const item of content.aiKnowledge || []) {
+    if (['draft', 'hidden', 'archived'].includes(item.listingStatus)) continue;
+    addChunk({
+      id: `ai-knowledge-${knowledgeSlug(item.question)}`,
+      title: item.question,
+      sourceTitle: item.sourceTitle || item.question,
+      body: item.answer,
+      sourceType: 'aiKnowledge',
+      url: item.sourceUrl || '/plan-your-visit/',
+      keywords: knowledgeKeywords(item.question, item.alternateQuestions, item.answer, item.keywords),
+      priority: Number.isFinite(Number(item.priority)) ? Number(item.priority) : 12
     });
   }
 
