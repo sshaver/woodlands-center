@@ -1252,6 +1252,14 @@ const programDetailSection = (page) => `
   <section class="section program-detail-section">
     <div class="container program-detail-grid">
       <div>
+        ${
+          page.impactStats?.length
+            ? `<div class="program-impact-block">
+                <p class="eyebrow">Program impact</p>
+                ${statCards(page.impactStats, 'landing-stat-grid program-impact-grid')}
+              </div>`
+            : ''
+        }
         ${tabsIntro(page)}
         ${tabs(page.tabs || [{ label: 'Overview', slug: 'overview', body: `${page.title} connects people with The Pavilion experience.` }], `tabs-${page.slug.replaceAll('/', '-')}`)}
         ${
@@ -1440,6 +1448,7 @@ const grantPage = (program) =>
     tabsTitle: program.tabsTitle,
     tabsBody: program.tabsBody,
     tabsCTA: program.tabsCTA,
+    impactStats: program.impactStats,
     conversion: {
       eyebrow: 'Mission seekers',
       title: program.slug === 'scholarships' ? 'Get scholarship and mission updates' : 'Get grant and outreach updates',
@@ -1449,6 +1458,10 @@ const grantPage = (program) =>
     tabs: program.tabs,
     quoteHighlight: program.quoteHighlight,
     finalCTA: program.finalCTA,
+    video:
+      program.video?.href || program.video?.cta?.href
+        ? { ...program.video, poster: program.video.poster || program.video.image || program.image }
+        : null,
     slug: `mission/funding/${program.slug}`,
     seo: program.seo
   });
@@ -1465,8 +1478,12 @@ const outreachPage = (program) =>
     tabsTitle: program.tabsTitle,
     tabsBody: program.tabsBody,
     tabsCTA: program.tabsCTA,
+    impactStats: program.impactStats,
     conversion: program.conversion,
-    video: program.video,
+    video:
+      program.slug === 'chamberfest-strings-camp' && (program.video?.href || program.video?.cta?.href)
+        ? { ...program.video, poster: program.video.poster || program.video.image || program.image }
+        : null,
     tabs: program.tabs,
     quoteHighlight: program.quoteHighlight,
     finalCTA: program.finalCTA,
@@ -1482,7 +1499,6 @@ const planVisitPage = () =>
     body: `
       <section class="visit-hero" style="--hero-image:url('${attr('/assets/content-images/mission/26_Plan Your Visit_Hero.jpg')}')">
         <div class="container visit-copy">
-          <p class="eyebrow">Plan Your Visit</p>
           <h1>Plan your visit</h1>
           <p>How can we help get you rocking today?</p>
           <form class="ai-search" data-ai-search>
@@ -1491,13 +1507,10 @@ const planVisitPage = () =>
             <button type="submit" aria-label="Search">${svgIcon('arrow-right', { className: 'control-icon icon-white' })}</button>
           </form>
           <div class="ai-result" data-ai-result hidden></div>
-          <a class="scroll-prompt visit-topic-scroll" href="#visit-topic-search">Scroll to Search by Topic</a>
-        </div>
-      </section>
-      <section class="section topic-picker-section" id="visit-topic-search" aria-label="Search visit information by topic">
-        <div class="container">
-          <div class="topic-tabs" data-topic-tabs>
-            ${content.planVisitTopics.map((topic, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-topic-target="${attr(topic.slug)}">${svgIcon(topic.icon, { className: 'topic-tab-icon icon-blue' })}<span>${esc(topic.title)}</span></button>`).join('')}
+          <div class="visit-topic-picker" aria-label="Search visit information by topic">
+            <div class="topic-tabs" data-topic-tabs>
+              ${content.planVisitTopics.map((topic, index) => `<button type="button" class="${index === 0 ? 'is-active' : ''}" data-topic-target="${attr(topic.slug)}">${svgIcon(topic.icon, { className: 'topic-tab-icon icon-blue' })}<span>${esc(topic.title)}</span></button>`).join('')}
+            </div>
           </div>
         </div>
       </section>

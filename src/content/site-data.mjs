@@ -1147,8 +1147,13 @@ export const grantPrograms = [
     slug: 'professional-development',
     subtitle: 'Helping visual and performing arts educators in the Greater Houston Area improve teaching methods and curriculum through impactful PD experiences.',
     image: asset('content-images/landing-pages/Brainstormers-19.jpg'),
+    impactStats: [
+      { value: '$144K', label: 'in grants awarded' },
+      { value: '109', label: 'arts educators supported' },
+      { value: '32K', label: 'students reached' }
+    ],
     applicationCTA: { label: 'Apply Now', href: 'CONFIGURE_FOUNDANT_URL_IN_CMS', type: 'external', openInNewTab: true },
-    quoteHighlight: '“I was captivated by the opportunity to engage with fellow educators, exchanging ideas, tools and strategies to further advance and enrich our students’ learning experiences. Being surrounded by individuals who deeply understand and live for the art of dance was incredibly motivating. It was uplifting to connect with those who not only use dance as a medium for education but also as a source of personal fulfillment and creative expression.”',
+    quoteHighlight: '“Thanks to the support of this grant, I returned to my campus equipped with new ideas, stronger instructional tools, and renewed energy to serve my students and grow my program. Perhaps most importantly, TBA reminded me I’m not alone.”\n\nKeith Skarke, Band Teacher, Fonville Middle School',
     tabs: [
       { label: 'Qualifications', slug: 'qualifications', body: 'This grant program is designed to financially assist arts educators who want to participate in workshops, conferences and seminars that further their personal development in arts instruction and arts education. The program is open to visual arts and performing arts educators in K-12 public schools, including charter schools, within the Greater Houston area and located in the following counties: Austin, Brazoria, Chambers, Fort Bend, Galveston, Grimes, Harris, Liberty, Montgomery, San Jacinto, Walker and Waller.' },
       {
@@ -1169,6 +1174,12 @@ export const grantPrograms = [
     slug: 'resources',
     subtitle: 'Assisting arts curriculum programs in acquiring essential instruments, equipment, supplies and funding for performances, exhibitions, learning experiences and group training.',
     image: asset('content-images/mission/MSP IPZ-33.jpg'),
+    impactStats: [
+      { value: '$394K', label: 'in grants awarded' },
+      { value: '43', label: 'programs supported' },
+      { value: '39K', label: 'students reached' }
+    ],
+    quoteHighlight: '“When students entered the art room and saw brand-new tables, professional ceramics equipment, rich glazes, and beautiful paper, their reactions were immediate. Many asked, ‘These are really for us?’ The grant communicated that their creativity mattered and that they were worthy of investment.”\n\nStephanie Norman, Art Teacher, Ford Elementary',
     applicationCTA: { label: 'Apply Now', href: 'CONFIGURE_FOUNDANT_URL_IN_CMS', type: 'external', openInNewTab: true }
   },
   {
@@ -1176,6 +1187,12 @@ export const grantPrograms = [
     slug: 'travel',
     subtitle: 'Empowering arts programs to share their skill and inspiration beyond local communities by providing key funding for travel and special performance opportunities.',
     image: asset('content-images/mission/SSS HSO-16.jpg'),
+    impactStats: [
+      { value: '$50K', label: 'in grants awarded' },
+      { value: '5', label: 'schools received travel grants' },
+      { value: '244', label: 'participants traveled' }
+    ],
+    quoteHighlight: '“There were a few students who participated in the experience who were not able to contribute anything to the cost. They participated in an event that made them proud of their accomplishments without worrying about how much their parents could afford. Seeing the joy and awe in their faces was priceless.”\n\nElyse Catoe, Orchestra Director, Kingwood High School',
     applicationCTA: { label: 'Apply Now', href: 'CONFIGURE_FOUNDANT_URL_IN_CMS', type: 'external', openInNewTab: true }
   },
   {
@@ -1183,6 +1200,10 @@ export const grantPrograms = [
     slug: 'arts-organizations',
     subtitle: 'Supporting nonprofit community arts organizations in Harris and Montgomery Counties that are breaking down barriers, amplifying impact and bringing meaningful artistic experiences to our local communities.',
     image: asset('content-images/partners-sponsors/BostonPops-13.jpg'),
+    impactStats: [
+      { value: '$158K', label: 'in grants awarded' },
+      { value: '15', label: 'community arts grants awarded' }
+    ],
     applicationCTA: { label: 'Apply Now', href: 'CONFIGURE_FOUNDANT_URL_IN_CMS', type: 'external', openInNewTab: true }
   },
   {
@@ -1190,10 +1211,15 @@ export const grantPrograms = [
     slug: 'scholarships',
     subtitle: 'Enabling aspiring artists to pursue their dreams at the collegiate level through life-changing funding for graduating high school seniors, with over $2.9 million in scholarships awarded since the program’s inception.',
     image: asset('content-images/mission/Scholarship Recipients 2025.jpg'),
+    impactStats: [
+      { value: '$477K', label: 'in scholarships awarded' },
+      { value: '82', label: 'scholarships awarded' },
+      { value: '$2.9M+', label: 'awarded since the program began' }
+    ],
     applicationCTA: { label: 'Apply Now', href: 'CONFIGURE_ACCEPTD_URL_IN_CMS', type: 'external', openInNewTab: true }
   }
 ].map((program) => ({
-  quoteHighlight: program.quoteHighlight || 'Every grant helps educators and artists turn practical support into deeper arts experiences.',
+  quoteHighlight: program.quoteHighlight || '',
   finalCTA: program.applicationCTA ? { ...program.applicationCTA, label: 'Apply Today' } : null,
   tabs: program.tabs || (program.slug === 'scholarships'
     ? [
@@ -1224,6 +1250,11 @@ export const grantPrograms = [
 const outreachProgramDetails = {
   'instrument-petting-zoo': {
     primaryCTA: { label: 'Host a Zoo', type: 'popover', popoverId: 'contact' },
+    impactStats: [
+      { value: '26', label: 'Instrument Petting Zoo activations' },
+      { value: '3,197', label: 'people attended' },
+      { value: '19', label: 'locations visited' }
+    ],
     tabs: [
       { label: 'Impact', slug: 'impact', body: 'The Pavilion’s Instrument Petting Zoo, powered by Ovintiv, is a free outreach program where children have the chance to get up close and personal with the orchestral instruments they see professionally played on stage.' },
       { label: 'Upcoming Dates', slug: 'upcoming-dates', body: 'Use this area for seasonal host dates, school visits and community appearances as they are confirmed.' },
@@ -1234,6 +1265,11 @@ const outreachProgramDetails = {
   },
   'fine-arts-education-days': {
     primaryCTA: { label: 'Register Your Class', type: 'popover', popoverId: 'contact' },
+    impactStats: [
+      { value: '71', label: 'schools, including 45 Title I schools' },
+      { value: '9,629', label: 'students and teachers attended' },
+      { value: '247', label: 'buses across two days' }
+    ],
     tabs: [
       { label: 'Impact', slug: 'impact', body: 'Students jaws drop as they experience the thrilling power of a full symphony, most for the first time. They hear their favorite movie soundtracks alongside iconic classical pieces – and are often inspired to pick up an instrument and start playing themselves.' },
       {
@@ -1249,6 +1285,9 @@ const outreachProgramDetails = {
   },
   'hats-off-to-reading': {
     primaryCTA: { label: 'Get Reminders', type: 'popover', popoverId: 'get-emails' },
+    impactStats: [
+      { value: '1,446', label: 'guests attended in 2025' }
+    ],
     tabs: [
       { label: 'Impact', slug: 'impact', body: 'Our founder, Cynthia Mitchell, believed in the power of literacy paired with the inspiration of the arts. We do, too. Each year, we see thousands of kids and families walk out of the Event Center with a free book in their hands – and straight into a stunning, free performing arts experience tailored just for them.' },
       { label: 'Upcoming Dates', slug: 'upcoming-dates', body: 'Hats Off to Reading typically takes place in September before a kid-friendly symphony performance.' }
@@ -1256,6 +1295,12 @@ const outreachProgramDetails = {
   },
   'mini-pavilion-maestros': {
     primaryCTA: { label: 'Sign Up For Free', type: 'popover', popoverId: 'get-emails' },
+    impactStats: [
+      { value: '862', label: 'families engaged' },
+      { value: '1,587', label: 'Mini Maestros registered in 2025' },
+      { value: '85', label: 'ZIP codes represented' }
+    ],
+    quoteHighlight: '“Thank you for the Mini Maestro program! It’s an absolute gem and we feel so lucky to live nearby and participate with our 19 month old. LOVE the instrument petting zoo.”\n\nMini Pavilion Maestro Parent',
     tabs: [
       {
         label: 'Perks',
@@ -1282,6 +1327,12 @@ const outreachProgramDetails = {
   },
   'arts-in-action-awards': {
     primaryCTA: { label: 'Nominate Your Student', type: 'popover', popoverId: 'contact' },
+    impactStats: [
+      { value: '32', label: 'Arts in Action awardees' },
+      { value: '21', label: 'elementary schools across 5 districts' },
+      { value: '17', label: 'ZIP codes with awardees' }
+    ],
+    quoteHighlight: '“In honoring our local students, not only does the Arts in Action Award recognize the accomplishments and dedication of the honoree, it also inspires and encourages fellow classmates to continue pursuing their love of music. The collective celebration has a multiplying effect!\n\nMusic educators are in the business of molding music makers who will lead and enrich our future, and the Arts in Action program is a vital partner.”\n\nJulie Stobbe, Choir Teacher, Mitchell Intermediate School',
     tabs: [
       { label: 'Qualifications', slug: 'qualifications', body: 'The Arts in Action awards program honors middle and junior high school performing arts students nominated by their music teacher/director, not only for their excellence as artists, but for the dedication, leadership and commitment to their entire school community.' },
       { label: 'Impact', slug: 'impact', body: 'Excellence and energy in the arts needs to be recognized. Students who receive these awards are propelled towards greater future accomplishments, even as they inspire their classmates and communities.' },
@@ -1297,6 +1348,12 @@ const outreachProgramDetails = {
   },
   'arts-on-the-go': {
     primaryCTA: { label: 'Register Your Class or School', href: 'CONFIGURE_GOOGLE_SHEETS_URL_IN_CMS', type: 'external', openInNewTab: true },
+    impactStats: [
+      { value: '595', label: 'boxes delivered' },
+      { value: '13,875', label: 'students impacted' },
+      { value: '47', label: 'schools received boxes' }
+    ],
+    quoteHighlight: '“We cannot express enough gratitude for the Arts on the Go boxes you sent for our teachers. They are absolutely amazing! Our teachers and students love these resources. Your generosity and support mean so much to our school, and we truly appreciate the time and effort that went into providing such a meaningful contribution. Thank you again for your kindness and for investing in our classrooms.”\n\nAdministrator at Theiss Elementary',
     tabs: [
       {
         label: 'Key Information',
@@ -1323,6 +1380,11 @@ const outreachProgramDetails = {
   },
   'scout-days': {
     primaryCTA: { label: 'Register for Scout Day', type: 'popover', popoverId: 'contact' },
+    impactStats: [
+      { value: '405', label: 'badges earned' },
+      { value: '8', label: 'Scout badge programs served' }
+    ],
+    quoteHighlight: '“My 7-year-old Brownie Girl Scout had a blast earning her Art & Design Badge at Girl Scout Day at The Pavilion in June! It was her very first time getting to actually touch and try to play a French horn, flute, clarinet, harp, and violin. We are definitely looking forward to the next Girl Scout Day!”',
     tabs: [
       { label: 'Date 1', slug: 'date-1', body: 'Use this area for the first Scout Day event date and registration window as it is confirmed.' },
       { label: 'Date 2', slug: 'date-2', body: 'Use this area for the second Scout Day event date and registration window as it is confirmed.' },
@@ -1354,6 +1416,8 @@ export const outreachPrograms = [
   subtitle,
   image,
   primaryCTA: outreachProgramDetails[slug]?.primaryCTA || { label: 'Start here', type: 'popover', popoverId: 'contact' },
+  impactStats: outreachProgramDetails[slug]?.impactStats,
+  quoteHighlight: outreachProgramDetails[slug]?.quoteHighlight,
   conversion: {
     eyebrow: 'Mission seekers',
     title: title.includes('Education') || title.includes('Educator') || title.includes('Zoo') || title.includes('Maestros') || title.includes('Scout') || title.includes('Arts On The Go') ? 'Get educator and outreach updates' : 'Get mission stories in your inbox',
@@ -1428,6 +1492,12 @@ export const landingPages = [
     templatePreset: 'supportArts',
     heroImage: asset('content-images/partners-sponsors/HPP-68.jpg'),
     primaryCTA: { label: 'Become a Pavilion Partner', href: 'CONFIGURE_DONORPERFECT_URL_IN_CMS', type: 'external', openInNewTab: true },
+    impactStats: [
+      { value: '7,700', label: 'volunteer hours donated' },
+      { value: '131', label: 'active Pavilion Partners' },
+      { value: '111', label: 'events supported' }
+    ],
+    quoteHighlight: '“I have been an active Partner for twenty years. This has been an interesting, exciting, and extremely rewarding experience.”',
     tabs: [
       { label: 'Support Mission', slug: 'support-mission', body: 'Volunteers at The Pavilion participate the meaningful work of making the arts accessible to all by giving of their time, talents and leadership.', cta: partnersJoinCTA },
       { label: 'Work Events', slug: 'work-events', body: 'Volunteers work with Pavilion Staff to park buses, provide directions to teachers and students (20,000+ each year) and assist with seating assignments.', cta: partnersJoinCTA },
@@ -1529,6 +1599,11 @@ export const landingPages = [
     templatePreset: 'freeShows',
     heroImage: asset('content-images/mission/SSS HSO-1 (1).jpg'),
     primaryCTA: { label: 'Get Show Emails', type: 'popover', popoverId: 'get-emails' },
+    impactStats: [
+      { value: '41,805', label: 'guests attended performances' },
+      { value: '9', label: 'free arts events' }
+    ],
+    quoteHighlight: '“The Pavilion is a special tradition in our family and has given my daughters access to the arts that they would not have had without it.”\n\nArts Show Attendee',
     tabs: [
       { label: 'Entertaining', slug: 'entertaining', body: 'Whether a classic kids movie or the epic catalogue of an iconic rock band, our community arts shows prioritize accessibility, entertainment and fun.' },
       { label: 'Laid Back', slug: 'laid-back', body: 'Kick your feet up on the lawn and give your kids a little space to move around or come early to grab front row seats so you don’t miss a note. This isn’t your standard night at the symphony – it’s an open door where everyone belongs.' },

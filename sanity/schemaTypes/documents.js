@@ -190,11 +190,29 @@ export const grantProgram = {
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
     { name: 'applicationCTA', title: 'Application CTA', type: 'cta' },
+    {
+      name: 'impactStats',
+      title: 'Program Impact Callouts',
+      type: 'array',
+      description: 'Optional data points shown together in one divided panel above the tabs. Keep values short, such as “43” or “$394K”. Leave empty to hide the panel.',
+      of: [{ type: 'stat' }]
+    },
     ...tabsIntroFields,
     { name: 'tabs', title: 'Informational Tabs', type: 'array', of: [{ type: 'tab' }] },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
-    { name: 'video', title: 'Optional Video Block', type: 'mediaBlock' },
-    { name: 'quoteHighlight', title: 'Quote Highlight', type: 'text', rows: 3 },
+    {
+      name: 'video',
+      title: 'Optional Program Video',
+      type: 'mediaBlock',
+      description: 'Shown below the tabs only when a video or destination URL is entered. The hero image is used as the poster if no separate poster is selected.'
+    },
+    {
+      name: 'quoteHighlight',
+      title: 'Quote Highlight',
+      type: 'text',
+      rows: 6,
+      description: 'Optional quote displayed below the tabs. Put the attribution on a new paragraph after a blank line. Leave empty to hide the quote block.'
+    },
     { name: 'finalCTA', title: 'Final CTA', type: 'cta' },
     { name: 'seo', title: 'SEO', type: 'seo' }
   ],
@@ -218,11 +236,29 @@ export const outreachProgram = {
     { name: 'seasonalVisibility', title: 'Seasonal Visibility', type: 'object', fields: [{ name: 'visibility', title: 'Visibility', type: 'string' }] },
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
+    {
+      name: 'impactStats',
+      title: 'Program Impact Callouts',
+      type: 'array',
+      description: 'Optional data points shown together in one divided panel above the tabs. Keep values short. Leave empty to hide the panel.',
+      of: [{ type: 'stat' }]
+    },
     ...tabsIntroFields,
     { name: 'tabs', title: 'Informational Tabs', type: 'array', of: [{ type: 'tab' }] },
     { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
-    { name: 'video', title: 'Optional Video Block', type: 'mediaBlock' },
-    { name: 'quoteHighlight', title: 'Quote Highlight', type: 'text', rows: 3 },
+    {
+      name: 'video',
+      title: 'Optional Program Video',
+      type: 'mediaBlock',
+      description: 'Currently displayed only on the Chamberfest page, and only when a URL is entered. The hero image can serve as the poster.'
+    },
+    {
+      name: 'quoteHighlight',
+      title: 'Quote Highlight',
+      type: 'text',
+      rows: 6,
+      description: 'Optional quote displayed below the tabs. Put the attribution on a new paragraph after a blank line. Leave empty to hide the quote block.'
+    },
     { name: 'finalCTA', title: 'Final CTA', type: 'cta' },
     { name: 'seo', title: 'SEO', type: 'seo' }
   ],
@@ -302,6 +338,13 @@ export const landingPage = {
       type: 'cta',
       description: 'Optional second button shown next to the hero primary button.'
     },
+    {
+      name: 'impactStats',
+      title: 'Program Impact Callouts',
+      type: 'array',
+      description: 'Optional data points shown together in one divided panel above the tabs. Keep values short, such as “131” or “$477K”. Leave empty to hide the panel.',
+      of: [{ type: 'stat' }]
+    },
     ...tabsIntroFields,
     {
       name: 'supportIntro',
@@ -358,8 +401,8 @@ export const landingPage = {
       name: 'quoteHighlight',
       title: 'Quote Highlight',
       type: 'text',
-      rows: 3,
-      description: 'Optional quote or short callout displayed below the tabs.'
+      rows: 6,
+      description: 'Optional quote displayed below the tabs. Put the attribution on a new paragraph after a blank line. Leave empty to hide the quote block.'
     },
     {
       name: 'finalCTA',

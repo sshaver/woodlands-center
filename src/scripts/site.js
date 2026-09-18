@@ -330,9 +330,12 @@ topicTabs?.addEventListener('click', (event) => {
   const button = event.target.closest('[data-topic-target]');
   if (!button) return;
   topicTabs.querySelectorAll('button').forEach((tab) => tab.classList.toggle('is-active', tab === button));
+  let activePanel = null;
   document.querySelectorAll('[data-topic-panel]').forEach((panel) => {
     panel.hidden = panel.dataset.topicPanel !== button.dataset.topicTarget;
+    if (!panel.hidden) activePanel = panel;
   });
+  requestAnimationFrame(() => activePanel?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
 });
 
 const searchForm = document.querySelector('[data-ai-search]');
