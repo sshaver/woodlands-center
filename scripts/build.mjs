@@ -1287,40 +1287,215 @@ const programDetailSection = (page) => `
   ${page.video ? videoBlock(page.video, 'section-wash-deep', 'left') : ''}
 `;
 
-const seasonSeatsExtras = () => {
-  const placeMap = content.seasonSeats.placeMap || {};
-  const placeMapImage =
-    typeof placeMap.image === 'string'
-      ? { src: placeMap.image, alt: placeMap.imageAlt || placeMap.alt || 'Season Seats pricing map and seating chart' }
-      : placeMap.image;
+const seasonPageNav = () => `
+  <nav class="season-page-nav" aria-label="Season Seats page sections">
+    <div class="container season-page-nav-inner">
+      <a href="#season-experience">The experience</a>
+      <a href="#season-seating">Your seats</a>
+      <a href="#season-questions">Questions</a>
+      ${cta(content.seasonSeats.campaignHero?.cta, 'primary')}
+    </div>
+  </nav>
+`;
+
+const seasonExperienceSection = () => {
+  const intro = content.seasonSeats.experienceIntro || {};
+  const perks = content.seasonSeats.experiencePerks || [];
   return `
-    <section class="section season-extras-section section-wash-lift">
-      <div class="container">
-        <article class="info-card season-place-card">
-          <p class="eyebrow">${esc(placeMap.eyebrow || 'Season Seats')}</p>
-          <h2>${esc(placeMap.title || 'Find Your Place at The Pavilion')}</h2>
-          ${placeMapImage ? `<div class="season-place-map">${image(placeMapImage, '', 'lazy')}</div>` : ''}
-        </article>
+    <section class="section season-story-section section-wash-deep" id="season-experience">
+      <div class="container season-story-grid">
+        <div class="season-story-copy">
+          ${sectionHeading(intro.eyebrow, intro.title, [intro.subtitle, intro.body].filter(Boolean).join('\n\n'))}
+        </div>
+        <div class="season-perk-list">
+          ${perks
+            .map(
+              (perk, index) => `
+                <article>
+                  <span class="season-step" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <h3>${esc(perk.title)}</h3>
+                    ${paragraphsFromText(perk.body || perk.subtitle)}
+                  </div>
+                </article>
+              `
+            )
+            .join('')}
+        </div>
       </div>
     </section>
   `;
 };
 
-const seasonSeatsLandingSection = () => `
-  <section class="section season-conversion-section section-wash-deep">
-    <div class="container season-conversion-grid">
-      <div>
-        ${sectionHeading(
-          'Why Season Seats',
-          'A premium plan for the people you want beside you',
-          'Use Season Seats as a business development tool, a team reward, a family tradition or the easiest way to say yes when the right show lands on the calendar.'
-        )}
-        ${pathwayCards(content.seasonSeats.tabs || [], 'season-benefit-grid')}
+const seasonClubSection = () => {
+  const club = content.seasonSeats.clubFeature || {};
+  const facts = content.seasonSeats.clubFacts || [];
+  if (!club.title && !club.image) return '';
+  return `
+    <section class="section season-club-section section-wash-lift">
+      <div class="container season-club-grid">
+        <div class="season-club-media">
+          ${club.image ? image(club.image, 'season-club-primary') : ''}
+          ${content.seasonSeats.clubSecondaryImage ? image(content.seasonSeats.clubSecondaryImage, 'season-club-secondary') : ''}
+        </div>
+        <div class="season-club-copy">
+          ${sectionHeading(club.eyebrow, club.title, [club.subtitle, club.body].filter(Boolean).join('\n\n'))}
+          <div class="season-fact-list">
+            ${facts
+              .map(
+                (fact) => `
+                  <article>
+                    <h3>${esc(fact.title)}</h3>
+                    ${paragraphsFromText(fact.body || fact.subtitle)}
+                  </article>
+                `
+              )
+              .join('')}
+          </div>
+        </div>
       </div>
-      ${conversionCard(content.seasonSeats)}
+    </section>
+  `;
+};
+
+const seasonUseCasesSection = () => {
+  const intro = content.seasonSeats.useCasesIntro || {};
+  const useCases = content.seasonSeats.useCases || [];
+  return `
+    <section class="section season-use-cases-section section-wash-deep">
+      <div class="container">
+        ${sectionHeading(intro.eyebrow, intro.title, intro.body || intro.subtitle)}
+        <div class="season-use-case-grid">
+          ${useCases
+            .map(
+              (item) => `
+                <article class="pathway-card season-use-case-card">
+                  ${item.image ? image(item.image, 'pathway-card-image') : ''}
+                  <div class="pathway-card-copy">
+                    ${item.summary ? `<p class="eyebrow">${esc(item.summary)}</p>` : ''}
+                    <h3>${esc(item.title || item.label)}</h3>
+                    ${paragraphsFromText(item.body)}
+                  </div>
+                </article>
+              `
+            )
+            .join('')}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+const seasonPricingTabs = (items = []) => {
+  if (!items.length) return '';
+  return `
+    <div class="tabs season-pricing-tabs" data-tabs>
+      <div class="tab-list" role="tablist" aria-label="Season Seats pricing options">
+        ${items
+          .map(
+            (item, index) => `
+              <button class="tab-pill" id="season-pricing-tab-${index}" type="button" role="tab" aria-selected="${index === 0}" aria-controls="season-pricing-panel-${index}" tabindex="${index === 0 ? '0' : '-1'}">
+                <span>${esc(item.label)}</span>
+                ${item.summary ? `<small>${esc(item.summary)}</small>` : ''}
+              </button>
+            `
+          )
+          .join('')}
+      </div>
+      ${items
+        .map(
+          (item, index) => `
+            <div class="tab-panel season-pricing-panel" id="season-pricing-panel-${index}" role="tabpanel" aria-labelledby="season-pricing-tab-${index}" ${index === 0 ? '' : 'hidden'}>
+              <div class="season-pricing-copy">
+                ${item.eyebrow ? `<p class="eyebrow">${esc(item.eyebrow)}</p>` : ''}
+                <h3>${esc(item.title || item.label)}</h3>
+                ${paragraphsFromText(item.body)}
+                ${item.items?.length ? `<ul class="season-check-list">${item.items.map((detail) => `<li>${esc(detail)}</li>`).join('')}</ul>` : ''}
+                ${item.cta ? cta(item.cta, 'primary') : ''}
+                <p class="season-price-note">Connect with our team for current availability.</p>
+              </div>
+              ${item.image ? `<div class="season-pricing-art">${image(item.image, '', 'lazy')}</div>` : ''}
+            </div>
+          `
+        )
+        .join('')}
     </div>
-  </section>
-`;
+  `;
+};
+
+const seasonSeatingSection = () => {
+  const seating = content.seasonSeats.seatingIntro || {};
+  const mapUrl = seating.image?.src || seating.image || '';
+  return `
+    <section class="section season-seating-section section-wash-lift" id="season-seating">
+      <div class="container">
+        ${sectionHeading(seating.eyebrow, seating.title, seating.body || seating.subtitle)}
+        ${
+          seating.image
+            ? `<figure class="season-map-card">
+                ${image(seating.image, '', 'lazy')}
+                <figcaption>
+                  <span>All Season Seats are under the peaks.</span>
+                  <a href="${attr(mapUrl)}" target="_blank" rel="noopener noreferrer">View larger map</a>
+                </figcaption>
+              </figure>`
+            : ''
+        }
+        ${seasonPricingTabs(content.seasonSeats.pricingOptions || [])}
+      </div>
+    </section>
+  `;
+};
+
+const seasonFaqSection = () => {
+  const intro = content.seasonSeats.faqIntro || {};
+  const faqs = content.seasonSeats.faqs || [];
+  return `
+    <section class="section season-faq-section section-wash-deep" id="season-questions">
+      <div class="container season-faq-grid">
+        <div>
+          ${sectionHeading(intro.eyebrow, intro.title, intro.body || intro.subtitle)}
+          ${content.seasonSeats.campaignHero?.cta ? cta(content.seasonSeats.campaignHero.cta, 'secondary') : ''}
+        </div>
+        <div class="season-question-list">
+          ${faqs
+            .map(
+              (item) => `
+                <details>
+                  <summary>${esc(item.question)}<span aria-hidden="true">+</span></summary>
+                  <div>${paragraphsFromText(item.answer)}</div>
+                </details>
+              `
+            )
+            .join('')}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+const seasonFinalCtaSection = () => {
+  const conversion = content.seasonSeats.campaignConversion || {};
+  const contact = content.seasonSeats.salesContact || {};
+  return `
+    <section class="section season-final-section section-wash-blue">
+      <div class="container season-final-grid">
+        <div>
+          ${conversion.eyebrow ? `<p class="eyebrow">${esc(conversion.eyebrow)}</p>` : ''}
+          <h2>${esc(conversion.title)}</h2>
+          ${paragraphsFromText(conversion.body)}
+          ${conversion.cta ? cta(conversion.cta, 'primary') : ''}
+        </div>
+        <aside class="conversion-card season-contact-card">
+          ${contact.eyebrow ? `<p class="eyebrow">${esc(contact.eyebrow)}</p>` : ''}
+          <h3>${esc(contact.title)}</h3>
+          ${paragraphsFromText(contact.body || contact.subtitle)}
+          ${contact.cta ? cta(contact.cta, 'secondary') : ''}
+        </aside>
+      </div>
+    </section>
+  `;
+};
 
 const supportArtsLandingSection = (page) => {
   const supportIntro = {
@@ -1388,19 +1563,24 @@ const landingPage = (page, routePath = `/${page.slug}`) => {
 
 const seasonSeatsPage = () =>
   shell({
-    title: content.seasonSeats.title,
-    description: content.seasonSeats.subtitle,
+    title: content.seasonSeats.campaignHero?.title || content.seasonSeats.title,
+    description: content.seasonSeats.campaignHero?.subtitle || content.seasonSeats.subtitle,
     path: '/season-seats',
     body: `
       ${landingHero({
-        ...content.seasonSeats,
-        heroImage: content.seasonSeats.image,
+        ...content.seasonSeats.campaignHero,
+        heroImage: content.seasonSeats.campaignHero?.image || content.seasonSeats.image,
+        primaryCTA: content.seasonSeats.campaignHero?.cta || content.seasonSeats.primaryCTA,
         templatePreset: 'Season Seats',
         secondaryCTA: content.seasonSeats.holderLoginCTA
       })}
-      ${seasonSeatsLandingSection()}
-      ${seasonSeatsExtras()}
-      ${eventListBlock('Concert Nights for Clients, Friends and Family')}
+      ${seasonPageNav()}
+      ${seasonExperienceSection()}
+      ${seasonClubSection()}
+      ${seasonUseCasesSection()}
+      ${seasonSeatingSection()}
+      ${seasonFaqSection()}
+      ${seasonFinalCtaSection()}
     `
   });
 

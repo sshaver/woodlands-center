@@ -1,6 +1,7 @@
 import {
   cta,
   conversionBlock,
+  faqItem,
   formReference,
   mediaBlock,
   mediaAsset,
@@ -39,6 +40,7 @@ import {
 export const schemaTypes = [
   cta,
   conversionBlock,
+  faqItem,
   mediaBlock,
   mediaAsset,
   seo,

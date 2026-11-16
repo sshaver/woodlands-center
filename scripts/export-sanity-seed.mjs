@@ -30,13 +30,16 @@ const slugId = (prefix, slugOrTitle) =>
 let keyIndex = 0;
 const ctaFieldNames = new Set(['cta', 'primaryCTA', 'secondaryCTA', 'donateCTA', 'programsCTA', 'holderLoginCTA', 'learnMoreCTA', 'applicationCTA', 'finalCTA', 'tabsCTA']);
 const formFieldNames = new Set(['contact', 'getEmails', 'seasonSeats', 'missionSeekers', 'programReminder']);
-const mediaBlockFieldNames = new Set(['feature', 'video', 'email', 'storyPrefooter', 'impactHeading', 'humanProof', 'placeMap', 'pricing', 'seatingMap', 'conversionProof', 'supportIntro', 'supportProof', 'valuesGraphic']);
-const conversionBlockFieldNames = new Set(['conversion', 'eventsSeasonCTA']);
+const mediaBlockFieldNames = new Set(['feature', 'video', 'email', 'storyPrefooter', 'impactHeading', 'humanProof', 'placeMap', 'pricing', 'seatingMap', 'conversionProof', 'supportIntro', 'supportProof', 'valuesGraphic', 'campaignHero', 'experienceIntro', 'clubFeature', 'useCasesIntro', 'seatingIntro', 'faqIntro', 'salesContact']);
+const conversionBlockFieldNames = new Set(['conversion', 'campaignConversion', 'eventsSeasonCTA']);
 const blockScopedMediaFields = new Set(['seasonSeats']);
 const arrayItemTypes = {
   desktopPrimary: 'navItem',
   footer: 'navItem',
   impactStats: 'stat',
+  clubFacts: 'mediaBlock',
+  experiencePerks: 'mediaBlock',
+  faqs: 'faqItem',
   mobileDock: 'navItem',
   routes: 'routeItem',
   sections: 'policySection',
@@ -45,10 +48,13 @@ const arrayItemTypes = {
   sponsors: 'sponsorItem',
   stats: 'stat',
   tabs: 'tab',
+  pricingOptions: 'tab',
+  useCases: 'tab',
   utility: 'navItem'
 };
 const mediaFieldNames = new Set([
   'cardImage',
+  'clubSecondaryImage',
   'fallbackImage',
   'headerImage',
   'heroImage',

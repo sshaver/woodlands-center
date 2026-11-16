@@ -1540,6 +1540,307 @@ p {
   background: #000;
 }
 
+.season-page-nav {
+  border-block: 1px solid rgba(64, 189, 244, 0.28);
+  background: rgba(3, 16, 26, 0.94);
+}
+
+.season-page-nav-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.35rem;
+  align-items: center;
+  min-height: 5rem;
+}
+
+.season-page-nav-inner > a:not(.btn) {
+  color: var(--color-muted);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.season-page-nav-inner > a:not(.btn):hover,
+.season-page-nav-inner > a:not(.btn):focus-visible {
+  color: var(--color-white);
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+.season-page-nav-inner .btn {
+  margin-left: auto;
+}
+
+.season-story-grid,
+.season-club-grid,
+.season-faq-grid,
+.season-final-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1fr);
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  align-items: start;
+}
+
+.season-story-copy .section-heading {
+  margin-bottom: 0;
+}
+
+.season-perk-list {
+  border-top: 1px solid rgba(64, 189, 244, 0.42);
+}
+
+.season-perk-list article {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem) 0;
+  border-bottom: 1px solid rgba(64, 189, 244, 0.42);
+}
+
+.season-step {
+  color: var(--color-blue-400);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.season-perk-list h3,
+.season-fact-list h3 {
+  margin-bottom: 0.35rem;
+  font-size: clamp(1.25rem, 2.1vw, 1.7rem);
+}
+
+.season-perk-list p,
+.season-fact-list p,
+.season-club-copy .section-heading p,
+.season-final-grid > div > p:not(.eyebrow),
+.season-contact-card p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
+.season-club-grid {
+  grid-template-columns: minmax(360px, 1fr) minmax(0, 0.9fr);
+  align-items: center;
+}
+
+.season-club-media {
+  position: relative;
+  min-height: clamp(34rem, 48vw, 43rem);
+}
+
+.season-club-primary,
+.season-club-secondary {
+  position: absolute;
+  object-fit: cover;
+  border: 1px solid rgba(64, 189, 244, 0.44);
+  border-radius: var(--radius-card-md);
+  box-shadow: var(--shadow-blue-glow-soft);
+}
+
+.season-club-primary {
+  inset: 0 14% 17% 0;
+  width: 86%;
+  height: 83%;
+}
+
+.season-club-secondary {
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  height: 38%;
+}
+
+.season-fact-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 1.5rem;
+  border-block: 1px solid rgba(64, 189, 244, 0.34);
+}
+
+.season-fact-list article {
+  padding: 1.25rem 1.25rem 1.25rem 0;
+}
+
+.season-fact-list article + article {
+  padding-left: 1.25rem;
+  border-left: 1px solid rgba(64, 189, 244, 0.34);
+}
+
+.season-use-case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.season-use-case-card .pathway-card-image {
+  aspect-ratio: 4 / 3;
+}
+
+.season-use-case-card .pathway-card-copy h3 {
+  font-size: clamp(1.35rem, 2.1vw, 1.75rem);
+}
+
+.season-map-card {
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(2rem, 5vw, 4rem);
+  overflow: hidden;
+  border: 1px solid rgba(64, 189, 244, 0.44);
+  border-radius: var(--radius-card-md);
+  background: rgba(4, 21, 36, 0.72);
+  box-shadow: var(--shadow-blue-glow-soft);
+}
+
+.season-map-card img {
+  width: 100%;
+  min-height: 22rem;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.season-map-card figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  color: var(--color-muted);
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 900;
+}
+
+.season-map-card figcaption a {
+  color: var(--color-blue-400);
+  text-underline-offset: 0.25rem;
+}
+
+.season-pricing-tabs .tab-list {
+  margin-bottom: 1rem;
+}
+
+.season-pricing-tabs .tab-pill {
+  display: grid;
+  gap: 0.15rem;
+  min-width: min(100%, 15rem);
+  text-align: left;
+}
+
+.season-pricing-tabs .tab-pill small {
+  color: var(--color-muted);
+  font-size: 0.76rem;
+}
+
+.season-pricing-tabs .tab-pill[aria-selected='true'] small {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.season-pricing-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(340px, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+  padding: clamp(1.4rem, 3vw, 2.5rem);
+}
+
+.season-pricing-copy h3 {
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+}
+
+.season-pricing-copy > p:not(.eyebrow),
+.season-price-note {
+  color: var(--color-muted);
+}
+
+.season-check-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1.25rem 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.season-check-list li {
+  position: relative;
+  padding-left: 1.6rem;
+}
+
+.season-check-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-blue-400);
+}
+
+.season-price-note {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.season-pricing-art {
+  overflow: hidden;
+  border-radius: var(--radius-card-sm);
+  background: #ffffff;
+}
+
+.season-pricing-art img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.season-question-list {
+  border-top: 1px solid rgba(64, 189, 244, 0.42);
+}
+
+.season-question-list details {
+  border-bottom: 1px solid rgba(64, 189, 244, 0.42);
+}
+
+.season-question-list summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.35rem 0;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 900;
+  list-style: none;
+}
+
+.season-question-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.season-question-list summary span {
+  color: var(--color-blue-400);
+  font-size: 1.5rem;
+  transition: transform 180ms ease;
+}
+
+.season-question-list details[open] summary span {
+  transform: rotate(45deg);
+}
+
+.season-question-list details > div {
+  padding: 0 2.5rem 1.35rem 0;
+  color: var(--color-muted);
+}
+
+.season-final-grid {
+  align-items: center;
+}
+
+.season-final-grid > div > h2 {
+  max-width: 13ch;
+  font-size: clamp(2.2rem, 5vw, 4.25rem);
+}
+
+.season-contact-card h3 {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+}
+
 .compact-email-form {
   display: flex;
   gap: 0.5rem;
@@ -2767,6 +3068,11 @@ p {
   .season-block .landing-grid,
   .program-detail-grid,
   .season-conversion-grid,
+  .season-story-grid,
+  .season-club-grid,
+  .season-faq-grid,
+  .season-final-grid,
+  .season-pricing-panel,
   .support-landing-grid,
   .support-conversion-grid,
   .season-extras-grid,
@@ -2781,6 +3087,7 @@ p {
 
   .season-highlight-grid,
   .season-benefit-grid,
+  .season-use-case-grid,
   .support-pathway-grid,
   .program-impact-grid {
     grid-template-columns: 1fr;
@@ -2789,6 +3096,18 @@ p {
   .program-impact-grid .landing-stat-card + .landing-stat-card {
     border-top: 1px solid rgba(64, 189, 244, 0.3);
     border-left: 0;
+  }
+
+  .season-page-nav-inner .btn {
+    margin-left: 0;
+  }
+
+  .season-club-media {
+    min-height: clamp(27rem, 75vw, 38rem);
+  }
+
+  .season-pricing-art {
+    max-width: 38rem;
   }
 
   .support-conversion-grid .cta-row {
@@ -3022,6 +3341,58 @@ p {
   .pathway-card-copy .btn {
     max-width: 100%;
     white-space: normal;
+  }
+
+  .season-page-nav-inner {
+    gap: 0.6rem 1rem;
+    padding-block: 0.85rem;
+  }
+
+  .season-page-nav-inner > a:not(.btn) {
+    font-size: 0.8rem;
+  }
+
+  .season-page-nav-inner .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .season-club-media {
+    min-height: 26rem;
+  }
+
+  .season-club-primary {
+    inset: 0 8% 19% 0;
+    width: 92%;
+    height: 81%;
+  }
+
+  .season-club-secondary {
+    width: 58%;
+    height: 36%;
+  }
+
+  .season-fact-list {
+    grid-template-columns: 1fr;
+  }
+
+  .season-fact-list article + article {
+    padding-left: 0;
+    border-top: 1px solid rgba(64, 189, 244, 0.34);
+    border-left: 0;
+  }
+
+  .season-map-card img {
+    min-height: 15rem;
+  }
+
+  .season-map-card figcaption {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .season-pricing-tabs .tab-pill {
+    width: 100%;
   }
 
   .event-card {

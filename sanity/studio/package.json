@@ -11,7 +11,8 @@
     "dev": "sanity dev",
     "start": "sanity start",
     "sync:ai-knowledge": "sanity exec scripts/sync-ai-knowledge.mjs --with-user-token",
-    "sync:program-impact": "sanity exec scripts/sync-program-impact.mjs --with-user-token"
+    "sync:program-impact": "sanity exec scripts/sync-program-impact.mjs --with-user-token",
+    "sync:season-seats": "sanity exec scripts/sync-season-seats.mjs --with-user-token"
   },
   "keywords": [
     "sanity"

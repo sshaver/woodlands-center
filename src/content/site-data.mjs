@@ -1109,7 +1109,121 @@ export const seasonSeats = {
   image: asset('content-images/landing-pages/DSC00552.jpg'),
   primaryCTA: { label: 'Request Availability', type: 'popover', popoverId: 'seasonSeats' },
   learnMoreCTA: { label: 'Learn More', href: '/season-seats' },
-  holderLoginCTA: { label: 'SS Holder Log-In', href: 'CONFIGURE_ACCOUNT_MANAGER_URL_IN_CMS', type: 'external', openInNewTab: true },
+  holderLoginCTA: { label: 'Current Season Seat Holders Log In', href: 'https://am.ticketmaster.com/woodlands/', type: 'external', openInNewTab: true },
+  campaignHero: {
+    eyebrow: 'The Pavilion Experience / 2027',
+    title: 'Experience your soundtrack.',
+    subtitle: 'Your favorite artists. Your favorite people. A whole season of nights worth remembering.',
+    image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/TLC_Salt_N_Pepa_w_En_Vogue_65.jpg',
+    cta: { label: 'Schedule a Call', type: 'popover', popoverId: 'seasonSeats' }
+  },
+  experienceIntro: {
+    eyebrow: 'More than a seat',
+    title: 'The show is just the start.',
+    subtitle: 'Put the planning on pause. Put the good times on repeat.',
+    body: 'From your arrival to the last encore, Season Seats make the entire evening feel like your kind of night.'
+  },
+  experiencePerks: [
+    { title: 'Arrive like a VIP.', body: 'Private on-site parking and an exclusive entrance make getting to your seats part of the pleasure.' },
+    { title: 'Make yourself at home.', body: 'Enjoy premium seats under The Pavilion’s signature peaks, with access to the Woodforest Bank Club.' },
+    { title: 'Leave the details to us.', body: 'A dedicated customer service team is here to help you make the most of your season.' }
+  ],
+  clubFeature: {
+    eyebrow: 'The Woodforest Bank Club',
+    title: 'Your night. Amplified.',
+    subtitle: 'An exclusive space to settle in, catch up and keep the night going.',
+    body: 'Meet before the show. Share a meal. Make a toast to a favorite song. The Woodforest Bank Club brings your whole evening together.',
+    image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/CynthiaWoodsPavilion_009_JoeAker.png'
+  },
+  clubSecondaryImage: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/Midnight_Generation_6.jpg',
+  clubFacts: [
+    { title: 'Dinner, included.', body: 'Food and non-alcoholic beverages are included with your Season Seats.' },
+    { title: 'Set the mood.', body: 'Three full-service bars and a nightly happy hour.' }
+  ],
+  useCasesIntro: {
+    eyebrow: 'Good music. Even better company.',
+    title: 'Our next VIP? You.',
+    body: 'With 40+ shows hosted each year, there is always another reason to get together.'
+  },
+  useCases: [
+    {
+      label: 'Client Entertaining',
+      slug: 'client-entertaining',
+      summary: 'Make an impression',
+      title: 'Your client. Our next VIP.',
+      image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/10.7.22_Whiskey_Myers_0386.jpg',
+      body: 'Trade the usual meeting for an unforgettable night. Connect with clients over dinner, conversation and live music.'
+    },
+    {
+      label: 'Employee Rewards',
+      slug: 'employee-rewards',
+      summary: 'Turn up the thank-you',
+      title: 'Employee rewards. Amplified.',
+      image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/Keith_Urban_Fans_3.jpg',
+      body: 'Give your team something to look forward to. Celebrate a milestone or say thank you with tickets to a favorite show.'
+    },
+    {
+      label: 'Friends & Family',
+      slug: 'friends-family',
+      summary: 'Make it your tradition',
+      title: 'Your people. Your soundtrack.',
+      image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/Empire_of_the_Sun_20.jpg',
+      body: 'Bring the people who know every word. Make a standing date for the moments you will talk about long after the encore.'
+    }
+  ],
+  seatingIntro: {
+    eyebrow: 'Pick your seats. Never miss a moment.',
+    title: 'The best seats. Every show.',
+    body: 'Your spot for the season starts here. Explore premium seating and luxury boxes. All Season Seats are under The Pavilion’s signature peaks.',
+    image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/Final_3D_Seating_Chart.png'
+  },
+  pricingOptions: [
+    {
+      label: 'Premium Seats',
+      slug: 'premium-seats',
+      eyebrow: 'The Premium Seat Experience',
+      title: 'Your seat. Your season.',
+      summary: '$7,500–$20,200',
+      body: 'Get closer to the music with premium seating and the amenities that make every visit feel effortless.',
+      image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/Seat_Pricing_02.png',
+      items: ['Private on-site parking', 'Exclusive entrance', 'Access to the Woodforest Bank Club', 'Food and non-alcoholic beverages included', 'Dedicated customer service team'],
+      cta: { label: 'Schedule a Call', type: 'popover', popoverId: 'seasonSeats' }
+    },
+    {
+      label: 'Luxury Boxes',
+      slug: 'luxury-boxes',
+      eyebrow: 'The Luxury Box Experience',
+      title: 'Your own encore.',
+      summary: '$41,900–$62,000',
+      body: 'A shared space for a standout night. Choose a four- or six-seat box for clients, colleagues, friends or family.',
+      image: 'https://s3.dualstack.us-east-1.amazonaws.com/busites_www/cynthiawoods/pages/Box_Pricing_02_.png',
+      items: ['All premium seat amenities', 'Cushioned seating', 'In-seat wait service', 'Personalized nameplate', 'Four- and six-seat box options'],
+      cta: { label: 'Schedule a Call', type: 'popover', popoverId: 'seasonSeats' }
+    }
+  ],
+  faqIntro: {
+    eyebrow: 'A few good notes',
+    title: 'Before you go.',
+    body: 'Talk through your questions with our Season Seat team.'
+  },
+  faqs: [
+    { question: 'What comes with the Season Seat experience?', answer: 'Premium seating, private on-site parking, an exclusive entrance, Woodforest Bank Club access, included food and non-alcoholic beverages and a dedicated customer service team.' },
+    { question: 'What makes a luxury box different?', answer: 'Luxury boxes include the premium seat amenities, plus cushioned seats, in-seat wait service and a personalized nameplate. Four- and six-seat box options are available.' },
+    { question: 'How do I access or transfer my tickets?', answer: 'Current Season Seat Holders can access, transfer or accept tickets through Account Manager using the holder login at the top of this page.' },
+    { question: 'How do I find out what is available?', answer: 'Schedule a call with our Season Seat team to talk through seating options, pricing and current availability. You can also call JD Villaseñor at 281-210-1121.' }
+  ],
+  salesContact: {
+    eyebrow: 'Your Season Seats Contact',
+    title: 'JD Villaseñor',
+    body: 'Compare seating options, talk through the amenities and find the right fit for your season.',
+    cta: { label: 'Call 281-210-1121', href: 'tel:2812101121' }
+  },
+  campaignConversion: {
+    eyebrow: 'Your next great night starts here.',
+    title: 'Push play on your 2027 playlist.',
+    body: 'Tell us when you would prefer a call to discuss seating, pricing and availability.',
+    cta: { label: 'Schedule a Call', type: 'popover', popoverId: 'seasonSeats' }
+  },
   placeMap: {
     title: 'Find Your Place at The Pavilion',
     image: {

@@ -98,6 +98,95 @@ export const seasonSeats = {
     { name: 'learnMoreCTA', title: 'Learn More CTA', type: 'cta' },
     { name: 'holderLoginCTA', title: 'Holder Login CTA', type: 'cta' },
     {
+      name: 'campaignHero',
+      title: 'Page Hero',
+      type: 'mediaBlock',
+      description: 'Top of the Season Seats page: eyebrow, headline, supporting copy, hero image and main Schedule a Call button.'
+    },
+    {
+      name: 'experienceIntro',
+      title: 'Experience Introduction',
+      type: 'mediaBlock',
+      description: 'The “Show Is Just the Start” introduction immediately below the hero.'
+    },
+    {
+      name: 'experiencePerks',
+      title: 'Experience Benefits',
+      type: 'array',
+      description: 'The three benefit rows beneath the experience introduction. Use Title and Body for each row.',
+      of: [{ type: 'mediaBlock' }]
+    },
+    {
+      name: 'clubFeature',
+      title: 'Woodforest Bank Club Feature',
+      type: 'mediaBlock',
+      description: 'Main Club image, eyebrow, title, lead copy and body copy.'
+    },
+    {
+      name: 'clubSecondaryImage',
+      title: 'Woodforest Bank Club Secondary Image',
+      type: 'mediaAsset',
+      description: 'Smaller supporting image paired with the main Club image.'
+    },
+    {
+      name: 'clubFacts',
+      title: 'Woodforest Bank Club Details',
+      type: 'array',
+      description: 'Short Club details such as included dinner and bar service. Use Title and Body for each detail.',
+      of: [{ type: 'mediaBlock' }]
+    },
+    {
+      name: 'useCasesIntro',
+      title: 'Season Seats Uses Introduction',
+      type: 'mediaBlock',
+      description: 'Heading and body above the client, employee and friends/family cards.'
+    },
+    {
+      name: 'useCases',
+      title: 'Season Seats Uses',
+      type: 'array',
+      description: 'Cards explaining how Season Seats work for client entertaining, employee rewards and personal traditions.',
+      of: [{ type: 'tab' }]
+    },
+    {
+      name: 'seatingIntro',
+      title: 'Seating and Pricing Introduction',
+      type: 'mediaBlock',
+      description: 'Heading, body and 3D seating map at the start of the seating section.'
+    },
+    {
+      name: 'pricingOptions',
+      title: 'Pricing Options',
+      type: 'array',
+      description: 'Tabbed Premium Seats and Luxury Boxes content. Summary is used for the price range; add amenities under Bulleted Items.',
+      of: [{ type: 'tab' }]
+    },
+    {
+      name: 'faqIntro',
+      title: 'FAQ Introduction',
+      type: 'mediaBlock',
+      description: 'Heading and supporting copy beside the Season Seats questions.'
+    },
+    {
+      name: 'faqs',
+      title: 'Season Seats Questions',
+      type: 'array',
+      description: 'Expandable questions near the bottom of the page.',
+      of: [{ type: 'faqItem' }]
+    },
+    {
+      name: 'salesContact',
+      title: 'Season Seats Sales Contact',
+      type: 'mediaBlock',
+      description: 'Direct contact card in the final call-to-action section. Use Title for the person’s name, Body for the guidance and CTA for the phone link.'
+    },
+    {
+      name: 'campaignConversion',
+      title: 'Final Season Seats Call to Action',
+      type: 'conversionBlock',
+      description: 'Final “Push Play” section above the sales contact card.'
+    },
+    {
       name: 'placeMap',
       title: 'Find Your Place Map + Pricing Chart',
       type: 'mediaBlock',

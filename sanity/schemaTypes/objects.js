@@ -128,6 +128,8 @@ export const tab = {
       description: 'Internal anchor for this tab. Usually auto-generated from the label.',
       options: { source: 'label' }
     },
+    { name: 'eyebrow', title: 'Content Eyebrow', type: 'string', description: 'Optional small label shown inside the active tab panel.' },
+    { name: 'title', title: 'Content Title', type: 'string', description: 'Optional larger heading shown inside the active tab panel. Leave blank to reuse the tab button label.' },
     { name: 'summary', title: 'Card Summary', type: 'text', rows: 3, description: 'Short preview text used by some card-style tab layouts.' },
     { name: 'body', title: 'Tab Body', type: 'text', rows: 5, description: 'Main copy shown inside this tab panel.' },
     { name: 'image', title: 'Tab Image', type: 'mediaAsset', description: 'Optional image shown inside this tab panel when the layout supports it.' },
@@ -136,6 +138,32 @@ export const tab = {
   ],
   preview: {
     select: { title: 'label', subtitle: 'summary', media: 'image' }
+  }
+};
+
+export const faqItem = {
+  name: 'faqItem',
+  title: 'Frequently Asked Question',
+  type: 'object',
+  fields: [
+    {
+      name: 'question',
+      title: 'Question',
+      type: 'string',
+      description: 'The question shown in the expandable row.',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'answer',
+      title: 'Answer',
+      type: 'text',
+      rows: 5,
+      description: 'The answer revealed when a visitor opens the row. Paragraph breaks are supported.',
+      validation: (Rule) => Rule.required()
+    }
+  ],
+  preview: {
+    select: { title: 'question', subtitle: 'answer' }
   }
 };
 
