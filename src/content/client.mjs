@@ -42,10 +42,20 @@ const normalizeExternalRoutes = (routes) => {
 const normalizeNavigation = (navigation) => {
   if (!navigation) return navigation;
   const cmsPrimaryByHref = new Map((navigation.desktopPrimary || []).map((item) => [item.href, item]));
+  const cmsUtilityByHref = new Map((navigation.utility || []).map((item) => [item.href, item]));
+  const cmsFooterByHref = new Map((navigation.footer || []).map((item) => [item.href, item]));
   return {
     ...navigation,
     desktopPrimary: fixtures.navigation.desktopPrimary.map((item) => ({
       ...(cmsPrimaryByHref.get(item.href) || {}),
+      ...item
+    })),
+    utility: fixtures.navigation.utility.map((item) => ({
+      ...(cmsUtilityByHref.get(item.href) || {}),
+      ...item
+    })),
+    footer: fixtures.navigation.footer.map((item) => ({
+      ...(cmsFooterByHref.get(item.href) || {}),
       ...item
     }))
   };

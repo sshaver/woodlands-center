@@ -391,6 +391,7 @@ const eventCard = (event, featured = false) => `
       <span class="card-link-arrow" aria-hidden="true">${svgIcon('arrow-right', { className: 'btn-icon icon-white' })}</span>
     </a>
     <div class="event-card-body">
+      ${event.eventType === 'freeCommunity' ? '<span class="free-show-pill">Free Show</span>' : ''}
       <p class="event-date">${esc(fmtDate(event.eventDate))}</p>
       <h3><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h3>
       ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
@@ -406,6 +407,7 @@ const eventRows = (events) => `
           <article class="event-row event-type-${attr(event.eventType)}">
             <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))}</time>
             <div>
+              ${event.eventType === 'freeCommunity' ? '<span class="free-show-pill">Free Show</span>' : ''}
               <h3><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h3>
               <p>${esc(event.subheader || event.eventStartTime)}</p>
             </div>
@@ -428,6 +430,7 @@ const showRail = (events = upcomingEvents(), { eagerCount = 0 } = {}) => `
             <a href="/events/${attr(event.slug)}/"${analyticsAttrs('event_card_click', { eventName: event.title, eventSlug: event.slug, eventType: event.eventType, context: 'show_rail' })}>
               <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="${index < eagerCount ? 'eager' : 'lazy'}" decoding="async">
               <span>
+                ${event.eventType === 'freeCommunity' ? '<em class="free-show-pill">Free Show</em>' : ''}
                 <small>${esc(fmtDate(event.eventDate))}</small>
                 <strong>${esc(event.title)}</strong>
               </span>
@@ -608,7 +611,7 @@ const homeExperienceBlock = () => {
             <div class="home-latest-story-content">
               <p class="eyebrow">Latest Story</p>
               <h3>${esc(latestStory?.title || content.blocks.video.title)}</h3>
-              ${cta({ label: latestStory?.ctaLabel || 'Read the latest story', href: storyHref }, 'primary')}
+              ${cta({ label: latestStory?.ctaLabel || 'Read the latest story', href: storyHref }, 'secondary')}
             </div>
           </article>
 
@@ -617,7 +620,7 @@ const homeExperienceBlock = () => {
             <div>
               <p class="eyebrow">Season Seats</p>
               <h3>${esc(content.seasonSeats.title)}</h3>
-              ${cta(content.seasonSeats.learnMoreCTA || { label: 'Explore Season Seats', href: '/season-seats' }, 'primary')}
+              ${cta(content.seasonSeats.learnMoreCTA || { label: 'Explore Season Seats', href: '/season-seats' }, 'secondary')}
             </div>
           </article>
 
@@ -695,7 +698,7 @@ const sponsorLogo = (sponsor = {}) => {
   const sponsorMarkup = `
     <span class="sponsor-card-inner">
       ${sponsorInner}
-      ${sponsor.subtitle ? `<small>${esc(sponsor.subtitle)}</small>` : ''}
+      <small>${esc(sponsor.name)}</small>
     </span>
   `;
   return sponsor.href
@@ -705,6 +708,10 @@ const sponsorLogo = (sponsor = {}) => {
 
 const sponsorGroupsBlock = (groups = [], options = {}) => {
   if (!groups.length) return '';
+  const orderedGroups = groups.slice().sort((a, b) => {
+    const rank = (group) => (group.title?.toLowerCase().includes('live nation') ? 0 : group.title?.toLowerCase().includes('performing arts') ? 1 : 2);
+    return rank(a) - rank(b);
+  });
   const eyebrow = options.eyebrow || 'Sponsors';
   const title = options.title || 'Thanks to our season sponsors';
   const sectionId = options.sectionId || 'site-sponsors-title';
@@ -716,7 +723,7 @@ const sponsorGroupsBlock = (groups = [], options = {}) => {
           <h2 id="${attr(sectionId)}">${esc(title)}</h2>
         </div>
         <div class="sponsor-group-grid">
-          ${groups
+          ${orderedGroups
             .map(
               (group) => `
                 <article class="sponsor-group-card">
@@ -845,7 +852,7 @@ const header = (routePath, theme) => `
           .join('')}
       </nav>
       <div class="utility-nav">
-        ${content.navigation.utility.map((item) => `<a href="${attr(item.href)}" data-popover-open="${attr(item.popoverId)}">${esc(item.label)}</a>`).join('')}
+        ${content.navigation.utility.map((item) => `<a class="utility-cta" href="${attr(item.href)}"${item.popoverId ? ` data-popover-open="${attr(item.popoverId)}"` : ''}>${esc(item.label)}</a>`).join('')}
         <button type="button" class="menu-button" data-menu-open aria-label="Open menu">${svgIcon('bars', { className: 'control-icon' })}</button>
       </div>
     </div>
@@ -870,17 +877,18 @@ const footer = (theme) => `
       <div>
         <img src="${attr(theme === 'light' ? content.settings.logoBlue : content.settings.logoWhite)}" alt="${attr(content.settings.siteName)}">
         <p>The Pavilion brings world-class performances, free arts experiences, education programs and community moments to The Woodlands all season long.</p>
+        <address class="footer-contact">
+          <span>2005 Lake Robbins Drive<br>The Woodlands, TX 77380</span>
+          <a href="tel:+12813643024">281-364-3024</a>
+          <a href="mailto:info@woodlandscenter.org">info@woodlandscenter.org</a>
+        </address>
       </div>
-      <nav aria-label="Footer">
+      <nav class="footer-link-pills" aria-label="Footer">
         ${content.navigation.footer.map((item) => {
           const link = navItem(item);
-          return `<a href="${attr(link.href)}">${esc(link.label)}</a>`;
+          return `<a class="${item.featured ? 'is-featured' : ''}" href="${attr(link.href)}"${item.popoverId ? ` data-popover-open="${attr(item.popoverId)}"` : ''}${link.openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(link.label)}</a>`;
         }).join('')}
       </nav>
-      <div class="footer-actions">
-        ${cta({ label: 'Contact', type: 'popover', popoverId: 'contact' }, 'secondary')}
-        ${cta({ label: 'Get Emails', type: 'popover', popoverId: 'get-emails' }, 'primary')}
-      </div>
     </div>
   </footer>
 `;
@@ -1006,6 +1014,7 @@ const eventsPage = () => {
                           <img src="${attr(event.cardImage || event.headerImage)}" alt="${attr(event.title)}" loading="lazy" decoding="async">
                         </a>
                         <div class="events-chart-copy">
+                          ${event.eventType === 'freeCommunity' ? '<span class="free-show-pill">Free Show</span>' : ''}
                           <time datetime="${attr(event.eventDate)}">${esc(fmtDate(event.eventDate))} · ${esc(event.eventStartTime)}</time>
                           <h2><a href="/events/${attr(event.slug)}/">${esc(event.title)}</a></h2>
                           ${event.subheader ? `<p>${esc(event.subheader)}</p>` : ''}
@@ -1016,10 +1025,14 @@ const eventsPage = () => {
                             ${svgIcon('square-parking', { className: 'site-icon icon-blue' })}
                             <span>Parking</span>
                           </a>
-                          <a class="icon-action" href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs for ${attr(event.title)}"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
-                            ${svgIcon('chair', { className: 'site-icon icon-blue' })}
-                            <span>Lawn Chairs</span>
-                          </a>
+                          ${
+                            event.eventType === 'freeCommunity'
+                              ? ''
+                              : `<a class="icon-action" href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer" aria-label="Rent lawn chairs for ${attr(event.title)}"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'events_chart' })}>
+                                  ${svgIcon('chair', { className: 'site-icon icon-blue' })}
+                                  <span>Lawn Chairs</span>
+                                </a>`
+                          }
                         </div>
                       </article>
                     `
@@ -1146,7 +1159,11 @@ const eventDetailPage = (event) => {
             : `<nav class="event-sticky-bar" data-event-sticky-bar aria-label="Quick event actions">
                 <a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('ticket', { className: 'site-icon icon-blue' })}<span>${esc(event.ctaLabel || 'Get Tickets')}</span></a>
                 <a href="${attr(event.parkingLink)}"${analyticsAttrs('parking_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('square-parking', { className: 'site-icon icon-blue' })}<span>Parking</span></a>
-                <a href="${attr(event.bagPolicyLink)}"${analyticsAttrs('bag_policy_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('bag-shopping', { className: 'site-icon icon-blue' })}<span>Bag Policy</span></a>
+                ${
+                  event.eventType === 'freeCommunity'
+                    ? `<a href="${attr(event.bagPolicyLink)}"${analyticsAttrs('bag_policy_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('bag-shopping', { className: 'site-icon icon-blue' })}<span>Bag Policy</span></a>`
+                    : `<a href="${attr(event.lawnChairPurchaseLink || event.lawnChairLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('lawn_chair_click', { eventName: event.title, eventSlug: event.slug, context: 'sticky_bar' })}>${svgIcon('chair', { className: 'site-icon icon-blue' })}<span>Rent Lawn Chairs</span></a>`
+                }
               </nav>`
         }
         <section class="section">
@@ -1191,9 +1208,11 @@ const eventDetailPage = (event) => {
               </article>
               <article>
                 <span class="info-icon">${svgIcon('ticket', { className: 'site-icon icon-blue' })}</span>
-                <h3>Ticket Information</h3>
-                <p>Have mobile tickets ready before you reach the gate. Event timing, entry policies and artist-specific notes may change, so review this page again before leaving.</p>
-                ${eventHasPassed ? '' : `<a href="${attr(event.ticketLink)}" target="_blank" rel="noopener noreferrer"${analyticsAttrs('get_tickets_click', { eventName: event.title, eventSlug: event.slug, context: 'know_before_you_go' })}>Open tickets</a>`}
+                ${
+                  event.eventType === 'freeCommunity'
+                    ? `<h3>No Tickets Required</h3><p>This Performing Arts show is free. Arrive early, review the event schedule and enjoy the performance without purchasing a ticket.</p><a href="/plan-your-visit/">Plan your visit</a>`
+                    : `<h3>Ticket Details</h3><p>Have mobile tickets ready before you reach the gate. Event timing, entry policies and artist-specific notes may change, so review this page again before leaving.</p>${eventHasPassed ? '' : `<a href="/plan-your-visit/">Review ticket details</a>`}`
+                }
               </article>
             </div>
           </div>
@@ -1286,6 +1305,184 @@ const programDetailSection = (page) => `
   }
   ${page.video ? videoBlock(page.video, 'section-wash-deep', 'left') : ''}
 `;
+
+const programSectionAnchor = (item = {}) => `program-${item.slug || slugifyTopic(item.label || 'section')}`;
+
+const programImpactFeatureSection = (page) => {
+  const feature = page.impactFeature || {
+    eyebrow: 'Program impact',
+    title: `${page.title} at work.`,
+    body: page.subtitle,
+    image: page.image || page.heroImage
+  };
+  const primaryImage = feature.image || page.image || page.heroImage;
+  return `
+    <section class="section program-impact-feature section-wash-lift" id="program-impact">
+      <div class="container season-club-grid program-impact-feature-grid">
+        <div class="season-club-media program-impact-media">
+          ${primaryImage ? image(primaryImage, 'season-club-primary') : ''}
+          ${page.impactSecondaryImage ? image(page.impactSecondaryImage, 'season-club-secondary') : ''}
+        </div>
+        <div class="season-club-copy program-impact-copy">
+          ${sectionHeading(feature.eyebrow || 'Program impact', feature.title, [feature.subtitle, feature.body].filter(Boolean).join('\n\n'))}
+          ${statCards(page.impactStats || [], 'program-impact-feature-stats')}
+        </div>
+      </div>
+      ${
+        page.quoteHighlight
+          ? `<div class="container program-impact-quote"><blockquote>${paragraphsFromText(page.quoteHighlight)}</blockquote></div>`
+          : ''
+      }
+    </section>
+  `;
+};
+
+const programPageNav = (page) => {
+  const sectionLinks = (page.tabs || [])
+    .map((item) => `<a href="#${attr(programSectionAnchor(item))}">${esc(item.label)}</a>`)
+    .join('');
+  return `
+    <nav class="season-page-nav program-page-nav" aria-label="${attr(page.title)} page sections">
+      <div class="container season-page-nav-inner program-page-nav-inner">
+        ${sectionLinks}
+        ${page.video ? '<a href="#program-impact-video">Impact video</a>' : ''}
+        <a href="#program-stay-connected">Stay connected</a>
+      </div>
+    </nav>
+  `;
+};
+
+const programKeyInfoSection = (page, item = {}) => {
+  const details = item.items?.length
+    ? item.items
+    : String(item.body || item.summary || page.subtitle || '')
+        .split(/\n\s*\n/)
+        .filter(Boolean);
+  return `
+    <section class="section program-key-section section-wash-deep" id="${attr(programSectionAnchor(item))}">
+      <div class="container season-story-grid program-key-grid">
+        <div class="season-story-copy">
+          ${sectionHeading(item.eyebrow || 'Start here', item.title || item.label || 'Key information', item.body || item.summary)}
+          ${item.cta ? cta(item.cta, 'secondary') : ''}
+        </div>
+        <div class="season-perk-list program-key-list">
+          ${details
+            .map(
+              (detail, index) => `
+                <article>
+                  <span class="season-step" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+                  <div><p>${esc(detail)}</p></div>
+                </article>
+              `
+            )
+            .join('')}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+const programStorySection = (page, item, index) => {
+  const sectionImage = item.image || page.image || page.heroImage;
+  const reversed = index % 2 === 1;
+  return `
+    <section class="section program-story-section ${reversed ? 'section-wash-lift' : 'section-wash-deep'}" id="${attr(programSectionAnchor(item))}">
+      <div class="container program-story-grid ${reversed ? 'program-story-grid-reversed' : ''}">
+        <div class="program-story-media">
+          ${sectionImage ? image(sectionImage, '', 'lazy') : ''}
+        </div>
+        <div class="program-story-copy">
+          ${item.eyebrow ? `<p class="eyebrow">${esc(item.eyebrow)}</p>` : ''}
+          <h2>${esc(item.title || item.label)}</h2>
+          ${item.summary ? `<p class="program-story-summary">${esc(item.summary)}</p>` : ''}
+          ${paragraphsFromText(item.body)}
+          ${item.items?.length ? `<ul class="program-story-list">${item.items.map((detail) => `<li>${esc(detail)}</li>`).join('')}</ul>` : ''}
+          ${item.cta ? cta(item.cta, 'secondary') : ''}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+const programImpactVideoSection = (page) => {
+  const video = page.video || {};
+  if (!video.title && !video.poster && !video.image) return '';
+  const poster = video.poster || video.image || page.image || page.heroImage;
+  const videoHref = configuredValue(video.href);
+  return `
+    <section class="section program-video-section section-wash-deep" id="program-impact-video">
+      <div class="container video-block media-block media-left">
+        <div class="video-poster">
+          ${poster ? image(poster, '', 'lazy') : ''}
+          ${
+            videoHref
+              ? `<a class="play-button" href="${attr(videoHref)}" aria-label="Play ${attr(video.title)}">${svgIcon('play', { className: 'play-icon icon-white' })}</a>`
+              : ''
+          }
+        </div>
+        ${sectionHeading(video.eyebrow || 'Impact video', video.title, video.subtitle || video.body, video.cta ? cta(video.cta, 'secondary') : '')}
+      </div>
+    </section>
+  `;
+};
+
+const programInlineFormSection = (page) => {
+  const conversion = page.conversion || {};
+  const form = content.forms.missionSeekers || content.forms['get-emails'];
+  if (!form) return '';
+  return `
+    <section class="section program-inline-form-section section-wash-deep" id="program-stay-connected">
+      <div class="container program-inline-form-grid">
+        <div>
+          ${conversion.eyebrow ? `<p class="eyebrow">${esc(conversion.eyebrow)}</p>` : ''}
+          <h2>${esc(conversion.title || form.title || 'Stay connected')}</h2>
+          ${paragraphsFromText(conversion.body || form.subtitle)}
+        </div>
+        <div class="program-inline-form-panel">
+          <form class="program-mock-form" aria-label="Mission updates signup preview">
+            <div class="program-mock-form-row">
+              <label>
+                <span>First name</span>
+                <input type="text" name="first-name" autocomplete="given-name" placeholder="First name">
+              </label>
+              <label>
+                <span>Last name</span>
+                <input type="text" name="last-name" autocomplete="family-name" placeholder="Last name">
+              </label>
+            </div>
+            <label>
+              <span>Email address</span>
+              <input type="email" name="email" autocomplete="email" placeholder="you@example.com">
+            </label>
+            <button class="btn btn-primary" type="button">Join the mission</button>
+          </form>
+          ${form.privacyCopy ? `<p class="fine-print">${esc(form.privacyCopy)}</p>` : ''}
+        </div>
+      </div>
+    </section>
+  `;
+};
+
+const programScrollPage = (page) => {
+  const [keyInfo, ...programSections] = page.tabs || [];
+  return `
+    ${programImpactFeatureSection(page)}
+    ${programPageNav(page)}
+    ${programKeyInfoSection(page, keyInfo || { label: 'Key information', slug: 'key-information', body: page.subtitle })}
+    ${programSections.map((item, index) => programStorySection(page, item, index)).join('')}
+    ${
+      page.sponsorGroups?.length
+        ? sponsorGroupsBlock(page.sponsorGroups, {
+            eyebrow: 'Corporate Partners',
+            title: 'Current Corporate Sponsors',
+            sectionId: `${page.slug.replaceAll('/', '-')}-sponsors-title`
+          })
+        : ''
+    }
+    ${programImpactVideoSection(page)}
+    ${programInlineFormSection(page)}
+  `;
+};
 
 const seasonPageNav = () => `
   <nav class="season-page-nav" aria-label="Season Seats page sections">
@@ -1513,18 +1710,22 @@ const supportArtsLandingSection = (page) => {
   };
   return `
     <section class="section support-landing-section section-wash-deep">
-      <div class="container support-landing-grid">
-        <div>
-          ${sectionHeading(supportIntro.eyebrow, supportIntro.title, supportIntro.subtitle || supportIntro.body)}
-          ${pathwayCards(page.tabs || [], 'support-pathway-grid')}
+      <div class="container">
+        ${sectionHeading(supportIntro.eyebrow, supportIntro.title, supportIntro.subtitle || supportIntro.body)}
+        ${pathwayCards(page.tabs || [], 'support-pathway-grid')}
+      </div>
+    </section>
+    <section class="section support-proof-section section-wash-lift">
+      <div class="container season-club-grid support-proof-feature-grid">
+        <div class="season-club-media support-proof-media">
+          ${image(page.heroImage || content.mission.heroImage, 'season-club-primary')}
+          ${content.mission.humanProof?.image ? image(content.mission.humanProof.image, 'season-club-secondary') : ''}
         </div>
-        <aside class="support-proof-panel">
-          <p class="eyebrow">${esc(supportProof.eyebrow)}</p>
-          <h2>${esc(supportProof.title)}</h2>
-          ${paragraphsFromText(supportProof.body || supportProof.subtitle)}
-          ${statCards(content.mission.impactStats || [], 'support-stat-grid')}
-          ${supportProof.cta ? cta(supportProof.cta, 'primary') : ''}
-        </aside>
+        <div class="season-club-copy support-proof-copy">
+          ${sectionHeading(supportProof.eyebrow, supportProof.title, supportProof.body || supportProof.subtitle)}
+          ${statCards(content.mission.impactStats || [], 'program-impact-feature-stats')}
+          ${supportProof.cta ? cta(supportProof.cta, 'secondary') : ''}
+        </div>
       </div>
     </section>
     <section class="section support-conversion-band section-wash-lift">
@@ -1546,6 +1747,7 @@ const supportArtsLandingSection = (page) => {
 
 const landingPage = (page, routePath = `/${page.slug}`) => {
   const isSupportArtsPage = page.templatePreset === 'supportArts' && page.slug === 'mission/support-the-arts';
+  const isProgramScrollPage = page.layoutVariant === 'programScroll';
   const renderPage = isSupportArtsPage ? supportDonationPage(page) : page;
   return shell({
     title: page.title,
@@ -1555,7 +1757,13 @@ const landingPage = (page, routePath = `/${page.slug}`) => {
     storyFooter: false,
     body: `
       ${landingHero(renderPage)}
-      ${isSupportArtsPage ? supportArtsLandingSection(renderPage) : programDetailSection(renderPage)}
+      ${
+        isSupportArtsPage
+          ? supportArtsLandingSection(renderPage)
+          : isProgramScrollPage
+            ? programScrollPage(renderPage)
+            : programDetailSection(renderPage)
+      }
       ${renderPage.templatePreset === 'freeShows' ? eventListBlock('Free Community Shows', 'freeCommunity') : ''}
     `
   });
@@ -1624,6 +1832,9 @@ const grantPage = (program) =>
     heroImage: program.image,
     templatePreset: 'Funding the Arts',
     primaryCTA: program.applicationCTA,
+    layoutVariant: program.layoutVariant || 'programScroll',
+    impactFeature: program.impactFeature,
+    impactSecondaryImage: program.impactSecondaryImage,
     tabsEyebrow: program.tabsEyebrow,
     tabsTitle: program.tabsTitle,
     tabsBody: program.tabsBody,
@@ -1638,10 +1849,7 @@ const grantPage = (program) =>
     tabs: program.tabs,
     quoteHighlight: program.quoteHighlight,
     finalCTA: program.finalCTA,
-    video:
-      program.video?.href || program.video?.cta?.href
-        ? { ...program.video, poster: program.video.poster || program.video.image || program.image }
-        : null,
+    video: program.video ? { ...program.video, poster: program.video.poster || program.video.image || program.image } : null,
     slug: `mission/funding/${program.slug}`,
     seo: program.seo
   });
@@ -1654,16 +1862,16 @@ const outreachPage = (program) =>
     templatePreset: 'Arts Outreach',
     primaryCTA: program.primaryCTA,
     secondaryCTA: program.secondaryCTA,
+    layoutVariant: program.layoutVariant || 'programScroll',
+    impactFeature: program.impactFeature,
+    impactSecondaryImage: program.impactSecondaryImage,
     tabsEyebrow: program.tabsEyebrow,
     tabsTitle: program.tabsTitle,
     tabsBody: program.tabsBody,
     tabsCTA: program.tabsCTA,
     impactStats: program.impactStats,
     conversion: program.conversion,
-    video:
-      program.slug === 'chamberfest-strings-camp' && (program.video?.href || program.video?.cta?.href)
-        ? { ...program.video, poster: program.video.poster || program.video.image || program.image }
-        : null,
+    video: program.video ? { ...program.video, poster: program.video.poster || program.video.image || program.image } : null,
     tabs: program.tabs,
     quoteHighlight: program.quoteHighlight,
     finalCTA: program.finalCTA,
@@ -2093,10 +2301,14 @@ const storyHubRecentSection = ({ topic = null, currentSlug = '' } = {}) => {
       <section class="section story-recent-section">
         <div class="container">
           ${sectionHeading('Recent Stories', 'Fresh from The Pavilion', 'Filter by topic or browse the latest stories.')}
-          <div class="topic-filter-row" id="story-topics">
+        </div>
+        <nav class="season-page-nav story-topic-nav" id="story-topics" aria-label="Story topics">
+          <div class="container season-page-nav-inner story-topic-nav-inner">
             <a class="${topic ? '' : 'is-active'}" href="/story-hub/#story-topics"${analyticsAttrs('story_filter', { topic: 'All' })}>All</a>
             ${content.storyTopics.map((item) => `<a class="${topic === slugifyTopic(item) ? 'is-active' : ''}" href="/story-hub/topic/${slugifyTopic(item)}/#story-topics"${analyticsAttrs('story_filter', { topic: item })}>${esc(item)}</a>`).join('')}
           </div>
+        </nav>
+        <div class="container story-recent-cards">
           ${storyCards(stories)}
         </div>
       </section>

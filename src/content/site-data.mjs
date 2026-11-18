@@ -25,8 +25,7 @@ export const navigation = {
     { label: 'Plan your visit', href: '/plan-your-visit', icon: 'location-dot' }
   ],
   utility: [
-    { label: 'Contact', href: '#contact', popoverId: 'contact' },
-    { label: 'Get Emails', href: '#get-emails', popoverId: 'get-emails' }
+    { label: 'Season Tickets', href: '/season-seats' }
   ],
   mobileDock: [
     { label: 'Season Seats', href: '/season-seats', icon: 'crown' },
@@ -36,6 +35,7 @@ export const navigation = {
     { label: 'Mission', href: '/mission', icon: 'violin' }
   ],
   footer: [
+    { label: 'Season Seats', href: '/season-seats' },
     { label: 'Staff', href: '/staff' },
     { label: 'Leadership', href: '/staff' },
     { label: 'History', href: '/history' },
@@ -44,7 +44,9 @@ export const navigation = {
     { label: 'Staff Log In', href: '/staff-login' },
     { label: 'Rent The Pavilion', href: '/rent' },
     { label: 'Volunteers', href: '/volunteer' },
-    { label: 'Donate', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS' }
+    { label: 'Donate', href: 'CONFIGURE_DONORPERFECT_DONATION_URL_IN_CMS' },
+    { label: 'Contact', href: '#contact', popoverId: 'contact', featured: true },
+    { label: 'Get Emails', href: '#get-emails', popoverId: 'get-emails', featured: true }
   ]
 };
 
@@ -1333,6 +1335,19 @@ export const grantPrograms = [
     applicationCTA: { label: 'Apply Now', href: 'CONFIGURE_ACCEPTD_URL_IN_CMS', type: 'external', openInNewTab: true }
   }
 ].map((program) => ({
+  layoutVariant: 'programScroll',
+  impactFeature: {
+    eyebrow: 'Program impact',
+    title: `${program.title} at work.`,
+    body: program.subtitle,
+    image: program.image
+  },
+  video: {
+    eyebrow: 'Impact video',
+    title: `${program.title} in action`,
+    subtitle: 'Add a short program video in Sanity when one is available.',
+    poster: program.image
+  },
   quoteHighlight: program.quoteHighlight || '',
   finalCTA: program.applicationCTA ? { ...program.applicationCTA, label: 'Apply Today' } : null,
   tabs: program.tabs || (program.slug === 'scholarships'
@@ -1461,7 +1476,15 @@ const outreachProgramDetails = {
     ]
   },
   'arts-on-the-go': {
+    layoutVariant: 'programScroll',
     primaryCTA: { label: 'Register Your Class or School', href: 'CONFIGURE_GOOGLE_SHEETS_URL_IN_CMS', type: 'external', openInNewTab: true },
+    impactFeature: {
+      eyebrow: 'Program impact',
+      title: 'Arts access, delivered to the classroom.',
+      body: 'Arts on the Go gives teachers a ready-to-use way to bring creativity into the school day. Each box pairs curriculum-based activities with supplies, take-home pieces and multimedia prompts that make the arts approachable for students and practical for educators.',
+      image: asset('content-images/mission/Moorehead JHS-28.jpg')
+    },
+    impactSecondaryImage: asset('content-images/mission/Moorehead JHS-3.jpg'),
     impactStats: [
       { value: '595', label: 'boxes delivered' },
       { value: '13,875', label: 'students impacted' },
@@ -1472,6 +1495,9 @@ const outreachProgramDetails = {
       {
         label: 'Key Information',
         slug: 'key-information',
+        eyebrow: 'Start here',
+        title: 'What educators need to know.',
+        body: 'Arts on the Go is designed to make participation simple for schools and teachers. A few details help each box reach the right classroom at the right time.',
         items: [
           'Registration is required.',
           'Boxes are available on a first-come, first-served basis.',
@@ -1479,10 +1505,46 @@ const outreachProgramDetails = {
           'Items and books may vary due to availability.'
         ]
       },
-      { label: 'K-2nd Grade A', slug: 'k-2-a', body: 'A grade level-tailored Exploration Box delivered to your classroom - filled with hands-on activities, standards-aligned curriculum ideas, craft supplies with instructions and fun prizes for students to take home – for free.' },
-      { label: 'K-2nd Grade B', slug: 'k-2-b', body: 'A second K-2nd grade Exploration Box option gives teachers another age-appropriate set of hands-on arts activities and take-home materials.' },
-      { label: '3rd-5th Grade', slug: 'third-fifth', body: 'Older elementary students receive activities and materials designed to connect classroom learning with accessible arts exploration.' }
-    ]
+      {
+        label: 'K-2nd Grade A',
+        slug: 'k-2-a',
+        eyebrow: 'Exploration box 01',
+        title: 'Create, play and discover.',
+        summary: 'A hands-on arts introduction for early elementary classrooms.',
+        body: 'A grade level-tailored Exploration Box delivered to your classroom - filled with hands-on activities, standards-aligned curriculum ideas, craft supplies with instructions and fun prizes for students to take home - for free.',
+        image: asset('content-images/landing-pages/Brainstormers-19.jpg')
+      },
+      {
+        label: 'K-2nd Grade B',
+        slug: 'k-2-b',
+        eyebrow: 'Exploration box 02',
+        title: 'Another path into the arts.',
+        summary: 'A second early elementary option with a fresh set of activities.',
+        body: 'A second K-2nd grade Exploration Box option gives teachers another age-appropriate set of hands-on arts activities and take-home materials.',
+        image: asset('content-images/mission/School Dayz-36.jpg')
+      },
+      {
+        label: '3rd-5th Grade',
+        slug: 'third-fifth',
+        eyebrow: 'Exploration box 03',
+        title: 'Make the connection.',
+        summary: 'Arts exploration designed for older elementary students.',
+        body: 'Older elementary students receive activities and materials designed to connect classroom learning with accessible arts exploration.',
+        image: asset('content-images/mission/School Dayz-7.jpg')
+      }
+    ],
+    video: {
+      eyebrow: 'See the impact',
+      title: 'Arts on the Go in action',
+      subtitle: 'See how hands-on materials and educator-ready activities turn an ordinary classroom into a place for creative discovery.',
+      poster: asset('content-images/mission/Moorehead JHS-28.jpg'),
+      href: 'CONFIGURE_PROGRAM_VIDEO_URL_IN_CMS'
+    },
+    conversion: {
+      eyebrow: 'Mission seekers',
+      title: 'Stay close to the work.',
+      body: 'Get arts outreach stories, educator opportunities and program updates from The Pavilion.'
+    }
   },
   'chamberfest-strings-camp': {
     primaryCTA: { label: 'Register for Chamberfest', href: 'CONFIGURE_CHAMBERFEST_URL_IN_CMS', type: 'external', openInNewTab: true },
@@ -1529,10 +1591,18 @@ export const outreachPrograms = [
   slug,
   subtitle,
   image,
+  layoutVariant: 'programScroll',
+  impactFeature: outreachProgramDetails[slug]?.impactFeature || {
+    eyebrow: 'Program impact',
+    title: `${title} at work.`,
+    body: subtitle,
+    image
+  },
+  impactSecondaryImage: outreachProgramDetails[slug]?.impactSecondaryImage,
   primaryCTA: outreachProgramDetails[slug]?.primaryCTA || { label: 'Start here', type: 'popover', popoverId: 'contact' },
   impactStats: outreachProgramDetails[slug]?.impactStats,
   quoteHighlight: outreachProgramDetails[slug]?.quoteHighlight,
-  conversion: {
+  conversion: outreachProgramDetails[slug]?.conversion || {
     eyebrow: 'Mission seekers',
     title: title.includes('Education') || title.includes('Educator') || title.includes('Zoo') || title.includes('Maestros') || title.includes('Scout') || title.includes('Arts On The Go') ? 'Get educator and outreach updates' : 'Get mission stories in your inbox',
     body: 'Get emails from The Pavilion to learn more about our arts outreach programs and the people they impact.',
@@ -1542,7 +1612,8 @@ export const outreachPrograms = [
     title: `${title} in action`,
     poster: image,
     href: 'CONFIGURE_PROGRAM_VIDEO_URL_IN_CMS',
-    subtitle: 'Share a short video here when staff want families, educators or partners to see the program before they register.'
+    subtitle: 'Share a short video here when staff want families, educators or partners to see the program before they register.',
+    ...(outreachProgramDetails[slug]?.video || {})
   },
   tabs: outreachProgramDetails[slug]?.tabs || [
     { label: 'Overview', slug: 'overview', body: subtitle },
@@ -1590,6 +1661,7 @@ export const landingPages = [
     slug: 'mission/performing-arts-membership',
     subtitle: 'Join the exclusive group of Stage Lighters that fund our most powerful performances - and enjoy remarkable perks, too. This is the best way to make a donation to The Pavilion.',
     templatePreset: 'supportArts',
+    layoutVariant: 'programScroll',
     heroImage: asset('content-images/partners-sponsors/4.5.25 - Boston Pops-9006.jpg'),
     primaryCTA: { label: 'Join Stage Lighters', href: 'CONFIGURE_ACCOUNT_MANAGER_URL_IN_CMS', type: 'accountManager', openInNewTab: true },
     secondaryCTA: { label: 'Call Joan', type: 'popover', popoverId: 'contact' },
@@ -1604,6 +1676,7 @@ export const landingPages = [
     slug: 'mission/volunteer-membership',
     subtitle: 'Partners are a remarkable, thriving community of volunteers that help make The Pavilion’s mission for arts access possible through fundraising, organization and hands-on efforts. This volunteer membership program offers access to volunteer at all Pavilion Live Nation, Performing Arts and Education events - all while receiving some fun perks, of course.',
     templatePreset: 'supportArts',
+    layoutVariant: 'programScroll',
     heroImage: asset('content-images/partners-sponsors/HPP-68.jpg'),
     primaryCTA: { label: 'Become a Pavilion Partner', href: 'CONFIGURE_DONORPERFECT_URL_IN_CMS', type: 'external', openInNewTab: true },
     impactStats: [
@@ -1654,6 +1727,7 @@ export const landingPages = [
     slug: 'mission/corporate-partnership',
     subtitle: 'Partner with The Cynthia Woods Mitchell Pavilion - consistently ranked as one of the top amphitheaters in the world and nestled among the picturesque pines of The Woodlands, Texas.',
     templatePreset: 'supportArts',
+    layoutVariant: 'programScroll',
     eyebrow: 'Arts Access',
     heroImage: asset('content-images/partners-sponsors/Fans-13.jpg'),
     primaryCTA: { label: 'Become a Corporate Partner', type: 'popover', popoverId: 'contact' },
@@ -1797,6 +1871,7 @@ export const landingPages = [
     slug: 'rent',
     subtitle: 'Three dynamic event spaces on-site provide the perfect setting for your next meeting, celebration or fundraiser. Our partners at Wicked Whisk Catering and our experienced staff will make sure you have a remarkable experience.',
     templatePreset: 'footerPage',
+    layoutVariant: 'programScroll',
     heroImage: asset('content-images/partners-sponsors/Movies-6.jpg'),
     primaryCTA: { label: 'Book Your Event', type: 'popover', popoverId: 'contact' },
     tabs: [
@@ -1810,6 +1885,7 @@ export const landingPages = [
     slug: 'volunteer',
     subtitle: 'Find volunteer opportunities, Pavilion Partner information, member resources and mission-supporting ways to serve.',
     templatePreset: 'footerPage',
+    layoutVariant: 'programScroll',
     heroImage: asset('content-images/partners-sponsors/HPP-25.jpg'),
     primaryCTA: { label: 'Become a Pavilion Partner', href: '/mission/volunteer-membership' },
     tabs: [

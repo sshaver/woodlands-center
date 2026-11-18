@@ -191,6 +191,32 @@ export const grantProgram = {
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
     { name: 'applicationCTA', title: 'Application CTA', type: 'cta' },
     {
+      name: 'layoutVariant',
+      title: 'Page Layout',
+      type: 'string',
+      initialValue: 'programScroll',
+      description: 'Program Story uses the full-width page menu, impact feature, scrolling sections, video and inline form used across mission program pages.',
+      options: {
+        list: [
+          { title: 'Standard tabs', value: 'standard' },
+          { title: 'Program Story', value: 'programScroll' }
+        ],
+        layout: 'radio'
+      }
+    },
+    {
+      name: 'impactFeature',
+      title: 'Program Impact Feature',
+      type: 'mediaBlock',
+      description: 'Large story-and-image section directly below the hero. Add its eyebrow, title, body and primary image here.'
+    },
+    {
+      name: 'impactSecondaryImage',
+      title: 'Program Impact Secondary Image',
+      type: 'mediaAsset',
+      description: 'Optional smaller overlapping image in the Program Impact section.'
+    },
+    {
       name: 'impactStats',
       title: 'Program Impact Callouts',
       type: 'array',
@@ -237,20 +263,57 @@ export const outreachProgram = {
     { name: 'primaryCTA', title: 'Primary CTA', type: 'cta' },
     { name: 'secondaryCTA', title: 'Secondary CTA', type: 'cta' },
     {
+      name: 'layoutVariant',
+      title: 'Page Layout',
+      type: 'string',
+      initialValue: 'standard',
+      description: 'Standard uses the existing tabbed page. Program Story turns the sections into a full-width page menu and stacked scrolling sections.',
+      options: {
+        list: [
+          { title: 'Standard tabs', value: 'standard' },
+          { title: 'Program Story', value: 'programScroll' }
+        ],
+        layout: 'radio'
+      }
+    },
+    {
+      name: 'impactFeature',
+      title: 'Program Impact Feature',
+      type: 'mediaBlock',
+      description: 'The large full-width impact section directly below the hero. Add its eyebrow, title, body and primary image here.'
+    },
+    {
+      name: 'impactSecondaryImage',
+      title: 'Program Impact Secondary Image',
+      type: 'mediaAsset',
+      description: 'Smaller overlapping image in the Program Impact section. Leave blank to use a single image.'
+    },
+    {
       name: 'impactStats',
       title: 'Program Impact Callouts',
       type: 'array',
-      description: 'Optional data points shown together in one divided panel above the tabs. Keep values short. Leave empty to hide the panel.',
+      description: 'Data callouts in the Program Impact section. On the standard layout these remain in the existing divided panel.',
       of: [{ type: 'stat' }]
     },
     ...tabsIntroFields,
-    { name: 'tabs', title: 'Informational Tabs', type: 'array', of: [{ type: 'tab' }] },
-    { name: 'conversion', title: 'Conversion Block', type: 'conversionBlock' },
+    {
+      name: 'tabs',
+      title: 'Program Sections',
+      type: 'array',
+      description: 'Standard pages show these as tabs. Program Story pages use the first item as Key Information, then turn the remaining items into full-width scrolling sections and page-menu links.',
+      of: [{ type: 'tab' }]
+    },
+    {
+      name: 'conversion',
+      title: 'Mission Seekers Form Introduction',
+      type: 'conversionBlock',
+      description: 'On Program Story pages this copy introduces the inline Mission Seekers form near the bottom of the page. Its CTA is not used because the form is already visible.'
+    },
     {
       name: 'video',
       title: 'Optional Program Video',
       type: 'mediaBlock',
-      description: 'Currently displayed only on the Chamberfest page, and only when a URL is entered. The hero image can serve as the poster.'
+      description: 'Program Story pages show this after the scrolling program sections. Standard outreach pages currently show it only on Chamberfest. Add a URL to reveal the play action.'
     },
     {
       name: 'quoteHighlight',
@@ -339,6 +402,31 @@ export const landingPage = {
       description: 'Optional second button shown next to the hero primary button.'
     },
     {
+      name: 'layoutVariant',
+      title: 'Page Layout',
+      type: 'string',
+      description: 'Use Program Story for volunteer, membership, partnership and rental pages that need the full-width mission-page structure.',
+      options: {
+        list: [
+          { title: 'Standard tabs', value: 'standard' },
+          { title: 'Program Story', value: 'programScroll' }
+        ],
+        layout: 'radio'
+      }
+    },
+    {
+      name: 'impactFeature',
+      title: 'Program Impact Feature',
+      type: 'mediaBlock',
+      description: 'Large story-and-image section directly below the hero on Program Story pages.'
+    },
+    {
+      name: 'impactSecondaryImage',
+      title: 'Program Impact Secondary Image',
+      type: 'mediaAsset',
+      description: 'Optional smaller overlapping image in the Program Impact section.'
+    },
+    {
       name: 'impactStats',
       title: 'Program Impact Callouts',
       type: 'array',
@@ -354,9 +442,9 @@ export const landingPage = {
     },
     {
       name: 'supportProof',
-      title: 'Support Proof Panel',
+      title: 'Mission Proof Feature',
       type: 'mediaBlock',
-      description: 'Support The Arts only: right-side proof panel with stats and an optional CTA.'
+      description: 'Support The Arts only: full-width Program Impact-style section shown below Ways to Support, with mission stats and an optional CTA.'
     },
     {
       name: 'tabs',
